@@ -1,6 +1,6 @@
-# JavaScript Timer
+# Timer module
 
-Simple API for generating JavaScript countdown timers or clocks.
+A simple JavaScript module for generating countdown timers or clocks. Check out `demo.html` for a brief demo of creating a simple clock in the browser and `demo.js` for a demo of using this in [Node.js](http://nodejs.org).
 
 ## `Timer` class
 
@@ -29,3 +29,4 @@ An interval of time - sort of like a `Date()` but for different periods of time.
 * `hours` - number of hours in the interval
 * `minutes` - number of minutes in the interval
 * `seconds` - number of seconds in the interval
+* `millis` - number of milliseconds in the interval

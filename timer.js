@@ -1,7 +1,29 @@
 /**
+ * A module for creating timers. The core module is simply a constructor that
+ * provides a method of receiving a notification roughly every second.
+ * @module timer
+ */
+
+(function (root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define([], factory);
+	} else if (typeof module === 'object' && module.exports) {
+		// Node. Does not work with strict CommonJS, but
+		// only CommonJS-like environments that support module.exports,
+		// like Node.
+		module.exports = factory();
+	} else {
+		// Browser globals (root is window)
+		root.Timer = factory();
+	}
+}(this, function () {
+
+/**
  * Very basic timer function that receives notifications every second.
  * Override ontick to receive the notification.
- * @constructor Create a new initially stopped timer.
+ * @constructor
+ * @alias module:timer
  */
 function Timer() {
 	this.timeout = false;
@@ -67,21 +89,50 @@ Timer.zeropad = function(d) {
 }
 
 /**
- * An interval of time - sort of like a <code>Date()</code> but for different
+ * An interval of time - sort of like a `Date()` but for different
  * periods of time.
- * @constructor Create a new interval.
- * @param interval the initial interval in milliseconds
+ * @constructor
+ * @param {Number} interval
+ *         the initial interval in milliseconds
  */
 Timer.Interval = function(interval) {
 	// Step 1: convert to seconds.
 	var t = Math.floor(interval / 1000); // 1000 ms = 1 seconds
+
+	/**
+	 * The number of milliseconds in the interval. For a 1500ms interval, this
+	 * is 500. This is almost never useful but is included anyway.
+	 */
+	this.millis = (interval - (t * 1000));
+	/**
+	 * The number of seconds in the interval. For a 90 second interval, this is
+	 * 30.
+	 */
 	this.seconds = t % 60; // 60 seconds = 1 minute
 	t = Math.floor(t / 60);
+	/**
+	 * The number of minutes in the interval. For a 90 minute interval, this is
+	 * 30.
+	 */
 	this.minutes = t % 60; // 60 minutes = 1 hour
 	t = Math.floor(t / 60);
+	/**
+	 * The number of hours in the interval. For a 1.5 day interval, this is 12.
+	 */
 	this.hours = t % 24; // 24 hours = 1 day
 	t = Math.floor(t / 24);
+	/**
+	 * The number of days in the interval. For a 10 day interval, this is 3 and
+	 * {@linkcode module:timer.Interval#weeks weeks} will be 1.
+	 */
 	this.days = t % 7; // 7 days = 1 week
+	/**
+	 * The number of weeks in the interval. There are no larger spans of time
+	 * calculated at present. Months make no sense at this level: how long is a
+	 * month? 28 days? Depends on when the interval starts? Years may be added
+	 * in the future, but years have a similar problem: How long is a year?
+	 * 365 days? What about leap years?
+	 */
 	this.weeks = Math.floor(t / 7); // And enough
 };
 
@@ -89,3 +140,6 @@ Timer.Interval.prototype.toString = function() {
 	return '[' + this.weeks + ' weeks ' + this.days + ' days ' + this.hours +
 		' hours ' + this.minutes + ' minutes ' + this.seconds + ' seconds]';
 }
+
+return Timer;
+}));
