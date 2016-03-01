@@ -4,7 +4,12 @@ This branch contains an FFXIV-specific timer implementation.
 
 ## Using
 
-You must run `grunt` at least once or at the very least run `bower` to install the necessary third party libraries that this uses.
+You must run `grunt` at least once to install the necessary third party libraries that this uses. So the setup process should effectively be:
+
+1. Install [Node](https://nodejs.org/)
+2. Run `npm install` to install necessary libraries
+3. Run `npm install -g grunt-cli` to install the CLI for grunt
+4. Run `grunt` itself
 
 # Timer module
 
