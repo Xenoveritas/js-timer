@@ -21,12 +21,24 @@ module.exports = function(grunt) {
           readme: 'README.jsdoc.md'
         }
       }
+    },
+    requirejs: {
+      compile: {
+        options: {
+          baseUrl: ".",
+          mainConfigFile: "ffxiv_main.js",
+          name: "bower_components/almond/almond",
+          include: [ 'ffxiv_main' ],
+          out: "ffxiv_optimized.js"
+        }
+      }
     }
   });
 
   // Load plugins
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('default', ['uglify', 'jsdoc']);
+  grunt.registerTask('default', ['requirejs', 'jsdoc']);
 };

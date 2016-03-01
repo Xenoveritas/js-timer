@@ -1,3 +1,10 @@
 /node_modules
 /build
 /doc
+/bower_components
+
+# Generated files
+/ffxiv_optimized.js
+
+# General junk
+*~

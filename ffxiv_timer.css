@@ -1,0 +1,157 @@
+/* Custom timer font */
+@font-face {
+	font-family: FFXIVWide;
+	src: url(xivwide.woff);
+}
+html {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 10pt;
+	background-color: #000;
+	color: #DDD;
+	width: 100%;
+	margin: 0;
+}
+a, a:visited { color: #CCF; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.timer, .subtimer, .error, .popover {
+	border: solid 1px #666;
+	border-radius: 16px;
+	padding: 10pt;
+	margin: 10pt;
+	background-color: #000018;
+	background: linear-gradient(to bottom, #003, #000);
+}
+.error {
+	font-size: 150%;
+	border-color: #766;
+	background-color: #500;
+	background: linear-gradient(to bottom, #600, #300);
+}
+.subtimer {
+	font-size: 80%;
+}
+.popover {
+	position: absolute;
+	opacity: 0.0;
+}
+.popover.visible {
+	opacity: 1.0;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-name: fade-in;
+	animation-duration: 1s;
+	animation-name: fade-in;
+}
+.popover.hidden {
+	animation-duration: 1s;
+	animation-name: fade-out;
+	opacity: 0.0;
+}
+.timer .title {
+	text-align: center;
+	font-weight: bold;
+	font-size: 220%;
+}
+.timer.before.maintenance, .timer.after.maintenance, .timer.active.beta {
+	border-color: #676;
+	background-color: #131;
+	background: linear-gradient(to bottom, #030, #010);
+}
+.timer.active.maintenance, .timer.before.beta, .timer.after.beta {
+	border-color: #766;
+	background-color: #311;
+	background: linear-gradient(to bottom, #300, #100);
+}
+.title:after {
+	display: block;
+	font-size: 80%;
+	font-weight: normal;
+}
+.reset .title:after {
+	display: none;
+}
+.before .title:after, .subtimer.before .title:after {
+	content: " starts in:";
+}
+.active .title:after, .subtimer.active .title:after {
+	content: " ongoing, ends in:";
+}
+.subtimer.active.ends-with-parent {
+	/* Highlight when active */
+	background: linear-gradient(to bottom, #005, #003);
+}
+.subtimer.active.ends-with-parent .countdown,
+.subtimer.active.ends-with-parent .title:after {
+	display: none;
+}
+.active.maintenance .title:after {
+	content: " ongoing, completes in:";
+}
+.after { opacity: 0.5; }
+.after .title:after, .subtimer.after .title:after {
+	content: " over";
+}
+.after.maintenance .title:after {
+	content: " completed";
+}
+.after .countdown {
+	display: none;
+}
+.countdown {
+	text-align: center;
+	font-family: FFXIVWide, Helvetica, sans-serif;
+	font-size: 300%;
+	color: #FFF;
+	text-shadow: #66CCFF 0px 0px 4px, #66CCFF 0px 0px 3px, #66CCFF 0px 0px 2px;
+}
+.duration {
+	text-align: center;
+	font-size: 150%;
+	/* No point showing it during or afterwards */
+	display: none;
+}
+.before .duration {
+	display: block;
+}
+.subtimer .countdown {
+	font-size: 250%;
+}
+footer {
+	color: #AAA;
+}
+/* Animations */
+@-webkit-keyframes fade-in {
+	from {
+		opacity: 0.0;
+	}
+	to {
+		opacity: 1.0;
+	}
+}
+@-webkit-keyframes fade-out {
+	from {
+		opacity: 1.0;
+		display: block;
+	}
+	to {
+		opacity: 0.0;
+		display: none;
+	}
+}
+@keyframes fade-in {
+	from {
+		opacity: 0.0;
+	}
+	to {
+		opacity: 1.0;
+	}
+}
+@keyframes fade-out {
+	from {
+		opacity: 1.0;
+		display: block;
+	}
+	to {
+		opacity: 0.0;
+		display: none;
+	}
+}

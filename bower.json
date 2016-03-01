@@ -1,0 +1,29 @@
+{
+  "name": "ffxiv-timer",
+  "description": "FFXIV timers.",
+  "main": "ffxiv_main.js",
+  "authors": [
+    "Xenoveritas"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "timer",
+    "clock",
+    "ffxiv"
+  ],
+  "homepage": "https://github.com/Xenoveritas/js-timer",
+  "moduleType": [
+    "amd"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "^2.1.22",
+    "almond": "^0.3.1"
+  }
+}

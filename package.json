@@ -1,7 +1,7 @@
 {
-  "name": "timer",
+  "name": "ffxiv-timer",
   "version": "0.1.0",
-  "description": "A very simply utility for creating a clock or timer.",
+  "description": "FFXIV timers.",
   "main": "timer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,6 +22,7 @@
   "homepage": "https://github.com/Xenoveritas/js-timer#readme",
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-jsdoc": "^0.6.7"
   },
