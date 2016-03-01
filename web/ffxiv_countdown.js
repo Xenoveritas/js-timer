@@ -98,7 +98,14 @@ FFXIVCountdown.prototype = {
 				// Over "every" recurrence is based on the UNIX epoch, which started on a
 				// Thursday. Since the reset is on Tuesday, that's 5 days off.
 				'offset': (5*24+8)*60*60*1000
-			},{
+			}, {
+				'name': 'Crafting Scrips Reset',
+				'popover': "After this reset, the total number of red crafters' and gathers' scrips is reset",
+				'type': 'reset',
+				'every': 7*24*60*60*1000,
+				// Helpfully this reset takes place on the same day as the UNIX epoch!
+				'offset': 8*60*60*1000
+			}, {
 				'name': 'Daily Reset',
 				'popover': 'On the daily reset, the following resets:<ul><li>Beastman daily quest allowances</li><li>Duty Roulette daily bonuses</li><li>Alexandrite Map repeatable quest</li></ul>',
 				'type': 'reset',
