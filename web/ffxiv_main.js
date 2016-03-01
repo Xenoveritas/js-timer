@@ -1,3 +1,8 @@
+requirejs.config({
+	paths: {
+		timer: '../timer'
+	}
+});
 requirejs(['ffxiv_countdown'], function(FFXIVCountdown) {
 	function startTimers() {
 		new FFXIVCountdown(document.getElementById('timers'), 'timers.json');

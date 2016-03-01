@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 
-<!-- This page is the "local" version. It does not use the rolled up page, it
-is not optimized, and while it does require you to install the Bower
-dependencies it's intended for development use. -->
+<!-- This page is the "real" version, ish. It uses the final, optimized version
+of the JavaScript library to build the timers. It *will not run* in the web
+directory and must instead be copied to the "build" directory. -->
 
 <html>
   <head>
     <title>FFXIV:ARR Event/Maintenance Timers</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="ffxiv_timer.css">
-    <script data-main="ffxiv_main" src="bower_components/requirejs/require.js"></script>
+    <script type="text/javascript" src="ffxiv_optimized.js"></script>
   </head>
   <body>
     <noscript>This requires JavaScript.</noscript>
