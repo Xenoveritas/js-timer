@@ -34,7 +34,14 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: [
-          { expand: true, src: [ 'web/*.{css,woff,json}' ],  dest: 'build/', flatten: true },
+          { expand: true, src: [ 'web/*.{css,woff}' ], dest: 'build/', flatten: true },
+        ]
+      }
+    },
+    parsetimers: {
+      dist: {
+        files: [
+          { src: 'web/timers.json', dest: 'build/timers.json' }
         ]
       }
     },
@@ -57,6 +64,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadTasks('tasks');
 
-  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'copy', 'jsdoc']);
+  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'copy', 'parsetimers', 'jsdoc']);
 };
