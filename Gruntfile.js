@@ -41,8 +41,13 @@ module.exports = function(grunt) {
     parsetimers: {
       dist: {
         files: [
-          { src: 'web/timers.json', dest: 'build/timers.json' }
+          { src: [ 'build/lodestone-timers.json', 'web/timers.json' ], dest: 'build/timers.json' }
         ]
+      }
+    },
+    scrapelodestone: {
+      scrape: {
+        dest: 'build/lodestone-timers.json'
       }
     },
     requirejs: {
@@ -66,5 +71,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadTasks('tasks');
 
-  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'copy', 'parsetimers', 'jsdoc']);
+  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'copy', 'scrapelodestone', 'parsetimers', 'jsdoc']);
 };
