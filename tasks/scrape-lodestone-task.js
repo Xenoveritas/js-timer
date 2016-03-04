@@ -2,7 +2,8 @@ module.exports = function(grunt) {
   var request = require('request'),
     cheerio = require('cheerio'),
     url = require('url'),
-    moment = require('moment');
+    moment = require('moment'),
+    fs = require('fs');
   function parseLodestoneDate(str) {
     // Cheat:
     str = str.replace(/([AaPp]\.[Mm]\.)/g, function(_, ap) { return ap.toLowerCase() + 'm'; });
@@ -141,8 +142,24 @@ module.exports = function(grunt) {
     var data = this.data;
     var options = this.options({
       timeLimit: 24*60*60*1000,
+      cacheTime: 60*60*1000,
       url: "http://na.finalfantasyxiv.com/lodestone/"
     });
+    var dest = data.dest;
+    // First, see if our destination already exists
+    try {
+      var stats = fs.statSync(dest);
+      // See if this is recent
+      if (stats.mtime.getTime() + options.cacheTime > new Date().getTime()) {
+        grunt.log.writeln("Skipping \"" + dest + "\": still within cache time.");
+        return;
+      }
+    } catch (ex) {
+      // If the file doesn't exist, we don't care
+      if (ex.code !== 'ENOENT') {
+        grunt.log.errorlns("Error checking destination \"" + dest + "\": " + ex);
+      }
+    }
     var lodestoneURL = options.url,
       skipBefore = new Date().getTime() - options.timeLimit;
     var done = this.async();
