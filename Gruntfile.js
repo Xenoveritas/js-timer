@@ -70,11 +70,25 @@ module.exports = function(grunt) {
           out: "build/ffxiv_optimized.js"
         }
       }
+    },
+    connect: {
+      test: {
+        options: {
+          keepalive: true
+        }
+      },
+      dist: {
+        options: {
+          base: 'build',
+          keepalive: true
+        }
+      }
     }
   });
 
   // Load plugins
   grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-less');
@@ -83,4 +97,7 @@ module.exports = function(grunt) {
   grunt.loadTasks('tasks');
 
   grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'less', 'copy', 'scrapelodestone', 'parsetimers', 'jsdoc']);
+  // Create some aliases:
+  grunt.registerTask('server', ['default', 'connect:dist']);
+  grunt.registerTask('testserver', ['connect:test']);
 };
