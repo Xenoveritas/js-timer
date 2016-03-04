@@ -1,0 +1,16 @@
+// LESS rules for specific holidays
+
+@littleLadiesText: #FCC;
+@littleLadiesGlow: #600;
+
+.little-ladies-day {
+	background-color: mix(#EAA, #B66);
+	background: linear-gradient(to bottom, #EAA, #B66);
+	border-color: @littleLadiesGlow;
+	color: darken(@littleLadiesText, 10%);
+	text-shadow: @littleLadiesGlow 0px 0px 2px;
+	.countdown {
+		color: @littleLadiesText;
+		text-shadow: @littleLadiesGlow 0px 0px 4px, @littleLadiesGlow 0px 0px 3px, @littleLadiesGlow 0px 0px 2px;
+	}
+}
