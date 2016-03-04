@@ -50,6 +50,16 @@ module.exports = function(grunt) {
         dest: 'build/lodestone-timers.json'
       }
     },
+    less: {
+      dist: {
+        options: {
+          compress: true
+        },
+        files: {
+          'build/ffxiv_timer.css': 'web/ffxiv_timer.less'
+        }
+      }
+    },
     requirejs: {
       compile: {
         options: {
@@ -67,9 +77,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadTasks('tasks');
 
-  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'copy', 'scrapelodestone', 'parsetimers', 'jsdoc']);
+  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'less', 'copy', 'scrapelodestone', 'parsetimers', 'jsdoc']);
 };

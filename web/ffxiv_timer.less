@@ -1,4 +1,9 @@
-/* Custom timer font */
+// Basic color definitions.
+
+@boxTopColor: #006;
+@boxBottomColor: #003;
+
+// Custom timer font
 @font-face {
 	font-family: FFXIVWide;
 	src: url(xivwide.woff);
@@ -19,7 +24,7 @@ a:hover { text-decoration: underline; }
 	padding: 10pt;
 	margin: 10pt;
 	background-color: #000018;
-	background: linear-gradient(to bottom, #003, #000);
+	background: linear-gradient(to bottom, @boxTopColor, @boxBottomColor);
 }
 .error {
 	font-size: 150%;
@@ -33,18 +38,18 @@ a:hover { text-decoration: underline; }
 .popover {
 	position: absolute;
 	opacity: 0.0;
-}
-.popover.visible {
-	opacity: 1.0;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-name: fade-in;
-	animation-duration: 1s;
-	animation-name: fade-in;
-}
-.popover.hidden {
-	animation-duration: 1s;
-	animation-name: fade-out;
-	opacity: 0.0;
+	&.visible {
+		opacity: 1.0;
+		-webkit-animation-duration: 1s;
+		-webkit-animation-name: fade-in;
+		animation-duration: 1s;
+		animation-name: fade-in;
+	}
+	&.hidden {
+		animation-duration: 1s;
+		animation-name: fade-out;
+		opacity: 0.0;
+	}
 }
 .timer .title {
 	text-align: center;
@@ -76,7 +81,7 @@ a:hover { text-decoration: underline; }
 	content: " ongoing, ends in:";
 }
 .subtimer.active.ends-with-parent {
-	/* Highlight when active */
+	// Highlight when active
 	background: linear-gradient(to bottom, #005, #003);
 }
 .subtimer.active.ends-with-parent .countdown,
@@ -106,7 +111,7 @@ a:hover { text-decoration: underline; }
 .duration {
 	text-align: center;
 	font-size: 150%;
-	/* No point showing it during or afterwards */
+	// No point showing it during or afterwards
 	display: none;
 }
 .before .duration {
@@ -118,7 +123,7 @@ a:hover { text-decoration: underline; }
 footer {
 	color: #AAA;
 }
-/* Animations */
+// Animations
 @-webkit-keyframes fade-in {
 	from {
 		opacity: 0.0;
