@@ -48,7 +48,11 @@ module.exports = function(grunt) {
             }
           });
         }
-        loadURL(0);
+        if (urls.length > 0) {
+          loadURL(0);
+        } else {
+          callback([]);
+        }
       }
     });
   }
@@ -151,7 +155,7 @@ module.exports = function(grunt) {
       var stats = fs.statSync(dest);
       // See if this is recent
       if (stats.mtime.getTime() + options.cacheTime > new Date().getTime()) {
-        grunt.log.writeln("Skipping \"" + dest + "\": still within cache time.");
+        grunt.log.ok("Skipping " + dest + ": still within cache time.");
         return;
       }
     } catch (ex) {
@@ -166,6 +170,7 @@ module.exports = function(grunt) {
     loadLodestone(lodestoneURL, skipBefore, function(timers) {
       if (timers !== null) {
         grunt.file.write(data.dest, JSON.stringify({ timers: timers }, null, 2));
+        grunt.log.ok("Found " + timers.length + " timers.");
       }
       done();
     });

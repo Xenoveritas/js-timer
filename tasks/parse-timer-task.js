@@ -60,6 +60,8 @@ grunt.registerMultiTask('parsetimers', 'Parses timer data', function() {
         parseTimers(timers, src);
       });
       grunt.file.write(file.dest, crushJSON({ timers: timers }));
+      grunt.log.ok("Wrote " + timers.length + " " +
+        grunt.util.pluralize(timers.length, "timer/timers") +" to " + file.dest);
     }
   });
 });
