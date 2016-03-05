@@ -150,7 +150,7 @@ module.exports = function(grunt) {
       url: "http://na.finalfantasyxiv.com/lodestone/"
     });
     var dest = data.dest;
-    // First, see if our destination already exists
+    // Check to see if our destination file is stale
     try {
       var stats = fs.statSync(dest);
       // See if this is recent

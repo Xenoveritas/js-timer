@@ -95,7 +95,7 @@ FFXIVCountdown.prototype = {
 				'type': 'reset',
 				// Period in MS for this event
 				'every': 7*24*60*60*1000,
-				// Over "every" recurrence is based on the UNIX epoch, which started on a
+				// The "every" recurrence is based on the UNIX epoch, which started on a
 				// Thursday. Since the reset is on Tuesday, that's 5 days off.
 				'offset': (5*24+8)*60*60*1000
 			}, {
@@ -265,7 +265,6 @@ FFXIVCountdown.prototype = {
 				popover.style.left = div.offsetLeft + "px";
 				popover.style.top = div.offsetTop + "px";
 				popover.className = 'popover visible';
-
 			};
 			div.onmouseleave = function(event) {
 				popover.className = 'popover hidden';

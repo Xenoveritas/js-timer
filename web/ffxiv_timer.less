@@ -2,8 +2,23 @@
 
 @boxTopColor: #006;
 @boxBottomColor: #003;
+// Colors for the box when it's up and running
+@boxUpTopColor: #060;
+@boxUpBottomColor: #030;
+// Colors for the box when it's during a period that the servers are down
+@boxDownTopColor: #600;
+@boxDownBottomColor: #300;
 @countdownColor: #FFF;
 @countdownGlowColor: #6CF;
+
+.gradient (@from, @to) {
+	background-color: mix(@from, @to);
+	background: linear-gradient(to bottom, @from, @to);
+}
+
+.textglow (@color) {
+	text-shadow: @color 0px 0px 4px, @color 0px 0px 3px, @color 0px 0px 2px;
+}
 
 // Custom timer font
 @font-face {
@@ -25,14 +40,13 @@ a:hover { text-decoration: underline; }
 	border-radius: 12px;
 	padding: 10pt;
 	margin: 10pt;
+	.gradient(@boxTopColor, @boxBottomColor);
 	background-color: #000018;
-	background: linear-gradient(to bottom, @boxTopColor, @boxBottomColor);
 }
 .error {
 	font-size: 150%;
 	border-color: #766;
-	background-color: #500;
-	background: linear-gradient(to bottom, #600, #300);
+	.gradient(@boxDownTopColor, @boxDownBottomColor);
 }
 .subtimer {
 	font-size: 80%;
@@ -42,8 +56,6 @@ a:hover { text-decoration: underline; }
 	opacity: 0.0;
 	&.visible {
 		opacity: 1.0;
-		-webkit-animation-duration: 1s;
-		-webkit-animation-name: fade-in;
 		animation-duration: 1s;
 		animation-name: fade-in;
 	}
@@ -60,13 +72,11 @@ a:hover { text-decoration: underline; }
 }
 .timer.before.maintenance, .timer.after.maintenance, .timer.active.beta {
 	border-color: #676;
-	background-color: #131;
-	background: linear-gradient(to bottom, #030, #010);
+	.gradient(@boxUpTopColor, @boxUpBottomColor);
 }
 .timer.active.maintenance, .timer.before.beta, .timer.after.beta {
 	border-color: #766;
-	background-color: #311;
-	background: linear-gradient(to bottom, #300, #100);
+	.gradient(@boxDownTopColor, @boxDownBottomColor);
 }
 .title:after {
 	display: block;
@@ -84,7 +94,7 @@ a:hover { text-decoration: underline; }
 }
 .subtimer.active.ends-with-parent {
 	// Highlight when active
-	background: linear-gradient(to bottom, #005, #003);
+	.gradient(#008, #004);
 	.countdown, .title:after {
 		display: none;
 	}
@@ -92,31 +102,33 @@ a:hover { text-decoration: underline; }
 .active.maintenance .title:after {
 	content: " ongoing, completes in:";
 }
-.after { opacity: 0.5; }
-.after .title:after, .subtimer.after .title:after {
-	content: " over";
-}
-.after.maintenance .title:after {
-	content: " completed";
-}
-.after .countdown {
-	display: none;
+.after {
+	opacity: 0.5;
+	.title:after, &.subtimer .title:after {
+		content: " over";
+	}
+	&.maintenance .title:after {
+		content: " completed";
+	}
+	.countdown {
+		display: none;
+	}
 }
 .countdown {
 	text-align: center;
 	font-family: FFXIVWide, Helvetica, sans-serif;
 	font-size: 300%;
 	color: @countdownColor;
-	text-shadow: @countdownGlowColor 0px 0px 4px, @countdownGlowColor 0px 0px 3px, @countdownGlowColor 0px 0px 2px;
+	.textglow(@countdownGlowColor);
 }
 .duration {
 	text-align: center;
 	font-size: 150%;
 	// No point showing it during or afterwards
 	display: none;
-}
-.before .duration {
-	display: block;
+	.before & {
+		display: block;
+	}
 }
 .subtimer .countdown {
 	font-size: 250%;
