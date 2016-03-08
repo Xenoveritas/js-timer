@@ -4,11 +4,14 @@
 @littleLadiesGlow: #600;
 
 .little-ladies-day {
-	background-color: mix(#EAA, #B66);
-	background: linear-gradient(to bottom, #EAA, #B66);
+	.gradient(#EAA, #B66);
 	border-color: @littleLadiesGlow;
-	color: darken(@littleLadiesText, 10%);
-	text-shadow: @littleLadiesGlow 0px 0px 2px;
+	color: darken(@littleLadiesText, 20%);
+	text-shadow: darken(@littleLadiesGlow, 20%) 0px 0px 2px, darken(@littleLadiesGlow, 20%) 0px 0px 4px;
+	a {
+		color: darken(@littleLadiesText, 10%);
+		text-shadow: darken(@littleLadiesGlow, 10%) 0px 0px 2px, darken(@littleLadiesGlow, 10%) 0px 0px 6px;
+	}
 	.countdown {
 		color: @littleLadiesText;
 		.textglow(@littleLadiesGlow);
