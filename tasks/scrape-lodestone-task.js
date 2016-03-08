@@ -4,10 +4,19 @@ module.exports = function(grunt) {
     url = require('url'),
     moment = require('moment'),
     fs = require('fs');
-  function parseLodestoneDate(str) {
+  function parseLodestoneDate(str, previous) {
     // Cheat:
     str = str.replace(/([AaPp]\.[Mm]\.)/g, function(_, ap) { return ap.toLowerCase() + 'm'; });
-    return moment.utc(str, 'MMM. D, YYYY h:mm a');
+    // It's possible for the end time NOT to include the date. If we're given
+    // the previous time and have no date component, use that.
+    var rv = moment.utc(str, 'MMM. D, YYYY h:mm a');
+    if (!rv.isValid() && arguments.length >= 2) {
+      rv = moment.utc(str, 'h:mm a');
+      if (rv !== null) {
+        rv.year(previous.year()).month(previous.month()).date(previous.date());
+      }
+    }
+    return rv;
   }
   function strip(str) {
     return str.replace(/^\s+|\s+$/g, '');
@@ -116,7 +125,7 @@ module.exports = function(grunt) {
     var m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(.*)\s+to\s+(.*)\s*\((\w+)\)/.exec(post);
     if (m) {
       var start = parseLodestoneDate(m[1]),
-        end = parseLodestoneDate(m[2]),
+        end = parseLodestoneDate(m[2], start),
         offset = 0;
       if (m[3] == "PDT") {
         offset = -7;
