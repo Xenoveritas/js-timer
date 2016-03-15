@@ -1,0 +1,17 @@
+{
+  "description": "Wouldn't it be nice if JSON did comments? This is just events, ready-to-go, so to speak.",
+  "timers": [
+    {
+      "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/Little_Ladies_Day/\">Little Ladies' Day</a>",
+      "type": "little-ladies-day",
+      "start": "2016-02-26T00:00:00-0800",
+      "end": "2016-03-10T06:59:00-0800"
+    },
+    {
+      "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/Hatching_tide/\">Hatching-tide</a>",
+      "type": "hatchingtide",
+      "start": "2016-03-15T01:00:00-0700",
+      "end": "2016-03-28T07:59:00-0700"
+    }
+  ]
+}
