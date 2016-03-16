@@ -138,8 +138,14 @@ module.exports = function(grunt) {
       // Apply the offset to make the time correct
       start.add(-offset, 'h');
       end.add(-offset, 'h');
+      var name = '<a href="' + postURL + '">' + strip(title.text()) + '</a>';
+      // See if it's for a patch.
+      m = /\bPatch (\d+\.\d+)\b/.exec(post);
+      if (m) {
+        name += ' (Patch ' + m[1] + ')';
+      }
       return {
-        name: '<a href="' + postURL + '">' + strip(title.text()) + '</a>',
+        name: name,
         type: tag,
         start: start.valueOf(),
         end: end.valueOf()
@@ -179,7 +185,8 @@ module.exports = function(grunt) {
     loadLodestone(lodestoneURL, skipBefore, function(timers) {
       if (timers !== null) {
         grunt.file.write(data.dest, JSON.stringify({ timers: timers }, null, 2));
-        grunt.log.ok("Found " + timers.length + " timers.");
+        grunt.log.ok("Found " + timers.length + " " +
+          grunt.util.pluralize(timers.length, "timer/timers") + ".");
       }
       done();
     });
