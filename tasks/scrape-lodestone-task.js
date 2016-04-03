@@ -140,8 +140,9 @@ module.exports = function(grunt) {
       end.add(-offset, 'h');
       var name = '<a href="' + postURL + '">' + strip(title.text()) + '</a>';
       // See if it's for a patch.
-      m = /\bPatch (\d+\.\d+)\b/.exec(post);
+      m = /\bPatch\s+(\d+\.\d+(?:\s+Hotfixes)?)\b/.exec(post);
       if (m) {
+        // See if it's a hotfix patch
         name += ' (Patch ' + m[1] + ')';
       }
       return {

@@ -1,11 +1,3 @@
 {
-"timers": [
-  {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/Hatching_tide/\">Hatching-tide</a>",
-    "type": "event hatchingtide",
-    "start": "2016-03-15T01:00:00-0700",
-    "end": "2016-03-28T07:59:00-0700",
-    "showDuration": true
-  }
-]
+"timers": []
 }
