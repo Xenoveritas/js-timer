@@ -6,9 +6,10 @@ module.exports = function(grunt) {
     fs = require('fs');
   function parseLodestoneDate(str, previous) {
     // Cheat:
-    str = str.replace(/([AaPp]\.[Mm]\.)/g, function(_, ap) { return ap.toLowerCase() + 'm'; });
+    str = str.replace(/([AaPp])\.[Mm]\./g, function(_, ap) { return ap.toLowerCase() + 'm'; });
     // It's possible for the end time NOT to include the date. If we're given
     // the previous time and have no date component, use that.
+    grunt.verbose.writeln("Parsing time [" + str + "]");
     var rv = moment.utc(str, 'MMM. D, YYYY h:mm a');
     if (!rv.isValid() && arguments.length >= 2) {
       rv = moment.utc(str, 'h:mm a');
@@ -67,6 +68,7 @@ module.exports = function(grunt) {
   }
   function scrapeLodestone(html, lodestoneURL, skipBefore, links) {
     var $ = cheerio.load(html);
+    var cutoff = moment(skipBefore).format();
     $('dl.news_list').each(function(i, e) {
       // See if this is a maintenance news item.
       var item = cheerio(this);
@@ -83,7 +85,7 @@ module.exports = function(grunt) {
         if (m) {
           var time = parseInt(m[1]) * 1000;
           if (time < skipBefore) {
-            grunt.verbose.writeln("Skipping \"" + name + "\" - before cutoff");
+            grunt.verbose.writeln("Skipping \"" + name + "\" - its time (" + moment(time).format() + ") is before cutoff " + cutoff);
           } else {
             if (href in links) {
               if (links[href] != name) {
@@ -138,13 +140,15 @@ module.exports = function(grunt) {
       // Apply the offset to make the time correct
       start.add(-offset, 'h');
       end.add(-offset, 'h');
-      var name = '<a href="' + postURL + '">' + strip(title.text()) + '</a>';
+      title = strip(title.text());
+      var name = '<a href="' + postURL + '">' + title + '</a>';
       // See if it's for a patch.
       m = /\bPatch\s+(\d+\.\d+(?:\s+Hotfixes)?)\b/.exec(post);
       if (m) {
         // See if it's a hotfix patch
         name += ' (Patch ' + m[1] + ')';
       }
+      grunt.verbose.writeln("Added timer for " + title + " from " + start.format() + " until " + end.format());
       return {
         name: name,
         type: tag,
@@ -161,7 +165,7 @@ module.exports = function(grunt) {
     // This task doesn't really work with files, so use data instead
     var data = this.data;
     var options = this.options({
-      timeLimit: 24*60*60*1000,
+      timeLimit: 3*24*60*60*1000,
       cacheTime: 60*60*1000,
       url: "http://na.finalfantasyxiv.com/lodestone/"
     });
