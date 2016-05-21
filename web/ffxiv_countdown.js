@@ -17,6 +17,12 @@ function FFXIVCountdown(container, timers, addBuiltins) {
 	}
 	this._init(timers);
 }
+
+/**
+ * Maximum age before we don't show a timer.
+ */
+FFXIVCountdown.MAX_TIMER_AGE = (24*60*60*1000);
+
 FFXIVCountdown.prototype = {
 	/**
 	 * Reload timers from the initial URL if there was one or a NO-OP if
@@ -113,9 +119,15 @@ FFXIVCountdown.prototype = {
 				'offset': 15*60*60*1000
 			});
 		}
-		var now = new Date().getTime();
+		var now = new Date().getTime(), skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;
 		for (var i = 0; i < timers.length; i++) {
 			var t = timers[i];
+			if ('end' in t && t['end'] <= skipTimersBefore) {
+				// Remove out of date timers from the list.
+				timers.splice(i, 1);
+				i--;
+				continue;
+			}
 			var div = this.makeTimer(t, 'timer');
 			this.container.appendChild(div);
 			t.div = div;

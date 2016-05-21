@@ -22,7 +22,7 @@ module.exports = function(grunt) {
   function strip(str) {
     return str.replace(/^\s+|\s+$/g, '');
   }
-  function loadLodestone(lodestoneURL, skipBefore, callback) {
+  function loadLodestone(lodestoneURL, skipScrapeBefore, skipTimerBefore, callback) {
     grunt.log.write('Pulling ' + lodestoneURL + '... ');
     request({
       method: 'GET',
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
       if (response.statusCode == 200) {
         var links = { };
         grunt.log.ok();
-        scrapeLodestone(body, lodestoneURL, skipBefore, links);
+        scrapeLodestone(body, lodestoneURL, skipScrapeBefore, links);
         var timers = [];
         // We now want to iterate through the links but we want to pull them
         // sequentially, so this ends up being a bit horrible. All we care
@@ -45,7 +45,11 @@ module.exports = function(grunt) {
         loadURL = function(i) {
           loadPost(url.resolve(lodestoneURL, urls[i]), function(error, timer) {
             if (error === null && timer !== null) {
-              timers.push(timer);
+              if (timer['end'] <= skipTimerBefore) {
+                grunt.verbose.writeln('Skipping timer: it is too old');
+              } else {
+                timers.push(timer);
+              }
             }
             // Regardless of outcome:
             i++;
@@ -74,10 +78,17 @@ module.exports = function(grunt) {
       var item = cheerio(this);
       var title = item.find('dt.ic_maintenance');
       if (title.length > 0) {
+        var tag = title.find('.tag');
         // Grab the link out of it.
         var a = title.find('a');
         var href = a.attr('href');
         var name = a.text();
+        if (/^\s*\[\s*Follow-up\s*\]\s*$/.test(tag.text())) {
+          // TODO: Update previous items with follow-up data. For now, though,
+          // just ignore them.
+          grunt.verbose.writeln("Skipping " + name + ": it is a follow-up.");
+          return;
+        }
         // See if we can pull the time out of it. Obnoxiously the time is hidden
         // in a script element.
         var script = item.find("span[id^='datetime-']+script").text();
@@ -165,9 +176,16 @@ module.exports = function(grunt) {
     // This task doesn't really work with files, so use data instead
     var data = this.data;
     var options = this.options({
-      timeLimit: 3*24*60*60*1000,
-      cacheTime: 60*60*1000,
+      // Don't scrape any news item posted this number of millis before
+      scrapeTimeLimit: moment.duration(5, 'days'),
+      timeLimit: moment.duration(1, 'day'),
+      cacheTime: moment.duration(1, 'hour'),
       url: "http://na.finalfantasyxiv.com/lodestone/"
+    });
+    // Convert any moment durations into milliseconds
+    ['scrapeTimeLimit', 'timeLimit', 'cacheTime'].forEach(function(k) {
+      if (moment.isDuration(options[k]))
+        options[k] = options[k].asMilliseconds();
     });
     var dest = data.dest;
     // Check to see if our destination file is stale
@@ -185,9 +203,10 @@ module.exports = function(grunt) {
       }
     }
     var lodestoneURL = options.url,
-      skipBefore = new Date().getTime() - options.timeLimit;
+      skipScrapeBefore = new Date().getTime() - options.scrapeTimeLimit,
+      skipTimerBefore = new Date().getTime() - options.timeLimit;
     var done = this.async();
-    loadLodestone(lodestoneURL, skipBefore, function(timers) {
+    loadLodestone(lodestoneURL, skipScrapeBefore, skipTimerBefore, function(timers) {
       if (timers !== null) {
         grunt.file.write(data.dest, JSON.stringify({ timers: timers }, null, 2));
         grunt.log.ok("Found " + timers.length + " " +
