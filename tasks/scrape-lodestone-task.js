@@ -46,7 +46,7 @@ module.exports = function(grunt) {
           loadPost(url.resolve(lodestoneURL, urls[i]), function(error, timer) {
             if (error === null && timer !== null) {
               if (timer['end'] <= skipTimerBefore) {
-                grunt.verbose.writeln('Skipping timer: it is too old');
+                grunt.verbose.writeln('Skipping timer "' + timer['title'] + '": it is too old');
               } else {
                 timers.push(timer);
               }
@@ -162,9 +162,15 @@ module.exports = function(grunt) {
       grunt.verbose.writeln("Added timer for " + title + " from " + start.format() + " until " + end.format());
       return {
         name: name,
+        // For debugging (mostly) keep the raw title and URL
+        title: title,
+        href: postURL,
         type: tag,
         start: start.valueOf(),
-        end: end.valueOf()
+        end: end.valueOf(),
+        // For debuggin (mostly) keep the text versions
+        startText: start.format(),
+        endText: end.format()
       };
     } else {
       grunt.verbose.writeln("Did not find times.");

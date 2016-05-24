@@ -3,7 +3,8 @@
  */
 module.exports = function(grunt) {
 
-var crushJSON = require('./lib/crush-json');
+var crushJSON = require('./lib/crush-json'),
+  moment = require('moment');
 
 function convertDate(date) {
   try {
@@ -27,7 +28,47 @@ function convertTimer(timer) {
   }
 }
 
-function parseTimers(timers, filename) {
+/**
+ * The set of fields the timer cares about and that should survive
+ * JSON-crushing. Note that this does NOT include the "subtimers" field as
+ * that's only valid on the top-level field.
+ */
+var TIMER_FIELDS = {
+  "start": true,
+  "end": true,
+  "name": true,
+  "type": true,
+  "showDuration": true,
+  "popover": true
+};
+
+/**
+ * Strips any field out of the timer that isn't used by the actual timer code.
+ */
+function stripIgnoredFields(timer, allowSubtimer) {
+  if (arguments.length < 2)
+    allowSubtimer = true;
+  // We want to pull the keys and delete them while iterating over them, so:
+  var keys = Object.keys(timer);
+  keys.forEach(function(key) {
+    if (!(key in TIMER_FIELDS)) {
+      if (key === 'subtimers' && allowSubtimer) {
+        // We actually want to recurse into this.
+        if (grunt.util.kindOf(timer['subtimers']) === 'array') {
+          timer['subtimers'].forEach(function(subtimer) {
+            // Subtimers aren't allowed on subtimers. You can only nest once.
+            stripIgnoredFields(subtimer, false);
+          });
+        }
+        return;
+      }
+      // Otherwise, delete it.
+      delete timer[key];
+    }
+  });
+}
+
+function parseTimers(timers, filename, oldest) {
   var json = grunt.file.readJSON(filename);
   // Fairly simple: just merge the timer data as necessary.
   var ts;
@@ -46,20 +87,53 @@ function parseTimers(timers, filename) {
         convertTimer(subtimer);
       });
     }
-    timers.push(t);
+    // Exclude timers that are too old
+    if (t['start'] > oldest)
+      timers.push(t);
   });
 }
 
 grunt.registerMultiTask('parsetimers', 'Parses timer data', function() {
+  var options = this.options({
+    sort: true,
+    stripUnusedFields: true,
+    crush: true,
+    oldest: moment.duration(1, 'day')
+  });
+  if (moment.isDuration(options['oldest']))
+    options['oldest'] = options['oldest'].asMilliseconds();
   this.files.forEach(function(file) {
     if (file.src.length < 1) {
       grunt.log.error("No input files for " + file.dest);
     } else {
-      var timers = [];
+      var timers = [], oldest = new Date().getTime() - options['oldest'];
       file.src.forEach(function(src) {
-        parseTimers(timers, src);
+        parseTimers(timers, src, oldest);
       });
-      grunt.file.write(file.dest, crushJSON({ timers: timers }));
+      if (options['sort']) {
+        // Sort the timers by start time before writing them. Earlier timers
+        // should be higher on the list.
+        timers.sort(function(a,b) {
+          var d = a['start'] - b['start'];
+          if (d != 0)
+            return d;
+          // Sort by title instead.
+          if ('title' in a && 'title' in b) {
+            return a['title'] < b['title'] ? -1 : (a['title'] == b['title'] ? 0 : 1);
+          } else {
+            // Otherwise, sort by the name field.
+            return a['name'] < b['name'] ? -1 : (a['name'] == b['name'] ? 0 : 1);
+          }
+        });
+      }
+      if (options['stripUnusedFields']) {
+        timers.forEach(function(timer) {
+          stripIgnoredFields(timer);
+        });
+      }
+      grunt.file.write(file.dest, options['crush'] ?
+        crushJSON({ timers: timers }) :
+        JSON.stringify({ timers: timers }, null, 2));
       grunt.log.ok("Wrote " + timers.length + " " +
         grunt.util.pluralize(timers.length, "timer/timers") +" to " + file.dest);
     }

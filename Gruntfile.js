@@ -83,11 +83,16 @@ module.exports = function(grunt) {
           keepalive: true
         }
       }
+    },
+    clean: {
+      build: [ 'build' ],
+      lodestone: [ 'build/lodestone-timers.json' ]
     }
   });
 
   // Load plugins
   grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
