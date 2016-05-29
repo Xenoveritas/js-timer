@@ -87,9 +87,16 @@ function parseTimers(timers, filename, oldest) {
         convertTimer(subtimer);
       });
     }
-    // Exclude timers that are too old
-    if (t['start'] > oldest)
+    // Exclude timers that are too old:
+    if ('end' in t && t['end'] > oldest) {
+      // Most timers have an end...
       timers.push(t);
+    } else {
+      // ...but if it doesn't, base it on the start.
+      if ('start' in t && t['start'] > oldest) {
+        timers.push(t);
+      }
+    }
   });
 }
 

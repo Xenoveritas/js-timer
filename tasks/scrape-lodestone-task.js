@@ -183,7 +183,9 @@ module.exports = function(grunt) {
     var data = this.data;
     var options = this.options({
       // Don't scrape any news item posted this number of millis before
-      scrapeTimeLimit: moment.duration(5, 'days'),
+      // You know what, if S-E is going to start posting patch notices THAT far
+      // in advance...
+      scrapeTimeLimit: moment.duration(1, 'month'),
       timeLimit: moment.duration(1, 'day'),
       cacheTime: moment.duration(1, 'hour'),
       url: "http://na.finalfantasyxiv.com/lodestone/"
