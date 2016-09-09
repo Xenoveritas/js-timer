@@ -73,10 +73,10 @@ module.exports = function(grunt) {
   function scrapeLodestone(html, lodestoneURL, skipBefore, links) {
     var $ = cheerio.load(html);
     var cutoff = moment(skipBefore).format();
-    $('dl.news_list').each(function(i, e) {
+    $('ul.news__content__list > li').each(function(i, e) {
       // See if this is a maintenance news item.
       var item = cheerio(this);
-      var title = item.find('dt.ic_maintenance');
+      var title = item.find('span.ic_maintenance');
       if (title.length > 0) {
         var tag = title.find('.tag');
         // Grab the link out of it.
@@ -129,12 +129,12 @@ module.exports = function(grunt) {
   }
   function parsePost(html, postURL) {
     var $ = cheerio.load(html);
-    var title = $('div.topics_detail_txt');
-    var tag = title.find('.topics_detail_tag').text().toLowerCase();
+    var title = $('header.news__header > h1');
+    var tag = title.find('.news__header__tag').text().toLowerCase();
     tag = tag.replace(/^\s*\[\s*|\s*\]\s*$/g, '');
     // Remove the maintenance tag
-    title.find('.topics_detail_tag').remove();
-    var post = $('div.area_inner_cont').text();
+    title.find('.news__header__tag').remove();
+    var post = $('div.news__detail__wrapper').text();
     var m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(.*)\s+to\s+(.*)\s*\((\w+)\)/.exec(post);
     if (m) {
       var start = parseLodestoneDate(m[1]),
