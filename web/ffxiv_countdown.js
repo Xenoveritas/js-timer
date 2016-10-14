@@ -97,7 +97,7 @@ FFXIVCountdown.prototype = {
 			// Time conversion.
 			timers.push({
 				'name': 'Weekly Reset',
-				'popover': 'On the weekly reset, the following resets:<ul><li>Allagan tomestones of lore</li><li>Alexander Midas</li><li>The quest "Primal Focus"</li><li>PvP Weekly Performance</li><li>Challenge Log challenges</li></ul>',
+				'popover': 'On the weekly reset, the following resets:<ul><li>Allagan tomestones of scripture</li><li>Alexander: the Creator</li><li>The quest "Primal Focus"</li><li>PvP Weekly Performance</li><li>Challenge Log challenges</li></ul>',
 				'type': 'reset',
 				// Period in MS for this event
 				'every': 7*24*60*60*1000,

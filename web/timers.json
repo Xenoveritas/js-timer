@@ -1,17 +1,11 @@
 {
 "timers": [
   {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/youkai-watch/\">Yo-kai Watch</a>",
-    "type": "event yokai",
-    "start": "2016-07-26T01:00:00-0700",
-    "end": "2016-10-03T07:59:00-0700",
+    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/All_Saints_Wake/\">All Saints' Wake</a>",
+    "type": "event all-saints-wake",
+    "start": "2016-10-19T01:00:00-0700",
+    "end": "2016-11-01T07:59:00-0700",
     "showDuration": true
-  },
-  {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/The_Rising/\">The Rising</a>",
-    "type": "event rising",
-    "start": "2016-08-27T01:00:00-0700",
-    "end": "2016-09-12T07:59:00-0700"
   }
 ]
 }
