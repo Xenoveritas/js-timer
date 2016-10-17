@@ -95,9 +95,12 @@ FFXIVCountdown.prototype = {
 			// I also wonder if that's a patch note typo and they meant "8AM PDT"
 			// to match the daily reset and screwed up their Daylight Saving
 			// Time conversion.
+			// Wondrous Tails resets "on Tuesday at 1AM PDT" which I'm assuming is
+			// really 1PM PST to match the weekly reset and, again, someone forgot
+			// that daylight saving time exists.
 			timers.push({
 				'name': 'Weekly Reset',
-				'popover': 'On the weekly reset, the following resets:<ul><li>Allagan tomestones of scripture</li><li>Alexander: the Creator</li><li>The quest "Primal Focus"</li><li>PvP Weekly Performance</li><li>Challenge Log challenges</li></ul>',
+				'popover': 'On the weekly reset, the following resets:<ul><li>Allagan tomestones of scripture</li><li>Alexander: the Creator</li><li>The quest "Primal Focus"</li><li>PvP Weekly Performance</li><li>Challenge Log challenges</li><li>A new journal is available from Khloe Aliapoh (Wondrous Tails)</li></ul>',
 				'type': 'reset',
 				// Period in MS for this event
 				'every': 7*24*60*60*1000,
