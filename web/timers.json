@@ -1,10 +1,10 @@
 {
 "timers": [
   {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/All_Saints_Wake/\">All Saints' Wake</a>",
-    "type": "event all-saints-wake",
-    "start": "2016-10-19T01:00:00-0700",
-    "end": "2016-11-01T07:59:00-0700",
+    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/topics/detail/7f6f03825f75fdb71701f7ad9f68cbf4d8ab3bca\">Free Login Campaign</a>",
+    "type": "event free-login",
+    "start": "2016-12-01T03:00:00-0800",
+    "end": "2017-01-04T06:59:00-0800",
     "showDuration": true
   }
 ]

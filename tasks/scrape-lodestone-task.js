@@ -1,3 +1,6 @@
+/**
+ * Module for scraping the Lodestone and finding maintenance times.
+ */
 module.exports = function(grunt) {
   var request = require('request'),
     cheerio = require('cheerio'),
@@ -23,7 +26,7 @@ module.exports = function(grunt) {
     return str.replace(/^\s+|\s+$/g, '');
   }
   function loadLodestone(lodestoneURL, skipScrapeBefore, skipTimerBefore, callback) {
-    grunt.log.write('Pulling ' + lodestoneURL + '... ');
+    grunt.log.writeln('Pulling ' + lodestoneURL + '... ');
     request({
       method: 'GET',
       uri: lodestoneURL,
@@ -35,13 +38,14 @@ module.exports = function(grunt) {
       }
       if (response.statusCode == 200) {
         var links = { };
-        grunt.log.ok();
         scrapeLodestone(body, lodestoneURL, skipScrapeBefore, links);
         var timers = [];
         // We now want to iterate through the links but we want to pull them
         // sequentially, so this ends up being a bit horrible. All we care
         // about are the object keys.
         var urls = Object.keys(links), loadURL;
+        grunt.log.ok('Found ' + urls.length + ' ' +
+          grunt.util.pluralize(urls.length, ' URL/URLs') + ' to check.');
         loadURL = function(i) {
           loadPost(url.resolve(lodestoneURL, urls[i]), function(error, timer) {
             if (error === null && timer !== null) {
@@ -111,7 +115,7 @@ module.exports = function(grunt) {
     });
   }
   function loadPost(postURL, callback) {
-    grunt.log.write("Pulling " + postURL + "... ");
+    grunt.log.writeln("Pulling " + postURL + "... ");
     request({
       method: 'GET',
       uri: postURL,
@@ -122,8 +126,12 @@ module.exports = function(grunt) {
         callback(error);
       }
       if (response.statusCode == 200) {
-        grunt.log.ok();
-        callback(null, parsePost(body, postURL));
+        timer = parsePost(body, postURL);
+        if (timer == null)
+          grunt.log.error("Unable to parse post.");
+        else
+          grunt.log.ok("Generated a " + timer.type + " timer");
+        callback(null, timer);
       }
     });
   }
@@ -217,8 +225,8 @@ module.exports = function(grunt) {
     loadLodestone(lodestoneURL, skipScrapeBefore, skipTimerBefore, function(timers) {
       if (timers !== null) {
         grunt.file.write(data.dest, JSON.stringify({ timers: timers }, null, 2));
-        grunt.log.ok("Found " + timers.length + " " +
-          grunt.util.pluralize(timers.length, "timer/timers") + ".");
+        grunt.log.ok("Kept " + timers.length + " " +
+          grunt.util.pluralize(timers.length, "timer/timers") + " after removing old timers.");
       }
       done();
     });
