@@ -89,13 +89,38 @@ Timer.zeropad = function(d) {
 }
 
 /**
+ * Returns an interval between two dates.
+ *
+ * @param {Date} firstDate the first date
+ * @param {Date} secondDate the second date
+ * @return {Timer.Interval} interval between the two.
+ */
+Timer.difference = function(firstDate, secondDate) {
+	if (firstDate instanceof Date)
+		firstDate = firstDate.getTime();
+	if (secondDate instanceof Date)
+		secondDate = secondDate.getTime();
+	return new Timer.Interval(firstDate - secondDate);
+}
+
+/**
  * An interval of time - sort of like a `Date()` but for different
- * periods of time.
+ * periods of time. Given a number of milliseconds, this calculates the number
+ * of weeks, days, hours, minutes, and seconds between the two. Useful for
+ * creating a countdown to a given time.
  * @constructor
  * @param {Number} interval
  *         the initial interval in milliseconds
  */
 Timer.Interval = function(interval) {
+	// Step 0: Deal with negative intervals. Intervals only make sense using
+	// positive numbers, but include a flag if it's in the past.
+	/**
+	 * Indicates that the interval occurred in the past.
+	 */
+	this.isInPast = interval < 0;
+	// And make it absolute.
+	interval = Math.abs(interval);
 	// Step 1: convert to seconds.
 	var t = Math.floor(interval / 1000); // 1000 ms = 1 seconds
 

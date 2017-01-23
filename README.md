@@ -20,7 +20,7 @@ Very basic timer class that runs a function every second.
 
 An interval of time - sort of like a `Date()` but for different periods of time.
 
-`Timer.Interval(millis)` - create a new timer for the given number of milliseconds
+`Timer.Interval(millis)` - create a new interval for the given number of milliseconds
 
 ## Member variables
 
@@ -30,3 +30,4 @@ An interval of time - sort of like a `Date()` but for different periods of time.
 * `minutes` - number of minutes in the interval
 * `seconds` - number of seconds in the interval
 * `millis` - number of milliseconds in the interval
+* `isInPast` - indicates that the interval occurred in the past (over a negative number of milliseconds)
