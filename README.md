@@ -1,8 +1,8 @@
-# Timer module
+Clock# Clock module
 
 A simple JavaScript module for generating countdown timers or clocks. Check out `demo.html` for a brief demo of creating a simple clock in the browser and `demo.js` for a demo of using this in [Node.js](http://nodejs.org).
 
-## `Timer` class
+## `Clock` class
 
 Very basic timer class that runs a function every second.
 
@@ -14,13 +14,13 @@ Very basic timer class that runs a function every second.
 
 ### Static Functions
 
-* `Timer.zeropad(number)` - Utility function to 0-pad a two-digit number, since this comes up so often. This will take numbers 0-9 and produce strings like `"01"`.
+* `Clock.zeropad(number)` - Utility function to 0-pad a two-digit number, since this comes up so often. This will take numbers 0-9 and produce strings like `"01"`.
 
-## `Timer.Interval` class
+## `Clock.Interval` class
 
 An interval of time - sort of like a `Date()` but for different periods of time.
 
-`Timer.Interval(millis)` - create a new interval for the given number of milliseconds
+`Clock.Interval(millis)` - create a new interval for the given number of milliseconds
 
 ## Member variables
 
