@@ -31,11 +31,15 @@ function Clock() {
 
 Clock.prototype = {
 	/**
-	 * Start the timer.
+	 * Start the clock. {@link module:clock#ontick ontick()} will be invoked
+	 * nearly immediately with the current time and then invoked every second.
 	 */
 	start: function() {
 		if (this.timeout === false) {
-			var me = this;
+			// I suppose lastTime could also be set to 0 on the assumption that no one
+			// is going to be running with a clock set to 1970 Jan 1, but... whatever.
+			// Go ahead and support weird time travelers.
+			var me = this, lastTime = new Date().getTime() - 1000;
 			me.timeout = 1;
 			function tick() {
 				var now = new Date();
@@ -45,6 +49,11 @@ Clock.prototype = {
 				// timers.
 				t -= t % 1000;
 				now.setTime(t);
+				if (t < lastTime) {
+					// Clock has run backwards.
+					me.onbackwards(now);
+				}
+				lastTime = t;
 				me.ontick(now);
 				var next = 1000 - (new Date().getTime() % 1000);
 				if (next < 50) {
@@ -61,7 +70,9 @@ Clock.prototype = {
 		}
 	},
 	/**
-	 * Stop the timer.
+	 * Stops the clock. No further {@link module:clock#ontick ontick()}s will
+	 * be called until the clock is restarted using
+	 * {@linkcode module:clock#start start()}.
 	 */
 	stop: function() {
 		if (this.timeout !== false) {
@@ -70,15 +81,41 @@ Clock.prototype = {
 		}
 	},
 	/**
-	 * Called once a second with the current time. (Note: the Date object given
-	 * will have a different time from the one given by <code>new Date()</code>,
-	 * as the time when ontick is called may not be exactly on the second. By
-	 * using the given date, the timer will update "close enough" to the correct
-	 * second.)
+	 * Called once a second with the current time.
+	 *
+	 * Note that the `Date` object given is the time that the clock is being
+	 * "ticked" for, and is **not** going to be the exact same time that
+	 * `new Date()` would generate. This is because JavaScript engines may call a
+	 * callback set by `setTimeout()` or `setInterval()` slightly early or
+	 * slightly late. This class deals with that by rounding to the nearest
+	 * second and then passing that rounded time to this function.
+	 *
+	 * The default implementation does nothing.
 	 *
 	 * @param date {Date} the current time.
 	 */
 	ontick: function(date) {
+	},
+	/**
+	 * Generally speaking it can be assumed that ticks will only ever increase the
+	 * current time. This does not need to be true: it is possible for the clock
+	 * to run "backwards." The most likely cause is the clock being fast and the
+	 * user correcting it or the clock be synced to an NTP server.
+	 *
+	 * Changing over to Daylight Saving Time will **not** trigger this callback,
+	 * it's only used when an {@link module:clock#ontick ontick()} would have
+	 * triggered for an earlier time than a previous one.
+	 *
+	 * Not all clocks need to handle this case, however some clocks may be written
+	 * in such a way that elements that happened "in the past" are removed and may
+	 * suddenly be required again.
+	 *
+	 * The default implementation does nothing.
+	 *
+	 * @param date {Date} the current time, as would have been passed to
+	 *   {@code ontick}.
+	 */
+	onbackwards: function(date) {
 	}
 };
 

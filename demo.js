@@ -10,6 +10,10 @@ clock.ontick = function(now) {
     + Clock.zeropad(now.getSeconds()));
 };
 
+clock.onbackwards = function(now) {
+  process.stdout.write(cr + "Clock ran backwards! Did you just reset your clock?\n");
+}
+
 if (!Boolean(process.stdout.isTTY)) {
   console.error('Refusing to run the demo to a file.');
   return;
