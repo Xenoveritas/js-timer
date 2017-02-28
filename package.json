@@ -2,7 +2,7 @@
   "name": "timer",
   "version": "0.1.1",
   "description": "A very simply utility for creating a clock or timer.",
-  "main": "timer.js",
+  "main": "clock.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

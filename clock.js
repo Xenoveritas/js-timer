@@ -1,7 +1,7 @@
 /**
- * A module for creating timers. The core module is simply a constructor that
+ * A module for creating clocks. The core module is simply a constructor that
  * provides a method of receiving a notification roughly every second.
- * @module timer
+ * @module clock
  */
 
 (function (root, factory) {
@@ -15,21 +15,21 @@
 		module.exports = factory();
 	} else {
 		// Browser globals (root is window)
-		root.Timer = factory();
+		root.Clock = factory();
 	}
 }(this, function () {
 
 /**
- * Very basic timer function that receives notifications every second.
+ * Very basic clock object that receives tick notifications ever second.
  * Override ontick to receive the notification.
  * @constructor
- * @alias module:timer
+ * @alias module:clock
  */
-function Timer() {
+function Clock() {
 	this.timeout = false;
 }
 
-Timer.prototype = {
+Clock.prototype = {
 	/**
 	 * Start the timer.
 	 */
@@ -75,6 +75,7 @@ Timer.prototype = {
 	 * as the time when ontick is called may not be exactly on the second. By
 	 * using the given date, the timer will update "close enough" to the correct
 	 * second.)
+	 *
 	 * @param date {Date} the current time.
 	 */
 	ontick: function(date) {
@@ -84,7 +85,7 @@ Timer.prototype = {
 /**
  * Utility function to 0-pad a two-digit number, since this comes up so often.
  */
-Timer.zeropad = function(d) {
+Clock.zeropad = function(d) {
 	return d < 10 ? '0' + d : d.toString();
 }
 
@@ -95,7 +96,7 @@ Timer.zeropad = function(d) {
  * @param {Date} secondDate the second date
  * @return {Timer.Interval} interval between the two.
  */
-Timer.difference = function(firstDate, secondDate) {
+Clock.difference = function(firstDate, secondDate) {
 	if (firstDate instanceof Date)
 		firstDate = firstDate.getTime();
 	if (secondDate instanceof Date)
@@ -112,7 +113,7 @@ Timer.difference = function(firstDate, secondDate) {
  * @param {Number} interval
  *         the initial interval in milliseconds
  */
-Timer.Interval = function(interval) {
+Clock.Interval = function(interval) {
 	// Step 0: Deal with negative intervals. Intervals only make sense using
 	// positive numbers, but include a flag if it's in the past.
 	/**
@@ -161,10 +162,10 @@ Timer.Interval = function(interval) {
 	this.weeks = Math.floor(t / 7); // And enough
 };
 
-Timer.Interval.prototype.toString = function() {
+Clock.Interval.prototype.toString = function() {
 	return '[' + this.weeks + ' weeks ' + this.days + ' days ' + this.hours +
 		' hours ' + this.minutes + ' minutes ' + this.seconds + ' seconds]';
 }
 
-return Timer;
+return Clock;
 }));

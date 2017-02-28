@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8">
   <title>Demo</title>
-  <script type="application/javascript" src="timer.js"></script>
+  <script type="application/javascript" src="clock.js"></script>
   <script type="application/javascript">
     window.addEventListener('load', function() {
-      var e = document.createElement('h1'), clock = new Timer();
+      var e = document.createElement('h1'), clock = new Clock();
       document.body.appendChild(e);
       clock.ontick = function(now) {
-        e.innerHTML = now.getHours() + ':' + Timer.zeropad(now.getMinutes()) + ':' + Timer.zeropad(now.getSeconds());
+        e.innerHTML = now.getHours() + ':' + Clock.zeropad(now.getMinutes()) + ':' + Clock.zeropad(now.getSeconds());
       };
       clock.start();
     }, false);
