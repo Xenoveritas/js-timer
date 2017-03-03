@@ -1,6 +1,6 @@
 requirejs.config({
 	paths: {
-		timer: '../timer'
+		clock: '../clock'
 	}
 });
 requirejs(['ffxiv_countdown'], function(FFXIVCountdown) {

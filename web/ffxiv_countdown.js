@@ -1,7 +1,7 @@
 /**
  * Module for the actual clock.
  */
-define(['timer'], function(Timer) {
+define(['clock'], function(Timer) {
 function FFXIVCountdown(container, timers, addBuiltins) {
 	if (arguments.length < 2) {
 		timers = [];
