@@ -21,19 +21,19 @@
   },
   "homepage": "https://github.com/Xenoveritas/js-timer#readme",
   "devDependencies": {
-    "cheerio": "^0.20.0",
+    "cheerio": "^0.22.0",
     "grunt": "^0.4.5",
-    "grunt-bower-task": "^0.4.0",
+    "grunt-bower": "^0.21.4",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-connect": "^0.11.2",
     "grunt-contrib-copy": "^0.8.2",
-    "grunt-contrib-htmlmin": "^0.6.0",
-    "grunt-contrib-less": "^1.2.0",
-    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-htmlmin": "^2.2.0",
+    "grunt-contrib-less": "^1.4.0",
+    "grunt-contrib-requirejs": "^1.0.0",
     "grunt-contrib-uglify": "^2.2.0",
     "grunt-jsdoc": "^2.1.0",
     "ink-docstrap": "^1.3.0",
-    "moment": "^2.11.2"
+    "moment": "^2.17.1"
   },
   "dependencies": {
     "amdefine": "^1.0.0"

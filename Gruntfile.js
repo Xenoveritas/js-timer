@@ -14,10 +14,8 @@ module.exports = function(grunt) {
       }
     },
     bower: {
-      install: {
-        options: {
-          targetDir: 'web/lib'
-        }
+      dev: {
+        dest: 'web/lib'
       }
     },
     htmlmin: {
@@ -65,7 +63,7 @@ module.exports = function(grunt) {
         options: {
           baseUrl: "web",
           mainConfigFile: "web/ffxiv_main.js",
-          name: "lib/almond/almond",
+          name: "lib/almond",
           include: [ 'ffxiv_main' ],
           out: "build/ffxiv_optimized.js"
         }
@@ -91,7 +89,7 @@ module.exports = function(grunt) {
   });
 
   // Load plugins
-  grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks('grunt-bower');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
