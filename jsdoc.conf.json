@@ -21,7 +21,6 @@
     "protocol": "html://"
   },
   "markdown": {
-    "parser": "gfm",
-    "hardwrap": true
+    "parser": "gfm"
   }
 }

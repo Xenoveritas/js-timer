@@ -31,6 +31,39 @@ function Clock() {
 
 Clock.prototype = {
 	/**
+	 * The offset in milliseconds from real time to use to send to the clock. This
+	 * can be used if you want to make a clock that displays ticks based on when
+	 * a user clicked the button (by setting it to the number of milliseconds off
+	 * the second) or to make a clock that displays a certain amount of time in
+	 * the future or past. Changing this will take effect on the *next* tick.
+	 *
+	 * The offset is added to the time - positive offsets move the values given by
+	 * {@link module:clock#ontick ontick()} into the future, negative values move
+	 * it into the past.
+	 *
+	 * Changing this enough to make a tick appear in the past will also trigger an
+	 * {@link module:clock#onbackwards onbackwards()} call, just as if the clock
+	 * had moved backwards due to external causes.
+	 */
+	offset: 0,
+	/**
+	 * Whether or not the clock is still running.
+	 *
+	 * If set, starts or stops the clock by using
+	 * {@link module:clock#start start()} or {@link module:clock#stop stop()} as
+	 * appropriate.
+	 */
+	get running() {
+		return this.timeout !== false;
+	},
+	set running(value) {
+		if (value) {
+			this.start();
+		} else {
+			this.stop();
+		}
+	},
+	/**
 	 * Start the clock. {@link module:clock#ontick ontick()} will be invoked
 	 * nearly immediately with the current time and then invoked every second.
 	 */
@@ -44,7 +77,7 @@ Clock.prototype = {
 			function tick() {
 				var now = new Date();
 				// Round now up, as the timeout may be called slightly early.
-				var t = now.getTime() + 500;
+				var t = now.getTime() + me.offset + 500;
 				// And chop off the uneven milliseconds - useful for countdown
 				// timers.
 				t -= t % 1000;
@@ -55,7 +88,7 @@ Clock.prototype = {
 				}
 				lastTime = t;
 				me.ontick(now);
-				var next = 1000 - (new Date().getTime() % 1000);
+				var next = 1000 - ((new Date().getTime() + me.offset) % 1000);
 				if (next < 50) {
 					// If it's really close, just jump to the next second, as we'll
 					// have "rounded" to this second anyway.
@@ -89,6 +122,9 @@ Clock.prototype = {
 	 * callback set by `setTimeout()` or `setInterval()` slightly early or
 	 * slightly late. This class deals with that by rounding to the nearest
 	 * second and then passing that rounded time to this function.
+	 *
+	 * If {@link module:clock#offset} is non-zero, the `Date` given will be
+	 * adjusted by that.
 	 *
 	 * The default implementation does nothing.
 	 *
