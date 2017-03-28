@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Demo</title>
+  <script type="application/javascript" src="clock.js"></script>
+  <script type="application/javascript" src="clock-debug.js"></script>
+  <script type="application/javascript">
+    window.addEventListener('load', function() {
+      var e = document.createElement('h1'), clock = new DebugClock("Demo");
+      document.body.appendChild(e);
+      clock.ontick = function(now) {
+        e.innerHTML = now.getHours() + ':' + Clock.zeropad(now.getMinutes()) + ':' + Clock.zeropad(now.getSeconds());
+      };
+      clock.start();
+    }, false);
+  </script>
+</head>
+<body>
+<noscript>JavaScript demos are pretty boring if you've disabled JavaScript.</noscript>
+</body>
+</html>
