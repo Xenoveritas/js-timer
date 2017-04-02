@@ -1,10 +1,10 @@
 {
 "timers": [
   {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2017/Little_Ladies_Day/\">Little Ladies' Day</a>",
-    "type": "event little-ladies-day",
-    "start": "2017-03-01T00:00:00-0800",
-    "end": "2017-03-14T07:59:00-0700"
+    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2017/Hatching_tide/\">Hatching-tide</a>",
+    "type": "event hatchingtide",
+    "start": "2017-04-04T01:00:00-0700",
+    "end": "2017-04-17T07:59:00-0700"
   },
   {
     "name": "<a href=\"http://na.finalfantasyxiv.com/stormblood/\">Stormblood</a> Release",
