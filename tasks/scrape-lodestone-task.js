@@ -77,16 +77,15 @@ module.exports = function(grunt) {
   function scrapeLodestone(html, lodestoneURL, skipBefore, links) {
     var $ = cheerio.load(html);
     var cutoff = moment(skipBefore).format();
-    $('ul.news__content__list > li').each(function(i, e) {
+    // Sweet lord is the FFXIV Lodestone HTML terrible
+    $('a.ic__maintenance--list').each(function(i, e) {
       // See if this is a maintenance news item.
       var item = cheerio(this);
-      var title = item.find('span.ic_maintenance');
+      var title = item.find('p.news__list--title');
       if (title.length > 0) {
-        var tag = title.find('.tag');
-        // Grab the link out of it.
-        var a = title.find('a');
-        var href = a.attr('href');
-        var name = a.text();
+        var tag = title.find('.news__list--tag');
+        var href = item.attr('href');
+        var name = title.text();
         if (/^\s*\[\s*Follow-up\s*\]\s*$/.test(tag.text())) {
           // TODO: Update previous items with follow-up data. For now, though,
           // just ignore them.
@@ -95,7 +94,7 @@ module.exports = function(grunt) {
         }
         // See if we can pull the time out of it. Obnoxiously the time is hidden
         // in a script element.
-        var script = item.find("span[id^='datetime-']+script").text();
+        var script = item.find("time > script").text();
         var m = /ldst_strftime\s*\(\s*(\d+)\s*,\s*['"]YMD['"]\s*\)/.exec(script);
         if (m) {
           var time = parseInt(m[1]) * 1000;
@@ -108,8 +107,11 @@ module.exports = function(grunt) {
               }
             } else {
               links[href] = name;
+              grunt.verbose.writeln("Adding \"" + name + "\" => \"" + href + "\"");
             }
           }
+        } else {
+          grunt.verbose.writeln("Unable to locate time for \"" + name + "\": not following.");
         }
       }
     });
