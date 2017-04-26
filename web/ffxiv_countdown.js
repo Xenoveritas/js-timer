@@ -109,7 +109,7 @@ FFXIVCountdown.prototype = {
 				'offset': (5*24+8)*60*60*1000
 			}, {
 				'name': 'Crafting Scrips Reset',
-				'popover': "After this reset, the total number of red crafters' and gathers' scrips is reset",
+				'popover': "On the weekly crafting reset, the following resets:<ul><li>Red crafters' and gathers' scrips</li><li>Zhloe deliveries</li></ul>",
 				'type': 'reset',
 				'every': 7*24*60*60*1000,
 				// Helpfully this reset takes place on the same day as the UNIX epoch!
