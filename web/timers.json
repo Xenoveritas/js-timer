@@ -1,10 +1,16 @@
 {
 "timers": [
   {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2017/Hatching_tide/\">Hatching-tide</a>",
-    "type": "event hatchingtide",
-    "start": "2017-04-04T01:00:00-0700",
-    "end": "2017-04-17T07:59:00-0700"
+    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/topics/detail/3dd64bc980d2444be2f4eab0d50716040e34a5b6\">NA Server Move</a> (Aether / Primal)",
+    "type": "maintenance",
+    "start": "2017-05-15T00:00:00-0700",
+    "end": "2017-05-17T00:00:00-0700"
+  },
+  {
+    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/topics/detail/3dd64bc980d2444be2f4eab0d50716040e34a5b6\">NA Server Move</a> (Elemental / Gaia / Mana / Chaos)",
+    "type": "maintenance",
+    "start": "2017-05-16T00:00:00-0700",
+    "end": "2017-05-17T00:00:00-0700"
   },
   {
     "name": "<a href=\"http://na.finalfantasyxiv.com/stormblood/\">Stormblood</a> Release",
