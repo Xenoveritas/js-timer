@@ -45,7 +45,10 @@ module.exports = function(grunt) {
     },
     scrapelodestone: {
       scrape: {
-        dest: 'build/lodestone-timers.json'
+        dest: 'build/lodestone-timers.json',
+        options: {
+          ignore: 'web/timers.json'
+        }
       }
     },
     less: {
@@ -54,7 +57,7 @@ module.exports = function(grunt) {
           compress: true
         },
         files: {
-          'build/ffxiv_timer.css': 'web/ffxiv_timer.less'
+          'build/ffxiv-timer.css': 'web/ffxiv_timer.less'
         }
       }
     },
@@ -65,8 +68,17 @@ module.exports = function(grunt) {
           mainConfigFile: "web/ffxiv_main.js",
           name: "lib/almond",
           include: [ 'ffxiv_main' ],
-          out: "build/ffxiv_optimized.js"
+          out: "build/ffxiv.js"
         }
+      }
+    },
+    cacheBust: {
+      dist: {
+        options: {
+          baseDir: './build',
+          assets: [ 'ffxiv.js', 'ffxiv-timer.css' ]
+        },
+        src: ['./build/ffxiv_timer.html']
       }
     },
     connect: {
@@ -97,9 +109,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-cache-bust');
   grunt.loadTasks('tasks');
 
-  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'less', 'copy', 'scrapelodestone', 'parsetimers', 'jsdoc']);
+  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'less', 'copy', 'scrapelodestone', 'parsetimers', 'jsdoc', 'cacheBust']);
   // Create some aliases:
   grunt.registerTask('server', ['default', 'connect:dist']);
   grunt.registerTask('testserver', ['connect:test']);

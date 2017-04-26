@@ -25,7 +25,7 @@ module.exports = function(grunt) {
   function strip(str) {
     return str.replace(/^\s+|\s+$/g, '');
   }
-  function loadLodestone(lodestoneURL, skipScrapeBefore, skipTimerBefore, callback) {
+  function loadLodestone(lodestoneURL, skipScrapeBefore, skipTimerBefore, ignoredURLs, callback) {
     grunt.log.writeln('Pulling ' + lodestoneURL + '... ');
     request({
       method: 'GET',
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
       }
       if (response.statusCode == 200) {
         var links = { };
-        scrapeLodestone(body, lodestoneURL, skipScrapeBefore, links);
+        scrapeLodestone(body, lodestoneURL, skipScrapeBefore, ignoredURLs, links);
         var timers = [];
         // We now want to iterate through the links but we want to pull them
         // sequentially, so this ends up being a bit horrible. All we care
@@ -74,7 +74,7 @@ module.exports = function(grunt) {
       }
     });
   }
-  function scrapeLodestone(html, lodestoneURL, skipBefore, links) {
+  function scrapeLodestone(html, lodestoneURL, skipBefore, ignoredURLs, links) {
     var $ = cheerio.load(html);
     var cutoff = moment(skipBefore).format();
     // Sweet lord is the FFXIV Lodestone HTML terrible
@@ -85,6 +85,13 @@ module.exports = function(grunt) {
       if (title.length > 0) {
         var tag = title.find('.news__list--tag');
         var href = item.attr('href');
+        var postURL = url.resolve(lodestoneURL, href);
+        // TODO: Possibly look this up in a more efficient fashion (although
+        // it's almost always going to be an empty list)
+        if (ignoredURLs.indexOf(postURL) >= 0) {
+          grunt.verbose.writeln("Ignoring " + postURL + ": it is on the ignore list.");
+          return;
+        }
         var name = title.text();
         if (/^\s*\[\s*Follow-up\s*\]\s*$/.test(tag.text())) {
           // TODO: Update previous items with follow-up data. For now, though,
@@ -198,7 +205,8 @@ module.exports = function(grunt) {
       scrapeTimeLimit: moment.duration(1, 'month'),
       timeLimit: moment.duration(1, 'day'),
       cacheTime: moment.duration(1, 'hour'),
-      url: "http://na.finalfantasyxiv.com/lodestone/"
+      url: "http://na.finalfantasyxiv.com/lodestone/",
+      ignore: null
     });
     // Convert any moment durations into milliseconds
     ['scrapeTimeLimit', 'timeLimit', 'cacheTime'].forEach(function(k) {
@@ -220,13 +228,21 @@ module.exports = function(grunt) {
         grunt.log.errorlns("Error checking destination \"" + dest + "\": " + ex);
       }
     }
+    var ignoredURLs = [];
+    if (options.ignore) {
+      // This will always be a file to load at present.
+      var data = grunt.file.readJSON(options.ignore);
+      if ('scrapeLodestone' in data && 'ignore' in data['scrapeLodestone'])
+        ignoredURLs = data['scrapeLodestone']['ignore'];
+      grunt.verbose.writeln('Ignoring ' + ignoredURLs);
+    }
     var lodestoneURL = options.url,
       skipScrapeBefore = new Date().getTime() - options.scrapeTimeLimit,
       skipTimerBefore = new Date().getTime() - options.timeLimit;
     var done = this.async();
-    loadLodestone(lodestoneURL, skipScrapeBefore, skipTimerBefore, function(timers) {
+    loadLodestone(lodestoneURL, skipScrapeBefore, skipTimerBefore, ignoredURLs, function(timers) {
       if (timers !== null) {
-        grunt.file.write(data.dest, JSON.stringify({ timers: timers }, null, 2));
+        grunt.file.write(dest, JSON.stringify({ timers: timers }, null, 2));
         grunt.log.ok("Kept " + timers.length + " " +
           grunt.util.pluralize(timers.length, "timer/timers") + " after removing old timers.");
       }

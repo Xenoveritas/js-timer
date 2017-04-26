@@ -1,13 +1,16 @@
 {
+"scrapeLodestone": {
+  "ignore": [ "http://na.finalfantasyxiv.com/lodestone/news/detail/5e7bb502b2264f066679965f86b441ea1f36bc6a" ]
+},
 "timers": [
   {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/topics/detail/3dd64bc980d2444be2f4eab0d50716040e34a5b6\">NA Server Move</a> (Aether / Primal)",
+    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/topics/detail/3dd64bc980d2444be2f4eab0d50716040e34a5b6\">Maintenance for NA Data Center Relocation</a> (Aether / Primal)",
     "type": "maintenance",
     "start": "2017-05-15T00:00:00-0700",
     "end": "2017-05-17T00:00:00-0700"
   },
   {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/topics/detail/3dd64bc980d2444be2f4eab0d50716040e34a5b6\">NA Server Move</a> (Elemental / Gaia / Mana / Chaos)",
+    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/topics/detail/3dd64bc980d2444be2f4eab0d50716040e34a5b6\">Maintenance for NA Data Center Relocation</a> (Elemental / Gaia / Mana / Chaos)",
     "type": "maintenance",
     "start": "2017-05-16T00:00:00-0700",
     "end": "2017-05-17T00:00:00-0700"
