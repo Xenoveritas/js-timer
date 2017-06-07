@@ -3,7 +3,7 @@ requirejs.config({
 		clock: '../clock'
 	}
 });
-requirejs(['ffxiv_countdown'], function(FFXIVCountdown) {
+requirejs(['ffxiv_countdown', 'ffxiv_builtins'], function(FFXIVCountdown) {
 	function startTimers() {
 		new FFXIVCountdown(document.getElementById('timers'), 'timers.json');
 	}

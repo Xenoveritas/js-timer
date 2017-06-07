@@ -38,6 +38,12 @@ function FFXIVCountdown(container, timers, addBuiltins) {
  */
 FFXIVCountdown.MAX_TIMER_AGE = (24*60*60*1000);
 
+/**
+ * Global array of "built-in" timers. By default this is empty. To populate it
+ * with actual builtins, require the {@link module:ffxiv_builtins ffxiv_builtins} module.
+ */
+FFXIVCountdown.builtins = [];
+
 FFXIVCountdown.prototype = {
 	/**
 	 * Reload timers from the initial URL if there was one or a NO-OP if
@@ -109,41 +115,7 @@ FFXIVCountdown.prototype = {
 	 */
 	_init: function(timers) {
 		if (this.addBuiltins) {
-			// Insert our recurring timers.
-			// Weekly reset is every Tuesday at 1AM PST/4AM EST/08:00 UTC
-			// Daily reset is every day at 7AM PST/10AM EST/15:00 UTC
-			// Daily "duty finder jerk" reset is apparently every day at
-			// 9AM PDT/12PM EDT/16:00 UTC
-			// Right now I'm not going to bother including it.
-			// I also wonder if that's a patch note typo and they meant "8AM PDT"
-			// to match the daily reset and screwed up their Daylight Saving
-			// Time conversion.
-			// Wondrous Tails resets "on Tuesday at 1AM PDT" which I'm assuming is
-			// really 1PM PST to match the weekly reset and, again, someone forgot
-			// that daylight saving time exists.
-			timers.push({
-				'name': 'Weekly Reset',
-				'popover': 'On the weekly reset, the following resets:<ul><li>Allagan tomestones of scripture</li><li>Alexander: the Creator</li><li>The quest "Primal Focus"</li><li>PvP Weekly Performance</li><li>Challenge Log challenges</li><li>A new journal is available from Khloe Aliapoh (Wondrous Tails)</li></ul>',
-				'type': 'reset',
-				// Period in MS for this event
-				'every': 7*24*60*60*1000,
-				// The "every" recurrence is based on the UNIX epoch, which started on a
-				// Thursday. Since the reset is on Tuesday, that's 5 days off.
-				'offset': (5*24+8)*60*60*1000
-			}, {
-				'name': 'Crafting Scrips Reset',
-				'popover': "On the weekly crafting reset, the following resets:<ul><li>Red crafters' and gathers' scrips</li><li>Zhloe deliveries</li></ul>",
-				'type': 'reset',
-				'every': 7*24*60*60*1000,
-				// Helpfully this reset takes place on the same day as the UNIX epoch!
-				'offset': 8*60*60*1000
-			}, {
-				'name': 'Daily Reset',
-				'popover': 'On the daily reset, the following resets:<ul><li>Beastman daily quest allowances</li><li>Duty Roulette daily bonuses</li><li>Alexandrite Map repeatable quest</li></ul>',
-				'type': 'reset',
-				'every': 24*60*60*1000,
-				'offset': 15*60*60*1000
-			});
+			Array.prototype.push.apply(timers, FFXIVCountdown.builtins);
 		}
 		var now = new Date().getTime(), skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;
 		for (var i = 0; i < timers.length; i++) {

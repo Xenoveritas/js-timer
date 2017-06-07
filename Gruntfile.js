@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     jsdoc: {
       dist: {
-        src: [ 'clock.js', 'clock-debug.js', 'web/ffxiv_countdown.js' ],
+        src: [ 'clock.js', 'clock-debug.js', 'web/ffxiv_countdown.js', 'web/ffxiv_builtins.js' ],
         options: {
           destination: 'doc',
           template: "node_modules/ink-docstrap/template",
