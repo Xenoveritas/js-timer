@@ -1,7 +1,22 @@
 /**
- * Module for the actual clock.
+ * Module for showing countdown timers to events in FFXIV, or recurring events
+ * like when various resets are.
+ * @module ffxiv_countdown
  */
 define(['clock'], function(Timer) {
+
+/**
+ * FFXIV countdown object.
+ * @constructor
+ * @alias module:ffxiv_countdown
+ * @param {Element} container
+ *   the DOM object to place the generated HTML timers in
+ * @param {Object|String} timers
+ *   if an object, the JSON object describing the timers; if a string, a URL
+ *   that will be fetched containing the JSON object describing the timers
+ * @param {Boolean} addBuiltins
+ *   when <code>true</code> (the default), adds a set of builtin timers
+ */
 function FFXIVCountdown(container, timers, addBuiltins) {
 	if (arguments.length < 2) {
 		timers = [];
@@ -13,9 +28,9 @@ function FFXIVCountdown(container, timers, addBuiltins) {
 	if (typeof timers == 'string') {
 		// Assume it's a URL and try and pull it using AJAX
 		this.load(timers);
-		return;
+	} else {
+		this._init(timers);
 	}
-	this._init(timers);
 }
 
 /**
@@ -33,6 +48,10 @@ FFXIVCountdown.prototype = {
 			this.load(this.updateURL);
 		}
 	},
+	/**
+	 * Load timers from the given URL. When constructed with a URL, this is called
+	 * automatically.
+	 */
 	load: function(url) {
 		this.updateURL = url;
 		var xhr = new XMLHttpRequest();
@@ -84,6 +103,10 @@ FFXIVCountdown.prototype = {
 			me.container.appendChild(me.makeError(message));
 		}
 	},
+	/**
+	 * An internal method to constuct the actual UI.
+	 * @private
+	 */
 	_init: function(timers) {
 		if (this.addBuiltins) {
 			// Insert our recurring timers.
