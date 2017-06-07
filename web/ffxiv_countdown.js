@@ -267,21 +267,54 @@ FFXIVCountdown.prototype = {
 			d.appendChild(document.createTextNode('Lasts ' + m.join(', ')));
 		}
 		if (t.popover) {
-			var popover = document.createElement('div');
-			popover.className = 'popover';
-			popover.innerHTML = t.popover;
-			div.appendChild(popover);
-			div.onmouseenter = function(event) {
+			this._makePopover(div, t.popover);
+		}
+		return div;
+	},
+	_makePopover: function(div, popoverHTML) {
+		var popover = document.createElement('div'), visible = false, sticky = false;
+		popover.className = 'popover';
+		popover.innerHTML = popoverHTML;
+		div.appendChild(popover);
+		function toggle() {
+			if (visible || sticky) {
 				popover.style.left = div.offsetLeft + "px";
 				popover.style.top = div.offsetTop + "px";
 				popover.className = 'popover visible';
-			};
-			div.onmouseleave = function(event) {
+			} else {
 				popover.className = 'popover hidden';
-			};
+			}
 		}
-		return div;
+		div.onmouseenter = function(event) {
+			visible = true;
+			toggle();
+		};
+		div.onmouseleave = function(event) {
+			visible = false;
+			toggle();
+		};
+		// For compatibility with touch devices, also allow clicking on items to
+		// make the popup "sticky"
+		div.onclick = function(event) {
+			if (sticky) {
+				// If currently sticky, force it to be hidden
+				visible = sticky = false;
+			} else {
+				// Otherwise, force it to be visible
+				visible = sticky = true;
+			}
+			toggle();
+		};
 	}
 };
+
+/**
+ * Internal function for generating the popover events.
+ * @private
+ */
+function createPopover(popoverHTML) {
+
+}
+
 return FFXIVCountdown;
 });
