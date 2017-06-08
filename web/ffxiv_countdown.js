@@ -200,7 +200,7 @@ FFXIVCountdown.prototype = {
 				}
 				var m = '';
 				if (time.weeks > 0) {
-					m = '<span class="weeks">' + time.weeks + (time.weeks > 1 ? ' weeks' : 'week') + ', </span>';
+					m = '<span class="weeks">' + time.weeks + (time.weeks > 1 ? ' weeks' : ' week') + ', </span>';
 				}
 				if (time.days > 0) {
 					m += '<span class="days">' + time.days + (time.days > 1 ? ' days' : ' day') + ', </span>';
@@ -266,11 +266,20 @@ FFXIVCountdown.prototype = {
 			}
 			d.appendChild(document.createTextNode('Lasts ' + m.join(', ')));
 		}
+		if (t.note) {
+			div.appendChild(d = document.createElement('div'));
+			d.className = 'note';
+			d.appendChild(document.createTextNode(t.note));
+		}
 		if (t.popover) {
 			this._makePopover(div, t.popover);
 		}
 		return div;
 	},
+	/**
+	 * Internal function for generating the popover.
+	 * @private
+	 */
 	_makePopover: function(div, popoverHTML) {
 		var popover = document.createElement('div'), visible = false, sticky = false;
 		popover.className = 'popover';
@@ -307,14 +316,6 @@ FFXIVCountdown.prototype = {
 		};
 	}
 };
-
-/**
- * Internal function for generating the popover events.
- * @private
- */
-function createPopover(popoverHTML) {
-
-}
 
 return FFXIVCountdown;
 });
