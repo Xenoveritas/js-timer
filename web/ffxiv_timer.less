@@ -5,6 +5,7 @@
 @linkColor: #2556B8;
 
 @timerBackgroundColor: mix(@pageColor, #FFF);
+@timerBorderColor: mix(@textColor, #FFF);
 
 @countdownBackgroundColor: #404040;
 @countdownColor: #FFF;
@@ -46,14 +47,16 @@ a:hover { text-decoration: underline; }
 	text-align: center;
 }
 .timer, .subtimer, .error, .popover {
-	border: solid 2px #666;
+	border: solid 2px @timerBorderColor;
 	padding: 16px;
 	margin: 16px;
 	background-color: @timerBackgroundColor;
 }
 .error {
 	font-size: 150%;
-	border-color: #766;
+	border-color: mix(#F00, @timerBorderColor);
+	background-color: mix(#F00, @timerBackgroundColor);
+	color: mix(#F00, @textColor);
 }
 .subtimer {
 	font-size: 80%;
