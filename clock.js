@@ -199,7 +199,7 @@ Clock.difference = function(firstDate, secondDate) {
  *         present, they'll just be set to 0.
  */
 Clock.Interval = function(interval, periods) {
-	if (arguments.length < 2) {
+	if (arguments.length < 2 || periods === true) {
 		periods = 5;
 	} else if (periods === false) {
 		periods = 4;
