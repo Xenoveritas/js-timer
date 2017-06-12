@@ -214,42 +214,34 @@ Clock.Interval = function(interval, periods) {
 	interval = Math.abs(interval);
 	// Step 1: convert to seconds.
 	var t = Math.floor(interval / 1000); // 1000 ms = 1 seconds
-
-	/**
-	 * The number of milliseconds in the interval. For a 1500ms interval, this
-	 * is 500. This is almost never useful but is included anyway.
-	 */
 	this.millis = (interval - (t * 1000));
-	/**
-	 * The number of seconds in the interval. For a 90 second interval, this is
-	 * 30.
-	 */
+	if (periods < 2) {
+		this.seconds = t;
+		return;
+	}
 	this.seconds = t % 60; // 60 seconds = 1 minute
-	if (periods < 2)
-		return;
 	t = Math.floor(t / 60);
-	/**
-	 * The number of minutes in the interval. For a 90 minute interval, this is
-	 * 30.
-	 */
+	if (periods < 3) {
+		this.minutes = t;
+		return;
+	}
 	this.minutes = t % 60; // 60 minutes = 1 hour
-	if (periods < 3)
-		return;
 	t = Math.floor(t / 60);
-	/**
-	 * The number of hours in the interval. For a 1.5 day interval, this is 12.
-	 */
+	if (periods < 4) {
+		this.hours = t;
+		return;
+	}
 	this.hours = t % 24; // 24 hours = 1 day
-	if (periods < 4)
-		return;
 	t = Math.floor(t / 24);
-	/**
-	 * The number of days in the interval. For a 10 day interval, this is 3 and
-	 * {@linkcode module:timer.Interval#weeks weeks} will be 1.
-	 */
-	this.days = t % 7; // 7 days = 1 week
-	if (periods < 5)
+	if (periods < 5) {
+		this.days = t;
 		return;
+	}
+	this.days = t % 7; // 7 days = 1 week
+	this.weeks = Math.floor(t / 7); // And enough
+};
+
+Clock.Interval.prototype = {
 	/**
 	 * The number of weeks in the interval. There are no larger spans of time
 	 * calculated at present. Months make no sense at this level: how long is a
@@ -257,15 +249,30 @@ Clock.Interval = function(interval, periods) {
 	 * in the future, but years have a similar problem: How long is a year?
 	 * 365 days? What about leap years?
 	 */
-	this.weeks = Math.floor(t / 7); // And enough
-};
-
-Clock.Interval.prototype = {
 	weeks: 0,
+	/**
+	 * The number of days in the interval. For a 10 day interval, this is 3 and
+	 * {@linkcode module:timer.Interval#weeks weeks} will be 1.
+	 */
 	days: 0,
+	/**
+	 * The number of hours in the interval. For a 1.5 day interval, this is 12.
+	 */
 	hours: 0,
+	/**
+	 * The number of minutes in the interval. For a 90 minute interval, this is
+	 * 30.
+	 */
 	minutes: 0,
+	/**
+	 * The number of seconds in the interval. For a 90 second interval, this is
+	 * 30.
+	 */
 	seconds: 0,
+	/**
+	 * The number of milliseconds in the interval. For a 1500ms interval, this
+	 * is 500. This is almost never useful but is included anyway.
+	 */
 	millis: 0,
 	toString: function() {
 		return '[' + this.weeks + ' weeks ' + this.days + ' days ' + this.hours +
