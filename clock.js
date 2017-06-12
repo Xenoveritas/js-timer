@@ -157,6 +157,9 @@ Clock.prototype = {
 
 /**
  * Utility function to 0-pad a two-digit number, since this comes up so often.
+ * This will only add a 0 in front of a single digit number and only works with
+ * positive numbers.
+ * @param {Number} d digit
  */
 Clock.zeropad = function(d) {
 	return d < 10 ? '0' + d : d.toString();
@@ -185,8 +188,22 @@ Clock.difference = function(firstDate, secondDate) {
  * @constructor
  * @param {Number} interval
  *         the initial interval in milliseconds
+ * @param {Number|Boolean} periods
+ *         number of periods to split the interval into. Defaults to 5:
+ *         include weeks, days, hours, minutes, seconds. Milliseconds is always
+ *         included and values less than 1 are treated as seconds. Decrease
+ *         to reduce the number of fields in that order: 4 omits weeks,
+ *         3 will only return hours, minute, and seconds, etc. `false`
+ *         can be used as a "shortcut" for 4 to treat the parameter as
+ *         "include weeks". Note that the fields not calculated will still be
+ *         present, they'll just be set to 0.
  */
-Clock.Interval = function(interval) {
+Clock.Interval = function(interval, periods) {
+	if (arguments.length < 2) {
+		periods = 5;
+	} else if (periods === false) {
+		periods = 4;
+	}
 	// Step 0: Deal with negative intervals. Intervals only make sense using
 	// positive numbers, but include a flag if it's in the past.
 	/**
@@ -208,23 +225,31 @@ Clock.Interval = function(interval) {
 	 * 30.
 	 */
 	this.seconds = t % 60; // 60 seconds = 1 minute
+	if (periods < 2)
+		return;
 	t = Math.floor(t / 60);
 	/**
 	 * The number of minutes in the interval. For a 90 minute interval, this is
 	 * 30.
 	 */
 	this.minutes = t % 60; // 60 minutes = 1 hour
+	if (periods < 3)
+		return;
 	t = Math.floor(t / 60);
 	/**
 	 * The number of hours in the interval. For a 1.5 day interval, this is 12.
 	 */
 	this.hours = t % 24; // 24 hours = 1 day
+	if (periods < 4)
+		return;
 	t = Math.floor(t / 24);
 	/**
 	 * The number of days in the interval. For a 10 day interval, this is 3 and
 	 * {@linkcode module:timer.Interval#weeks weeks} will be 1.
 	 */
 	this.days = t % 7; // 7 days = 1 week
+	if (periods < 5)
+		return;
 	/**
 	 * The number of weeks in the interval. There are no larger spans of time
 	 * calculated at present. Months make no sense at this level: how long is a
@@ -235,10 +260,18 @@ Clock.Interval = function(interval) {
 	this.weeks = Math.floor(t / 7); // And enough
 };
 
-Clock.Interval.prototype.toString = function() {
-	return '[' + this.weeks + ' weeks ' + this.days + ' days ' + this.hours +
-		' hours ' + this.minutes + ' minutes ' + this.seconds + ' seconds]';
-}
+Clock.Interval.prototype = {
+	weeks: 0,
+	days: 0,
+	hours: 0,
+	minutes: 0,
+	seconds: 0,
+	millis: 0,
+	toString: function() {
+		return '[' + this.weeks + ' weeks ' + this.days + ' days ' + this.hours +
+			' hours ' + this.minutes + ' minutes ' + this.seconds + ' seconds]';
+	}
+};
 
 return Clock;
 }));
