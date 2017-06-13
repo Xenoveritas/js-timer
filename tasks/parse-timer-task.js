@@ -39,7 +39,7 @@ var TIMER_FIELDS = {
   "name": true,
   "type": true,
   "showDuration": true,
-  "popover": true,
+  "info": true,
   "note": true
 };
 

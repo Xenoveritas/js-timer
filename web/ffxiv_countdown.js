@@ -3,7 +3,7 @@
  * like when various resets are.
  * @module ffxiv_countdown
  */
-define(['clock'], function(Timer) {
+define(['clock'], function(Clock) {
 
 /**
  * FFXIV countdown object.
@@ -15,16 +15,22 @@ define(['clock'], function(Timer) {
  *   if an object, the JSON object describing the timers; if a string, a URL
  *   that will be fetched containing the JSON object describing the timers
  * @param {Boolean} addBuiltins
- *   when <code>true</code> (the default), adds a set of builtin timers
+ *   when `true` (the default), adds the set of builtin timers defined in
+ *   {@link module:ffxiv_countdown.builtins FFXIVCountdown.builtins}
+ * @param {Boolean} showWeeks
+ *   when `true`, show weeks instead of just days
  */
-function FFXIVCountdown(container, timers, addBuiltins) {
+function FFXIVCountdown(container, timers, addBuiltins, showWeeks) {
 	if (arguments.length < 2) {
 		timers = [];
 	}
 	if (arguments.length < 3)
 		addBuiltins = true;
+	if (arguments.length < 4)
+		showWeeks = false;
 	this.container = container;
 	this.addBuiltins = addBuiltins;
+	this.showWeeks = showWeeks;
 	if (typeof timers == 'string') {
 		// Assume it's a URL and try and pull it using AJAX
 		this.load(timers);
@@ -34,13 +40,14 @@ function FFXIVCountdown(container, timers, addBuiltins) {
 }
 
 /**
- * Maximum age before we don't show a timer.
+ * Maximum age (in milliseconds) before a timer won't be shown any more.
  */
 FFXIVCountdown.MAX_TIMER_AGE = (24*60*60*1000);
 
 /**
  * Global array of "built-in" timers. By default this is empty. To populate it
- * with actual builtins, require the {@link module:ffxiv_builtins ffxiv_builtins} module.
+ * with actual builtins, require the
+ * {@link module:ffxiv_builtins ffxiv_builtins} module.
  */
 FFXIVCountdown.builtins = [];
 
@@ -163,17 +170,17 @@ FFXIVCountdown.prototype = {
 			//t.start = now + (3+i) * 1000;
 			//t.end = now + (6+i) * 1000;
 		}
-		var timer = new Timer();
+		var timer = new Clock();
 		timer.ontick = function(now) {
 			var now = now.getTime(), time;
 			for (var i = 0; i < timers.length; i++) {
 				var t = timers[i];
 				if (now <= t.start) {
 					t.div.className = t.beforeClass;
-					time = new Timer.Interval(t.start - now + 1000);
+					time = new Clock.Interval(t.start - now + 1000, this.showWeeks);
 				} else if (now <= t.end) {
 					t.div.className = t.activeClass;
-					time = new Timer.Interval(t.end - now + 1000);
+					time = new Clock.Interval(t.end - now + 1000);
 					if (t.removeOnActive) {
 						// Remove this from the list.
 						timers.splice(i, 1);
@@ -184,7 +191,7 @@ FFXIVCountdown.prototype = {
 					if (t.every) {
 						// Recurring timer, so reset it.
 						t.end = (Math.floor(((now+1000) - t.offset) / t.every) + 1) * t.every + t.offset;
-						time = new Timer.Interval(t.end - now + 1000);
+						time = new Clock.Interval(t.end - now + 1000);
 					} else {
 						// Otherwise, end it entirely.
 						t.div.className = t.afterClass;
@@ -205,7 +212,7 @@ FFXIVCountdown.prototype = {
 				if (time.days > 0) {
 					m += '<span class="days">' + time.days + (time.days > 1 ? ' days' : ' day') + ', </span>';
 				}
-				m += '<span class="hours">' + Timer.zeropad(time.hours) + ':' + Timer.zeropad(time.minutes) + ':' + Timer.zeropad(time.seconds) + '</span>';
+				m += '<span class="hours">' + Clock.zeropad(time.hours) + ':' + Clock.zeropad(time.minutes) + ':' + Clock.zeropad(time.seconds) + '</span>';
 				t.timerDiv.innerHTML = m;
 			}
 			if (timers.length == 0) {
@@ -250,7 +257,7 @@ FFXIVCountdown.prototype = {
 			d = document.createElement('div');
 			div.appendChild(d);
 			d.className = 'duration';
-			var lasts = new Timer.Interval(t.end - t.start);
+			var lasts = new Clock.Interval(t.end - t.start);
 			var m = [];
 			if (lasts.weeks > 0) {
 				m.push(lasts.weeks + (lasts.weeks > 1 ? ' weeks' : ' week'));
@@ -271,8 +278,8 @@ FFXIVCountdown.prototype = {
 			d.className = 'note';
 			d.appendChild(document.createTextNode(t.note));
 		}
-		if (t.popover) {
-			this._makePopover(div, t.popover);
+		if (t.info) {
+			this._makePopover(div, t.info);
 		}
 		return div;
 	},
@@ -282,16 +289,16 @@ FFXIVCountdown.prototype = {
 	 */
 	_makePopover: function(div, popoverHTML) {
 		var popover = document.createElement('div'), visible = false, sticky = false;
-		popover.className = 'popover';
+		popover.className = 'info';
 		popover.innerHTML = popoverHTML;
 		div.appendChild(popover);
 		function toggle() {
 			if (visible || sticky) {
 				popover.style.left = div.offsetLeft + "px";
 				popover.style.top = div.offsetTop + "px";
-				popover.className = 'popover visible';
+				popover.className = 'info visible';
 			} else {
-				popover.className = 'popover hidden';
+				popover.className = 'info hidden';
 			}
 		}
 		div.onmouseenter = function(event) {

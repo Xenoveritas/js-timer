@@ -7,13 +7,16 @@
  * - Weekly reset is every Tuesday at 1AM PST/4AM EST/08:00 UTC.
  * - Daily reset is every day at 7AM PST/10AM EST/15:00 UTC.
  * - Crafting reset is every Thursday at 1AM PST/4AM EST/08:00 UTC.
+ *
+ * When the module is required, it simply appends the above list to the
+ * {@link module:ffxiv_countdown.builtins} array.
  * @module ffxiv_builtins
  */
 define(['./ffxiv_countdown'], function(FFXIVCountdown) {
   var builtins = [
     {
       'name': 'Weekly Reset',
-      'popover': 'On the weekly reset, the following resets:<ul>'
+      'info': 'On the weekly reset, the following resets:<ul>'
         + '<li>Allagan tomestones of scripture</li>'
         + '<li>Weekly repeatable quests</li>'
         + '<li>PvP Weekly Performance</li>'
@@ -28,7 +31,7 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
     },
     {
       'name': 'Crafting Reset',
-      'popover': 'On the weekly crafting reset, the following resets:<ul>'
+      'info': 'On the weekly crafting reset, the following resets:<ul>'
         + "<li>Red crafters' and gathers' scrips</li>"
         + "<li>Zhloe deliveries</li></ul>",
       'type': 'reset',
@@ -38,7 +41,7 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
     },
     {
       'name': 'Daily Reset',
-      'popover': 'On the daily reset, the following resets:<ul>'
+      'info': 'On the daily reset, the following resets:<ul>'
         + '<li>Beastman quest allowances</li>'
         + '<li>Duty Roulette daily bonuses</li>'
         + '<li>Daily repeatable quest</li></ul>',
