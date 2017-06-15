@@ -38,7 +38,13 @@ module.exports = function(grunt) {
       }
       if (response.statusCode == 200) {
         var links = { };
-        scrapeLodestone(body, lodestoneURL, skipScrapeBefore, ignoredURLs, links);
+        try {
+          scrapeLodestone(body, lodestoneURL, skipScrapeBefore, ignoredURLs, links);
+        } catch (ex) {
+          grunt.log.error("Unable to parse Lodestone: " + ex);
+          callback(ex);
+          return;
+        }
         var timers = [];
         // We now want to iterate through the links but we want to pull them
         // sequentially, so this ends up being a bit horrible. All we care
@@ -71,6 +77,8 @@ module.exports = function(grunt) {
         } else {
           callback([]);
         }
+      } else {
+        grunt.log.error("Got error response from the Lodestone: " + response.statusCode + ' ' + response.statusMessage);
       }
     });
   }

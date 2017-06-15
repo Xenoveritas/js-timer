@@ -22,7 +22,8 @@
   {
     "name": "<a href=\"http://na.finalfantasyxiv.com/stormblood/\">Stormblood</a> Release",
     "type": "expansion release",
-    "start": "2017-06-20T00:00:00-0700"
+    "start": "2017-06-20T00:00:00-0700",
+    "note": "Note: Stormblood releases on June 20. This is set to midnight PDT as the \"worst case\" when Stormblood codes will be live."
   }
 ]
 }
