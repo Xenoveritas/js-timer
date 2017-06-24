@@ -17,11 +17,10 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
     {
       'name': 'Weekly Reset',
       'info': 'On the weekly reset, the following resets:<ul>'
-        + '<li>Allagan tomestones of scripture</li>'
         + '<li>Weekly repeatable quests</li>'
         + '<li>PvP Weekly Performance</li>'
         + '<li>Challenge Log challenges</li>'
-        + '<li>A new journal is available from Khloe Aliapoh (Wondrous Tails)</li></ul>',
+        + '<li>A new Wondrous Tails journal is available</li></ul>',
       'type': 'reset',
       // Period in MS for this event
       'every': 7*24*60*60*1000,
@@ -32,7 +31,6 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
     {
       'name': 'Crafting Reset',
       'info': 'On the weekly crafting reset, the following resets:<ul>'
-        + "<li>Red crafters' and gathers' scrips</li>"
         + "<li>Zhloe deliveries</li></ul>",
       'type': 'reset',
       'every': 7*24*60*60*1000,
