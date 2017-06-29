@@ -20,7 +20,8 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
         + '<li>Weekly repeatable quests</li>'
         + '<li>PvP Weekly Performance</li>'
         + '<li>Challenge Log challenges</li>'
-        + '<li>A new Wondrous Tails journal is available</li></ul>',
+        + '<li>A new Wondrous Tails journal is available</li>'
+        + '<li>Adventurer Squadron Priority mission</li></ul>',
       'type': 'reset',
       // Period in MS for this event
       'every': 7*24*60*60*1000,
@@ -40,9 +41,10 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
     {
       'name': 'Daily Reset',
       'info': 'On the daily reset, the following resets:<ul>'
-        + '<li>Beastman quest allowances</li>'
+        + '<li>Beastmen quest allowances</li>'
         + '<li>Duty Roulette daily bonuses</li>'
-        + '<li>Daily repeatable quest</li></ul>',
+        + '<li>Daily repeatable quests</li>'
+        + '<li>Adventurer Squadron training allowances</li></ul>',
       'type': 'reset',
       'every': 24*60*60*1000,
       'offset': 15*60*60*1000

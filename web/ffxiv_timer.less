@@ -137,13 +137,13 @@ a:hover { text-decoration: underline; }
 	border-radius: @borderRadius;
 	box-shadow: #000 1px 1px 4px;
 	// Styles for things that are "up"
-	.maintenance.after &, .event.active & {
+	.maintenance.after &, .event.active &, .campaign.active & {
 		background-color: @countdownUpBackgroundColor;
 		color: @countdownUpColor;
 		.textglow(@countdownUpGlowColor);
 	}
 	// Styles for things that are "pending"
-	.maintenance.before & {
+	.maintenance.before &, .event.before &, .campaign.before & {
 		background-color: @countdownPendingBackgroundColor;
 		color: @countdownPendingColor;
 		.textglow(@countdownPendingGlowColor);
