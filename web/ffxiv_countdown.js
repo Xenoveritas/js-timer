@@ -128,13 +128,13 @@ FFXIVCountdown.prototype = {
 		for (var i = 0; i < timers.length; i++) {
 			timers[i] = new FFXIVCountdown.Timer(this, timers[i]);
 			var t = timers[i];
-			if ('end' in t && t['end'] <= skipTimersBefore) {
+			if (t.isOutdated(skipTimersBefore)) {
 				// Remove out of date timers from the list.
 				timers.splice(i, 1);
 				i--;
 				continue;
 			}
-			var div = this.makeTimer(t, 'timer');
+			var div = t._makeHTML();
 			this.container.appendChild(div);
 			t.div = div;
 			if (t.every) {
@@ -250,6 +250,134 @@ FFXIVCountdown.prototype = {
 		return div;
 	},
 	/**
+	 * Formats a date. Override to provide a custom format. The default
+	 * just does `"YYYY-MM-DD at hh:mm"`.
+	 * @param {Date} date the date to format
+	 * @return {String} the date formatted to be human readable as a string
+	 */
+	formatDate: function(date) {
+		return date.getFullYear() + '-' + Clock.zeropad(date.getMonth() + 1) + '-' +
+			Clock.zeropad(date.getDate()) + ' at ' + date.getHours() + ':' +
+			Clock.zeropad(date.getMinutes());
+	}
+};
+
+/**
+ * A single timer.
+ */
+FFXIVCountdown.Timer = function(controller, definition) {
+	this.controller = controller;
+	// Copy over definition fields:
+	this.start = definition['start'];
+	this.end = definition['end'];
+	// Parse dates if necessary. Note that this won't work in all browsers.
+	if (typeof this.start == 'string') {
+		this.start = Date.parse(this.start);
+	}
+	if (typeof this.end == 'string') {
+		this.end = Date.parse(this.end);
+	}
+	this.name = definition['name'];
+	this.info = definition['info'];
+	this.note = definition['note'];
+	this.type = definition['type'];
+	if (!this.type)
+		this.type = '';
+	this.every = definition['every'];
+	this.offset = definition['offset'];
+	this.showDuration = definition['showDuration'];
+	// Default show duration to true in maintenance timers.
+	if ((!'showDuration' in definition) && this.type == 'maintenance')
+		this.showDuration = true;
+	this.removeOnActive = definition['removeOnActive'];
+	this.removeOnComplete = definition['removeOnComplete'];
+}
+
+FFXIVCountdown.Timer.prototype = {
+	/**
+	 * Initialize the timer based on a given time.
+	 */
+	init: function(container) {
+		if (this.every) {
+			if (typeof this.offset != 'number') {
+				this.offset = 0;
+			}
+			// Recurring timer, so set the start to 0
+			this.start = 0;
+			// And set the end correctly.
+			this.resetRecurring(now);
+		}
+	},
+	/**
+	 * Creates the HTML for the timer.
+	 * @private
+	 */
+	_makeHTML: function(className) {
+		if (arguments.length < 1)
+			className = 'timer';
+		var div = document.createElement('div');
+		div.className = this.type;
+		var d = document.createElement('div');
+		d.innerHTML = this.name;
+		d.className = 'title';
+		div.appendChild(d);
+		this.titleDiv = d;
+		d = document.createElement('div');
+		d.className = 'countdown';
+		div.appendChild(d);
+		this.timerDiv = d;
+		if (!this.type) {
+			this.type = '';
+		}
+		this.beforeClass = className + ' before ' + this.type;
+		this.activeClass = className + ' active ' + this.type;
+		this.afterClass = className + ' after ' + this.type;
+		if (this.showDuration) {
+			d = document.createElement('div');
+			div.appendChild(d);
+			d.className = 'duration';
+			var lasts = new Clock.Interval(this.end - this.start);
+			var m = [];
+			if (lasts.weeks > 0) {
+				m.push(lasts.weeks + (lasts.weeks > 1 ? ' weeks' : ' week'));
+			}
+			if (lasts.days > 0) {
+				m.push(lasts.days + (lasts.days > 1 ? ' days' : ' day'));
+			}
+			if (lasts.hours > 0) {
+				m.push(lasts.hours + (lasts.hours > 1 ? ' hours' : ' hour'));
+			}
+			if (lasts.minutes > 0) {
+				m.push(lasts.minutes + (lasts.minutes > 1 ? ' minutes' : ' minute'))
+			}
+			d.appendChild(document.createTextNode('Lasts ' + m.join(', ')));
+		}
+		if (this.note) {
+			div.appendChild(d = document.createElement('div'));
+			d.className = 'note';
+			d.appendChild(document.createTextNode(this.note));
+		}
+		if (this.info) {
+			this._makePopover(div, this.info);
+		}
+		div.appendChild(d = document.createElement('div'));
+		d.className = 'times';
+		var dl;
+		d.appendChild(dl = document.createElement('dl'));
+		if (this.start)
+			this._addTerm(dl, 'Starts at', this.controller.formatDate(new Date(this.start)));
+		if (this.end)
+			this._addTerm(dl, 'Ends at', this.controller.formatDate(new Date(this.end)));
+		return div;
+	},
+	_addTerm: function(dl, term, description) {
+		var e;
+		dl.appendChild(e = document.createElement('dt'));
+		e.appendChild(document.createTextNode(term));
+		dl.appendChild(e = document.createElement('dd'));
+		e.appendChild(document.createTextNode(description));
+	},
+	/**
 	 * Internal function for generating the popover.
 	 * @private
 	 */
@@ -287,29 +415,10 @@ FFXIVCountdown.prototype = {
 			}
 			toggle();
 		};
-	}
-};
-
-/**
- * A single timer.
- */
-FFXIVCountdown.Timer = function(controller, definition) {
-	this.controller = controller;
-	// Copy over definition fields:
-	this.start = definition['start'];
-	this.end = definition['end'];
-	this.name = definition['name'];
-	this.info = definition['info'];
-	this.note = definition['note'];
-	this.type = definition['type'];
-	this.every = definition['every'];
-	this.offset = definition['offset'];
-	this.showDuration = definition['showDuration'];
-	this.removeOnActive = definition['removeOnActive'];
-	this.removeOnComplete = definition['removeOnComplete'];
-}
-
-FFXIVCountdown.Timer.prototype = {
+	},
+	/**
+	 * Update the timer for the given time, potentially removing it.
+	 */
 	update: function(now) {
 		if (now <= this.start) {
 			this.div.className = this.beforeClass;
@@ -324,7 +433,7 @@ FFXIVCountdown.Timer.prototype = {
 		} else {
 			if (this.every) {
 				// Recurring timer, so reset it.
-				this.end = (Math.floor(((now+1000) - this.offset) / this.every) + 1) * this.every + this.offset;
+				this.resetRecurring(now);
 				time = new Clock.Interval(this.end - now + 1000);
 			} else {
 				// Otherwise, end it entirely.
@@ -346,6 +455,21 @@ FFXIVCountdown.Timer.prototype = {
 		m += '<span class="hours">' + Clock.zeropad(time.hours) + ':' + Clock.zeropad(time.minutes) + ':' + Clock.zeropad(time.seconds) + '</span>';
 		this.timerDiv.innerHTML = m;
 		return true;
+	},
+	/**
+	 * Determine if the timer is outdated.
+	 */
+	isOutdated: function(cutoff) {
+		// Recurring timers are never outdated.
+		return (!this.every) && this.end <= cutoff;
+	},
+	/**
+	 * If a recurring timer, reset the end fields to the next instance based on
+	 * the given time. Otherwise, this does nothing.
+	 */
+	resetRecurring: function(now) {
+		if (this.every)
+			this.end = (Math.floor(((now+1000) - this.offset) / this.every) + 1) * this.every + this.offset;
 	}
 }
 
