@@ -126,6 +126,7 @@ FFXIVCountdown.prototype = {
 		}
 		var now = new Date().getTime(), skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;
 		for (var i = 0; i < timers.length; i++) {
+			timers[i] = new FFXIVCountdown.Timer(this, timers[i]);
 			var t = timers[i];
 			if ('end' in t && t['end'] <= skipTimersBefore) {
 				// Remove out of date timers from the list.
@@ -174,46 +175,11 @@ FFXIVCountdown.prototype = {
 		timer.ontick = function(now) {
 			var now = now.getTime(), time;
 			for (var i = 0; i < timers.length; i++) {
-				var t = timers[i];
-				if (now <= t.start) {
-					t.div.className = t.beforeClass;
-					time = new Clock.Interval(t.start - now + 1000, this.showWeeks);
-				} else if (now <= t.end) {
-					t.div.className = t.activeClass;
-					time = new Clock.Interval(t.end - now + 1000);
-					if (t.removeOnActive) {
-						// Remove this from the list.
-						timers.splice(i, 1);
-						i--;
-						t.div.parentNode.removeChild(t.div);
-					}
-				} else {
-					if (t.every) {
-						// Recurring timer, so reset it.
-						t.end = (Math.floor(((now+1000) - t.offset) / t.every) + 1) * t.every + t.offset;
-						time = new Clock.Interval(t.end - now + 1000);
-					} else {
-						// Otherwise, end it entirely.
-						t.div.className = t.afterClass;
-						t.timerDiv.innerHTML = '(over)';
-						// Remove this from the list.
-						timers.splice(i, 1);
-						i--;
-						if (t.removeOnComplete) {
-							t.div.parentNode.removeChild(t.div);
-						}
-						continue;
-					}
+				if (!timers[i].update(now)) {
+					// Remove from the list.
+					timers.splice(i, 1);
+					i--;
 				}
-				var m = '';
-				if (time.weeks > 0) {
-					m = '<span class="weeks">' + time.weeks + (time.weeks > 1 ? ' weeks' : ' week') + ', </span>';
-				}
-				if (time.days > 0) {
-					m += '<span class="days">' + time.days + (time.days > 1 ? ' days' : ' day') + ', </span>';
-				}
-				m += '<span class="hours">' + Clock.zeropad(time.hours) + ':' + Clock.zeropad(time.minutes) + ':' + Clock.zeropad(time.seconds) + '</span>';
-				t.timerDiv.innerHTML = m;
 			}
 			if (timers.length == 0) {
 				// If we've killed all the timers, just stop.
@@ -323,6 +289,65 @@ FFXIVCountdown.prototype = {
 		};
 	}
 };
+
+/**
+ * A single timer.
+ */
+FFXIVCountdown.Timer = function(controller, definition) {
+	this.controller = controller;
+	// Copy over definition fields:
+	this.start = definition['start'];
+	this.end = definition['end'];
+	this.name = definition['name'];
+	this.info = definition['info'];
+	this.note = definition['note'];
+	this.type = definition['type'];
+	this.every = definition['every'];
+	this.offset = definition['offset'];
+	this.showDuration = definition['showDuration'];
+	this.removeOnActive = definition['removeOnActive'];
+	this.removeOnComplete = definition['removeOnComplete'];
+}
+
+FFXIVCountdown.Timer.prototype = {
+	update: function(now) {
+		if (now <= this.start) {
+			this.div.className = this.beforeClass;
+			time = new Clock.Interval(this.start - now + 1000, this.controller.showWeeks);
+		} else if (now <= this.end) {
+			this.div.className = this.activeClass;
+			time = new Clock.Interval(this.end - now + 1000);
+			if (this.removeOnActive) {
+				this.div.parentNode.removeChild(this.div);
+				return false;
+			}
+		} else {
+			if (this.every) {
+				// Recurring timer, so reset it.
+				this.end = (Math.floor(((now+1000) - this.offset) / this.every) + 1) * this.every + this.offset;
+				time = new Clock.Interval(this.end - now + 1000);
+			} else {
+				// Otherwise, end it entirely.
+				this.div.className = this.afterClass;
+				this.timerDiv.innerHTML = '(over)';
+				if (this.removeOnComplete) {
+					this.div.parentNode.removeChild(this.div);
+				}
+				return false;
+			}
+		}
+		var m = '';
+		if (time.weeks > 0) {
+			m = '<span class="weeks">' + time.weeks + (time.weeks > 1 ? ' weeks' : ' week') + ', </span>';
+		}
+		if (time.days > 0) {
+			m += '<span class="days">' + time.days + (time.days > 1 ? ' days' : ' day') + ', </span>';
+		}
+		m += '<span class="hours">' + Clock.zeropad(time.hours) + ':' + Clock.zeropad(time.minutes) + ':' + Clock.zeropad(time.seconds) + '</span>';
+		this.timerDiv.innerHTML = m;
+		return true;
+	}
+}
 
 return FFXIVCountdown;
 });
