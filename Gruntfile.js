@@ -29,13 +29,6 @@ module.exports = function(grunt) {
         }
       },
     },
-    copy: {
-      main: {
-        files: [
-          { expand: true, src: [ 'web/*.{css,woff}' ], dest: 'build/', flatten: true },
-        ]
-      }
-    },
     parsetimers: {
       dist: {
         files: [
@@ -104,7 +97,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bower');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
@@ -112,7 +104,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-cache-bust');
   grunt.loadTasks('tasks');
 
-  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'less', 'copy', 'scrapelodestone', 'parsetimers', 'jsdoc', 'cacheBust']);
+  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'less', 'scrapelodestone', 'parsetimers', 'jsdoc', 'cacheBust']);
   // Create some aliases:
   grunt.registerTask('server', ['default', 'connect:dist']);
   grunt.registerTask('testserver', ['connect:test']);
