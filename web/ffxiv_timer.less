@@ -9,32 +9,33 @@
 
 @countdownBackgroundColor: #404040;
 @countdownColor: #FFF;
-@countdownGlowColor: #6CF;
+@countdownGlowColor: #101010;
 
 // Background used when something is "up" - eg, maintenance is over:
 @countdownUpBackgroundColor: mix(#0F0, @countdownBackgroundColor);
 @countdownUpColor: #FFF;
-@countdownUpGlowColor: #0F0;
+@countdownUpGlowColor: #060;
 // Background used when something is "pending" - eg, maintenance is coming up:
 @countdownPendingBackgroundColor: #808050;
 @countdownPendingColor: #FFF;
-@countdownPendingGlowColor: #CC0;
+@countdownPendingGlowColor: #660;
 // Background used when something is "off" - eg, maintenance is ongoing:
 @countdownDownBackgroundColor: mix(#F00, @countdownBackgroundColor);
 @countdownDownColor: #FFF;
-@countdownDownGlowColor: #F00;
+@countdownDownGlowColor: #600;
 
 .textglow (@color) {
-	text-shadow: @color 0px 0px 4px, @color 0px 0px 3px, @color 0px 0px 2px;
+	// Original shadow:
+	//text-shadow: @color 0px 0px 4px, @color 0px 0px 3px, @color 0px 0px 2px;
+	text-shadow: @color -2px -2px 0px, @color 2px -2px 0px, @color 2px 2px 0px, @color -2px 2px 0px,
+		@color 0px -2px 0px, @color 2px 0px 0px, @color 0px 2px 0px, @color -2px 0px 0px;
 }
 
-// Custom timer font
-@font-face {
-	font-family: FFXIVWide;
-	src: url(xivwide.woff);
-}
+// Grab Roboto from Google.
+@import url('https://fonts.googleapis.com/css?family=Droid+Sans');
+
 html {
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: "Droid Sans", Helvetica, Arial, sans-serif;
 	font-size: 12px;
 	background-color: @pageColor;
 	color: @textColor;
@@ -129,7 +130,7 @@ a:hover { text-decoration: underline; }
 	display: inline-block;
 	margin: @padding 0;
 	padding: @padding @borderRadius;
-	font-family: FFXIVWide, Helvetica, sans-serif;
+	font-family: "Droid Sans", Helvetica, sans-serif;
 	font-size: @size * 3 / 4;
 	line-height: @size;
 	vertical-align: middle;
