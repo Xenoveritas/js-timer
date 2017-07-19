@@ -17,6 +17,7 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
     {
       'name': 'Weekly Reset',
       'info': 'On the weekly reset, the following resets:<ul>'
+        + '<li>Tomestones of Creation</li>'
         + '<li>Weekly repeatable quests</li>'
         + '<li>PvP Weekly Performance</li>'
         + '<li>Challenge Log challenges</li>'
