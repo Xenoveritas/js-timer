@@ -16,6 +16,13 @@
     "start": "2017-07-01T00:00:00-0700",
     "end": "2017-09-30T23:59:00-0700",
     "info": "Players who purchase a total of 90 days of subscription time during this time period will receive a Falcon mount."
+  },
+  {
+    "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2017/The_Rising/\">The Rising</a>",
+    "type": "event rising",
+    "start": "2017-08-26T08:00:00-0700",
+    "end": "2017-09-14T07:59:00-0700",
+    "showDuration": true
   }
 ]
 }
