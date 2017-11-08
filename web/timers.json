@@ -4,17 +4,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/youkai-watch/\">Yo-kai Watch</a>",
-    "type": "event yokai-watch",
-    "start": "2017-09-03T01:00:00-0700",
-    "end": "2017-11-01T07:59:00-0700",
-    "showDuration": true
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/All_Saints_Wake/\">All Saints' Wake</a>",
-    "type": "event all-saints-wake",
-    "start": "2017-10-19T00:01:00-0700",
-    "end": "2017-11-01T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/The_Maidens_Rhapsody/\">The Maiden's Rhapsody</a>",
+    "type": "event maidens-rhapsody",
+    "start": "2017-11-10T00:00:00-0800",
+    "end": "2017-11-29T06:59:00-0800"
   }
 ]
 }
