@@ -8,6 +8,12 @@
     "type": "event maidens-rhapsody",
     "start": "2017-11-10T00:00:00-0800",
     "end": "2017-11-29T06:59:00-0800"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/Theres_Golems_in_Those_Hills/\">Breaking Brick Mountains</a>",
+    "type": "event breaking-brick-mountains",
+    "start": "2017-11-30T00:00:00-0800",
+    "end": "2017-12-14T06:59:00-0800"
   }
 ]
 }
