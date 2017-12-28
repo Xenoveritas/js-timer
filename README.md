@@ -41,3 +41,12 @@ An interval of time - sort of like a `Date()` but for different periods of time.
 * `seconds` - number of seconds in the interval
 * `millis` - number of milliseconds in the interval
 * `isInPast` - indicates that the interval occurred in the past (over a negative number of milliseconds)
+
+# Building
+
+Building the source is currently done using [Yarn](https://yarnpkg.com/) and [Grunt](https://gruntjs.com/). This makes building the code simply:
+
+```sh
+yarn
+grunt
+```
