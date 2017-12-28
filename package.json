@@ -2,7 +2,7 @@
   "name": "ffxiv-timer",
   "version": "0.1.1",
   "description": "FFXIV timers.",
-  "main": "timer.js",
+  "main": "clock.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
