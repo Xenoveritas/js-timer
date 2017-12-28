@@ -13,11 +13,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    bower: {
-      dev: {
-        dest: 'web/lib'
-      }
-    },
     htmlmin: {
       dist: {
         options: {
@@ -59,7 +54,7 @@ module.exports = function(grunt) {
         options: {
           baseUrl: "web",
           mainConfigFile: "web/ffxiv_main.js",
-          name: "lib/almond",
+          name: "../node_modules/almond/almond",
           include: [ 'ffxiv_main' ],
           out: "build/ffxiv.js"
         }
@@ -94,7 +89,6 @@ module.exports = function(grunt) {
   });
 
   // Load plugins
-  grunt.loadNpmTasks('grunt-bower');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
@@ -104,7 +98,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-cache-bust');
   grunt.loadTasks('tasks');
 
-  grunt.registerTask('default', ['bower', 'htmlmin', 'requirejs', 'less', 'scrapelodestone', 'parsetimers', 'jsdoc', 'cacheBust']);
+  grunt.registerTask('default', ['htmlmin', 'requirejs', 'less', 'scrapelodestone', 'parsetimers', 'jsdoc', 'cacheBust']);
   // Create some aliases:
   grunt.registerTask('server', ['default', 'connect:dist']);
   grunt.registerTask('testserver', ['connect:test']);
