@@ -14,6 +14,12 @@
     "type": "event starlight-celebration",
     "start": "2017-12-15T00:00:00-0800",
     "end": "2017-12-31T06:59:00-0800"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Heavensturn/\">Heavensturn</a>",
+    "type": "event heavensturn",
+    "start": "2017-12-31T07:00:00-0800",
+    "end": "2018-01-15T06:59:00-0800"
   }
 ]
 }
