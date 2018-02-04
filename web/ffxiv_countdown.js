@@ -126,46 +126,17 @@ FFXIVCountdown.prototype = {
 		}
 		var now = new Date().getTime(), skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;
 		for (var i = 0; i < timers.length; i++) {
+			timers[i] = new FFXIVCountdown.Timer(this, timers[i]);
 			var t = timers[i];
-			if ('end' in t && t['end'] <= skipTimersBefore) {
+			if (t.isOutdated(skipTimersBefore)) {
 				// Remove out of date timers from the list.
 				timers.splice(i, 1);
 				i--;
 				continue;
 			}
-			var div = this.makeTimer(t, 'timer');
-			this.container.appendChild(div);
-			t.div = div;
-			if (t.every) {
-				if (!('offset' in t)) {
-					t.offset = 0;
-				}
-				// Recurring timer, so set the start to 0
-				t.start = 0;
-				// And set the end correctly.
-				t.end = (Math.floor((now - t.offset) / t.every) + 1) * t.every + t.offset;
-			}
-			if (t.subtimers) {
-				// If we have subtimers, add them.
-				for (var si = 0; si < t.subtimers.length; si++) {
-					var st = t.subtimers[si];
-					// If there's no end, set it to the end timer from the parent.
-					if (!st.end) {
-						st.end = t.end;
-						st.type = (st.type ? st.type + ' ' : '') + 'ends-with-parent';
-					}
-					if (!st.type) {
-						st.type = '';
-					}
-					var sdiv = this.makeTimer(st, 'subtimer');
-					div.appendChild(sdiv);
-					st.div = sdiv;
-				}
-				// Splice the subtimers into the timer list.
-				timers.splice.apply(timers, [i, 0].concat(t.subtimers));
-				// And move i past the timers we just added
-				i += t.subtimers.length;
-			}
+			t.init(this.container, now);
+			// FIXME: Subtimers haven't been used in quite some time and for now are
+			// a dead feature. They may be revived at some point in the future.
 			// Debug:
 			//t.start = now + (3+i) * 1000;
 			//t.end = now + (6+i) * 1000;
@@ -174,46 +145,11 @@ FFXIVCountdown.prototype = {
 		timer.ontick = function(now) {
 			var now = now.getTime(), time;
 			for (var i = 0; i < timers.length; i++) {
-				var t = timers[i];
-				if (now <= t.start) {
-					t.div.className = t.beforeClass;
-					time = new Clock.Interval(t.start - now + 1000, this.showWeeks);
-				} else if (now <= t.end) {
-					t.div.className = t.activeClass;
-					time = new Clock.Interval(t.end - now + 1000);
-					if (t.removeOnActive) {
-						// Remove this from the list.
-						timers.splice(i, 1);
-						i--;
-						t.div.parentNode.removeChild(t.div);
-					}
-				} else {
-					if (t.every) {
-						// Recurring timer, so reset it.
-						t.end = (Math.floor(((now+1000) - t.offset) / t.every) + 1) * t.every + t.offset;
-						time = new Clock.Interval(t.end - now + 1000);
-					} else {
-						// Otherwise, end it entirely.
-						t.div.className = t.afterClass;
-						t.timerDiv.innerHTML = '(over)';
-						// Remove this from the list.
-						timers.splice(i, 1);
-						i--;
-						if (t.removeOnComplete) {
-							t.div.parentNode.removeChild(t.div);
-						}
-						continue;
-					}
+				if (!timers[i].update(now)) {
+					// Remove from the list.
+					timers.splice(i, 1);
+					i--;
 				}
-				var m = '';
-				if (time.weeks > 0) {
-					m = '<span class="weeks">' + time.weeks + (time.weeks > 1 ? ' weeks' : ' week') + ', </span>';
-				}
-				if (time.days > 0) {
-					m += '<span class="days">' + time.days + (time.days > 1 ? ' days' : ' day') + ', </span>';
-				}
-				m += '<span class="hours">' + Clock.zeropad(time.hours) + ':' + Clock.zeropad(time.minutes) + ':' + Clock.zeropad(time.seconds) + '</span>';
-				t.timerDiv.innerHTML = m;
 			}
 			if (timers.length == 0) {
 				// If we've killed all the timers, just stop.
@@ -228,36 +164,95 @@ FFXIVCountdown.prototype = {
 		div.appendChild(document.createTextNode(message));
 		return div;
 	},
-	makeTimer: function(t, type) {
-		// Parse dates if necessary.
-		if (typeof t.start == 'string') {
-			t.start = Date.parse(t.start);
+	/**
+	 * Formats a date. Override to provide a custom format. The default
+	 * just does `"YYYY-MM-DD at hh:mm"`.
+	 * @param {Date} date the date to format
+	 * @return {String} the date formatted to be human readable as a string
+	 */
+	formatDate: function(date) {
+		return date.getFullYear() + '-' + Clock.zeropad(date.getMonth() + 1) + '-' +
+			Clock.zeropad(date.getDate()) + ' at ' + date.getHours() + ':' +
+			Clock.zeropad(date.getMinutes());
+	}
+};
+
+/**
+ * A single timer.
+ */
+FFXIVCountdown.Timer = function(controller, definition) {
+	this.controller = controller;
+	// Copy over definition fields:
+	this.start = definition['start'];
+	this.end = definition['end'];
+	// Parse dates if necessary. Note that this won't work in all browsers.
+	if (typeof this.start == 'string') {
+		this.start = Date.parse(this.start);
+	}
+	if (typeof this.end == 'string') {
+		this.end = Date.parse(this.end);
+	}
+	this.name = definition['name'];
+	this.info = definition['info'];
+	this.note = definition['note'];
+	this.type = definition['type'];
+	if (!this.type)
+		this.type = '';
+	this.every = definition['every'];
+	this.offset = definition['offset'];
+	this.showDuration = definition['showDuration'];
+	// Default show duration to true in maintenance timers.
+	if ((!'showDuration' in definition) && this.type == 'maintenance')
+		this.showDuration = true;
+	this.removeOnActive = definition['removeOnActive'];
+	this.removeOnComplete = definition['removeOnComplete'];
+}
+
+FFXIVCountdown.Timer.prototype = {
+	/**
+	 * Initialize the timer based on a given time.
+	 */
+	init: function(container, now) {
+		container.appendChild(this.div = this._makeHTML());
+		if (this.every) {
+			if (typeof this.offset != 'number') {
+				this.offset = 0;
+			}
+			// Recurring timer, so set the start to 0
+			this.start = 0;
+			// And set the end correctly.
+			this.resetRecurring(now);
 		}
-		if (typeof t.end == 'string') {
-			t.end = Date.parse(t.end);
-		}
+	},
+	/**
+	 * Creates the HTML for the timer.
+	 * @private
+	 */
+	_makeHTML: function(className) {
+		if (arguments.length < 1)
+			className = 'timer';
 		var div = document.createElement('div');
-		div.className = type;
+		div.className = this.type;
 		var d = document.createElement('div');
-		d.innerHTML = t.name;
+		d.innerHTML = this.name;
 		d.className = 'title';
 		div.appendChild(d);
-		t.titleDiv = d;
+		this.titleDiv = d;
 		d = document.createElement('div');
 		d.className = 'countdown';
 		div.appendChild(d);
-		t.timerDiv = d;
-		if (!t.type) {
-			t.type = '';
+		this.timerDiv = d;
+		if (!this.type) {
+			this.type = '';
 		}
-		t.beforeClass = type + ' before ' + t.type;
-		t.activeClass = type + ' active ' + t.type;
-		t.afterClass = type + ' after ' + t.type;
-		if (t.type == 'maintenance' || t.showDuration) {
+		this.beforeClass = className + ' before ' + this.type;
+		this.activeClass = className + ' active ' + this.type;
+		this.afterClass = className + ' after ' + this.type;
+		if (this.showDuration) {
 			d = document.createElement('div');
 			div.appendChild(d);
 			d.className = 'duration';
-			var lasts = new Clock.Interval(t.end - t.start);
+			var lasts = new Clock.Interval(this.end - this.start);
 			var m = [];
 			if (lasts.weeks > 0) {
 				m.push(lasts.weeks + (lasts.weeks > 1 ? ' weeks' : ' week'));
@@ -273,15 +268,37 @@ FFXIVCountdown.prototype = {
 			}
 			d.appendChild(document.createTextNode('Lasts ' + m.join(', ')));
 		}
-		if (t.note) {
+		if (this.note) {
 			div.appendChild(d = document.createElement('div'));
 			d.className = 'note';
-			d.appendChild(document.createTextNode(t.note));
+			d.appendChild(document.createTextNode(this.note));
 		}
-		if (t.info) {
-			this._makePopover(div, t.info);
+		if (this.info) {
+			this._makePopover(div, this.info);
 		}
+		div.appendChild(this._times = document.createElement('div'));
+		this._times.className = 'times';
+		this._updateTimes();
 		return div;
+	},
+	/**
+	 * Populate the "local time" display.
+	 */
+	_updateTimes: function() {
+		var html = [ '<table><tbody>' ];
+		function addRow(header, value) {
+			html.push('<tr><th>');
+			html.push(header);
+			html.push('</th><td>');
+			html.push(value);
+			html.push('</td></tr>');
+		}
+		if (this.start)
+			addRow('Starts at', this.controller.formatDate(new Date(this.start)));
+		if (this.end)
+			addRow(this.every ? 'Next at' : 'Ends at', this.controller.formatDate(new Date(this.end)));
+		html.push('</tbody></table>');
+		this._times.innerHTML = html.join('');
 	},
 	/**
 	 * Internal function for generating the popover.
@@ -321,8 +338,64 @@ FFXIVCountdown.prototype = {
 			}
 			toggle();
 		};
+	},
+	/**
+	 * Update the timer for the given time, potentially removing it.
+	 */
+	update: function(now) {
+		if (now <= this.start) {
+			this.div.className = this.beforeClass;
+			time = new Clock.Interval(this.start - now + 1000, this.controller.showWeeks);
+		} else if (now <= this.end) {
+			this.div.className = this.activeClass;
+			time = new Clock.Interval(this.end - now + 1000);
+			if (this.removeOnActive) {
+				this.div.parentNode.removeChild(this.div);
+				return false;
+			}
+		} else {
+			if (this.every) {
+				// Recurring timer, so reset it.
+				this.resetRecurring(now);
+				time = new Clock.Interval(this.end - now + 1000);
+			} else {
+				// Otherwise, end it entirely.
+				this.div.className = this.afterClass;
+				this.timerDiv.innerHTML = '(over)';
+				if (this.removeOnComplete) {
+					this.div.parentNode.removeChild(this.div);
+				}
+				return false;
+			}
+		}
+		var m = '';
+		if (time.weeks > 0) {
+			m = '<span class="weeks">' + time.weeks + (time.weeks > 1 ? ' weeks' : ' week') + ', </span>';
+		}
+		if (time.days > 0) {
+			m += '<span class="days">' + time.days + (time.days > 1 ? ' days' : ' day') + ', </span>';
+		}
+		m += '<span class="hours">' + Clock.zeropad(time.hours) + ':' + Clock.zeropad(time.minutes) + ':' + Clock.zeropad(time.seconds) + '</span>';
+		this.timerDiv.innerHTML = m;
+		return true;
+	},
+	/**
+	 * Determine if the timer is outdated.
+	 */
+	isOutdated: function(cutoff) {
+		// Recurring timers are never outdated.
+		return (!this.every) && this.end <= cutoff;
+	},
+	/**
+	 * If a recurring timer, reset the end fields to the next instance based on
+	 * the given time. Otherwise, this does nothing.
+	 */
+	resetRecurring: function(now) {
+		if (this.every)
+			this.end = (Math.floor(((now+1000) - this.offset) / this.every) + 1) * this.every + this.offset;
+		this._updateTimes();
 	}
-};
+}
 
 return FFXIVCountdown;
 });
