@@ -6,7 +6,6 @@
  *
  * - Weekly reset is every Tuesday at 1AM PST/4AM EST/08:00 UTC.
  * - Daily reset is every day at 7AM PST/10AM EST/15:00 UTC.
- * - Crafting reset is every Thursday at 1AM PST/4AM EST/08:00 UTC.
  *
  * When the module is required, it simply appends the above list to the
  * {@link module:ffxiv_countdown.builtins} array.
@@ -22,6 +21,7 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
         + '<li>PvP Weekly Performance</li>'
         + '<li>Challenge Log challenges</li>'
         + '<li>A new Wondrous Tails journal is available</li>'
+        + '<li>Zhloe Aliapoh custom deliveries</li>'
         + '<li>Adventurer Squadron Priority mission</li></ul>',
       'type': 'reset',
       // Period in MS for this event
@@ -29,15 +29,6 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
       // The "every" recurrence is based on the UNIX epoch, which started on a
       // Thursday. Since the reset is on Tuesday, that's 5 days off.
       'offset': (5*24+8)*60*60*1000
-    },
-    {
-      'name': 'Crafting Reset',
-      'info': 'On the weekly crafting reset, the following resets:<ul>'
-        + "<li>Zhloe deliveries</li></ul>",
-      'type': 'reset',
-      'every': 7*24*60*60*1000,
-      // Helpfully this reset takes place on the same day as the UNIX epoch!
-      'offset': 8*60*60*1000
     },
     {
       'name': 'Daily Reset',

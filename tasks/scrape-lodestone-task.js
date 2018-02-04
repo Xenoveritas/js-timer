@@ -160,7 +160,7 @@ module.exports = function(grunt) {
     // Remove the maintenance tag
     title.find('.news__header__tag').remove();
     var post = $('div.news__detail__wrapper').text();
-    var m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(.*)\s+to\s+(.*)\s*\((\w+)\)/.exec(post);
+    var m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(?:From\s+)?(.*)\s+to\s+(.*)\s*\((\w+)\)/.exec(post);
     if (m) {
       var start = parseLodestoneDate(m[1]),
         end = parseLodestoneDate(m[2], start),

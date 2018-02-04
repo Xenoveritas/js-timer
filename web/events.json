@@ -2,16 +2,40 @@
   "description": "Wouldn't it be nice if JSON did comments? This is just events, ready-to-go, so to speak.",
   "timers": [
     {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Valentiones_Day/\">Valentione's Day</a>",
+      "type": "event valentiones-day",
+      "start": "2018-02-02T00:00:00-0800",
+      "end": "2018-02-15T06:59:00-0800"
+    },
+    {
       "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/Little_Ladies_Day/\">Little Ladies' Day</a>",
-      "type": "little-ladies-day",
+      "type": "event little-ladies-day",
       "start": "2016-02-26T00:00:00-0800",
       "end": "2016-03-10T06:59:00-0800"
     },
     {
       "name": "<a href=\"http://na.finalfantasyxiv.com/lodestone/special/2016/Hatching_tide/\">Hatching-tide</a>",
-      "type": "hatchingtide",
+      "type": "event hatchingtide",
       "start": "2016-03-15T01:00:00-0700",
       "end": "2016-03-28T07:59:00-0700"
+    },
+    {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/4a05902b13287c82f5b096877ae9748cf08f69c9\">Free Login Campaign</a>",
+      "type": "campaign free-login",
+      "start": "2017-12-01T03:00:00-0800",
+      "end": "2018-01-04T06:59:00-0800"
+    },
+    {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/The_Starlight_Celebration\">Starlight Celebration</a>",
+      "type": "event starlight-celebration",
+      "start": "2017-12-15T00:00:00-0800",
+      "end": "2017-12-31T06:59:00-0800"
+    },
+    {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Heavensturn/\">Heavensturn</a>",
+      "type": "event heavensturn",
+      "start": "2017-12-31T07:00:00-0800",
+      "end": "2018-01-15T06:59:00-0800"
     }
   ]
 }

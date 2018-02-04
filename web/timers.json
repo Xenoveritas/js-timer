@@ -4,18 +4,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/youkai-watch/\">Yo-kai Watch</a>",
-    "type": "event yokai-watch",
-    "start": "2017-09-03T01:00:00-0700",
-    "end": "2017-11-01T07:59:00-0700",
-    "showDuration": true
-  },
-  {
-    "name": "<a href=\"http://na.finalfantasyxiv.com/mount_campaign_2017/\">Fly the Falcon Mount Campaign</a>",
-    "type": "campaign",
-    "start": "2017-07-01T00:00:00-0700",
-    "end": "2017-09-30T23:59:00-0700",
-    "info": "Players who purchase a total of 90 days of subscription time during this time period will receive a Falcon mount."
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Valentiones_Day/\">Valentione's Day</a>",
+    "type": "event valentiones-day",
+    "start": "2018-02-02T00:00:00-0800",
+    "end": "2018-02-15T06:59:00-0800"
   }
 ]
 }
