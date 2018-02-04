@@ -273,11 +273,7 @@ FFXIVCountdown.Timer.prototype = {
 			d.className = 'note';
 			d.appendChild(document.createTextNode(this.note));
 		}
-		if (this.info) {
-			this._makePopover(div, this.info);
-		}
-		div.appendChild(this._times = document.createElement('div'));
-		this._times.className = 'times';
+		this._makePopover(div, this.info);
 		this._updateTimes();
 		return div;
 	},
@@ -297,7 +293,7 @@ FFXIVCountdown.Timer.prototype = {
 			addRow('Starts at', this.controller.formatDate(new Date(this.start)));
 		if (this.end)
 			addRow(this.every ? 'Next at' : 'Ends at', this.controller.formatDate(new Date(this.end)));
-		html.push('</tbody></table>');
+		html.push("</tbody></table>Times displayed are based on your computer's timezone.");
 		this._times.innerHTML = html.join('');
 	},
 	/**
@@ -307,7 +303,13 @@ FFXIVCountdown.Timer.prototype = {
 	_makePopover: function(div, popoverHTML) {
 		var popover = document.createElement('div'), visible = false, sticky = false;
 		popover.className = 'info';
-		popover.innerHTML = popoverHTML;
+		if (popoverHTML) {
+			// If the popover HTML is null, leave this empty.
+			popover.innerHTML = popoverHTML;
+		}
+		// Add the time information to the popover
+		popover.appendChild(this._times = document.createElement('div'));
+		this._times.className = 'times';
 		div.appendChild(popover);
 		function toggle() {
 			if (visible || sticky) {
