@@ -4,10 +4,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Valentiones_Day/\">Valentione's Day</a>",
-    "type": "event valentiones-day",
-    "start": "2018-02-02T00:00:00-0800",
-    "end": "2018-02-15T06:59:00-0800"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Little_Ladies_Day/\">Little Ladies' Day</a>",
+    "type": "event little-ladies-day",
+    "start": "2018-03-01T00:00:00-0800",
+    "end": "2018-03-14T07:59:00-0700"
   }
 ]
 }
