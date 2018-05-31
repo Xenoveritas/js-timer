@@ -1,5 +1,11 @@
 {
   "description": "Wouldn't it be nice if JSON did comments? This is just events, ready-to-go, so to speak.",
+  "types": {
+    "explanation": "another object-as-comment",
+    "event": "an in-game event that has things to do in-game",
+    "campaign": "an out-of-game event such as free login or welcome back campaigns",
+    "early-access": "early access for expansions"
+  },
   "timers": [
     {
       "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Valentiones_Day/\">Valentione's Day</a>",
@@ -24,6 +30,12 @@
       "type": "campaign free-login",
       "start": "2017-12-01T03:00:00-0800",
       "end": "2018-01-04T06:59:00-0800"
+    },
+    {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/the_make_it_rain_campaign/\">The Make It Rain Campaign</a>",
+      "type": "event make-it-rain",
+      "start": "2018-06-06T20:00:00-0700",
+      "end": "2018-06-24T20:00:00-0700"
     },
     {
       "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/The_Starlight_Celebration\">Starlight Celebration</a>",
