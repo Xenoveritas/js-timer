@@ -22,6 +22,7 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
         + '<li>Challenge Log challenges</li>'
         + '<li>A new Wondrous Tails journal is available</li>'
         + '<li>Zhloe Aliapoh custom deliveries</li>'
+        + '<li>Doman Enclave Reconstruction Effort Donations</li>'
         + '<li>Adventurer Squadron Priority mission</li></ul>',
       'type': 'reset',
       // Period in MS for this event
@@ -36,7 +37,8 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
         + '<li>Beastmen quest allowances</li>'
         + '<li>Duty Roulette daily bonuses</li>'
         + '<li>Daily repeatable quests</li>'
-        + '<li>Adventurer Squadron training allowances</li></ul>',
+        + '<li>Adventurer Squadron training allowances</li>'
+        + '<li>Frontline Duty Availability</li></ul>',
       'type': 'reset',
       'every': 24*60*60*1000,
       'offset': 15*60*60*1000
