@@ -198,6 +198,10 @@ FFXIVCountdown.Timer = function(controller, definition) {
 	this.type = definition['type'];
 	if (!this.type)
 		this.type = '';
+	this.endText = definition['endText'];
+	if (!this.endText) {
+		this.endText = '(over)';
+	}
 	this.every = definition['every'];
 	this.offset = definition['offset'];
 	this.showDuration = definition['showDuration'];
@@ -247,7 +251,12 @@ FFXIVCountdown.Timer.prototype = {
 		}
 		this.beforeClass = className + ' before ' + this.type;
 		this.activeClass = className + ' active ' + this.type;
-		this.afterClass = className + ' after ' + this.type;
+		if (typeof this.end != 'number') {
+			// This is an "indefinite" timer: it starts, but never ends
+			this.afterClass = this.activeClass + ' indefinite';
+		} else {
+			this.afterClass = className + ' after ' + this.type;
+		}
 		if (this.showDuration) {
 			d = document.createElement('div');
 			div.appendChild(d);
@@ -363,7 +372,7 @@ FFXIVCountdown.Timer.prototype = {
 			} else {
 				// Otherwise, end it entirely.
 				this.div.className = this.afterClass;
-				this.timerDiv.innerHTML = '(over)';
+				this.timerDiv.innerHTML = this.endText;
 				if (this.removeOnComplete) {
 					this.div.parentNode.removeChild(this.div);
 				}
