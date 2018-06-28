@@ -67,6 +67,8 @@ FFXIVCountdown.prototype = {
 	 */
 	load: function(url) {
 		this.updateURL = url;
+		var loading = this.makeMessage('loading', "Loading timer data...");
+		this.container.appendChild(loading);
 		var xhr = new XMLHttpRequest();
 		var me = this;
 		// Firefox will indefinitely cache the JSON file, even though the server
@@ -80,6 +82,7 @@ FFXIVCountdown.prototype = {
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState == 4) {
 					// All set.
+					me.container.removeChild(loading);
 					var timers = xhr.response;
 					if (typeof timers == 'string') {
 						// avoid infinite recursion and re-sending things
@@ -159,8 +162,11 @@ FFXIVCountdown.prototype = {
 		timer.start();
 	},
 	makeError: function(message) {
+		return this.makeMessage("error", message);
+	},
+	makeMessage: function(className, message) {
 		var div = document.createElement('div');
-		div.className = "error";
+		div.className = className + " message";
 		div.appendChild(document.createTextNode(message));
 		return div;
 	},

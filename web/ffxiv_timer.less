@@ -47,14 +47,16 @@ a:hover { text-decoration: underline; }
 .timer {
 	text-align: center;
 }
-.timer, .subtimer, .error, .info {
+.timer, .subtimer, .error, .info, .message {
 	border: solid 2px @timerBorderColor;
 	padding: 16px;
 	margin: 16px;
 	background-color: @timerBackgroundColor;
 }
-.error {
+.error, .message {
 	font-size: 150%;
+}
+.error {
 	border-color: mix(#F00, @timerBorderColor);
 	background-color: mix(#F00, @timerBackgroundColor);
 	color: mix(#F00, @textColor);
