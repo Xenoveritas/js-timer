@@ -204,9 +204,9 @@ FFXIVCountdown.Timer = function(controller, definition) {
 	this.type = definition['type'];
 	if (!this.type)
 		this.type = '';
-	this.endText = definition['endText'];
-	if (!this.endText) {
-		this.endText = '(over)';
+	this.endLabel = definition['endLabel'];
+	if (!this.endLabel) {
+		this.endLabel = '(over)';
 	}
 	this.every = definition['every'];
 	this.offset = definition['offset'];
@@ -378,7 +378,7 @@ FFXIVCountdown.Timer.prototype = {
 			} else {
 				// Otherwise, end it entirely.
 				this.div.className = this.afterClass;
-				this.timerDiv.innerHTML = this.endText;
+				this.timerDiv.innerHTML = this.endLabel;
 				if (this.removeOnComplete) {
 					this.div.parentNode.removeChild(this.div);
 				}

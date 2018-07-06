@@ -1,13 +1,23 @@
 {
 "scrapeLodestone": {
-  "ignore": [ "http://na.finalfantasyxiv.com/lodestone/news/detail/5e7bb502b2264f066679965f86b441ea1f36bc6a" ]
+  "ignore": [
+    "http://na.finalfantasyxiv.com/lodestone/news/detail/5e7bb502b2264f066679965f86b441ea1f36bc6a",
+    "http://na.finalfantasyxiv.com/lodestone/news/detail/c8efaee5de3821c47d957abc7afdf98efff8ee0a"
+  ]
 },
 "timers": [
   {
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/0959ee31d1107dc1934f0c544824a5ee79a8f6af\">Fanfest Tickets Available</a>",
     "type": "fanfest",
     "start": "2018-07-10T12:00:00-0700",
-    "endText": "On sale now"
+    "endLabel": "On sale now"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/news/detail/67e849d9167abe0b98d3908966c13cf76f8b7bb1\">Character Image Display Update Feature Maintenance (Jul. 2-18)</a>",
+    "title": "Character Image Display Update Feature Maintenance (Jul. 2-8)",
+    "type": "maintenance",
+    "start": "2018-07-03T05:00:00Z",
+    "end": "2018-07-18T10:00:00Z"
   }
 ]
 }

@@ -41,7 +41,7 @@ var TIMER_FIELDS = {
   "showDuration": true,
   "info": true,
   "note": true,
-  "endText": true
+  "endLabel": true
 };
 
 /**
