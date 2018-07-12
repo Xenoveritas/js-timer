@@ -7,12 +7,6 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/0959ee31d1107dc1934f0c544824a5ee79a8f6af\">Fanfest Tickets Available</a>",
-    "type": "fanfest",
-    "start": "2018-07-10T12:00:00-0700",
-    "endLabel": "On sale now"
-  },
-  {
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/news/detail/67e849d9167abe0b98d3908966c13cf76f8b7bb1\">Character Image Display Update Feature Maintenance (Jul. 2-18)</a>",
     "title": "Character Image Display Update Feature Maintenance (Jul. 2-8)",
     "type": "maintenance",
