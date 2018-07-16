@@ -12,6 +12,12 @@
     "type": "maintenance",
     "start": "2018-07-03T05:00:00Z",
     "end": "2018-07-18T10:00:00Z"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/9b213433c6fd505c075c12c9a5a9b2939374f163\">Free Login Campaign</a>",
+    "type": "campaign free-login",
+    "start": "2018-07-16T00:00:00-0700",
+    "end": "2018-08-02T07:59:00-0700"
   }
 ]
 }
