@@ -8,6 +8,24 @@
   },
   "timers": [
     {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/4a05902b13287c82f5b096877ae9748cf08f69c9\">Free Login Campaign</a>",
+      "type": "campaign free-login",
+      "start": "2017-12-01T03:00:00-0800",
+      "end": "2018-01-04T06:59:00-0800"
+    },
+    {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/0959ee31d1107dc1934f0c544824a5ee79a8f6af\">Fanfest Tickets Available</a>",
+      "type": "fanfest",
+      "start": "2018-07-10T12:00:00-0700",
+      "endLabel": "On sale now"
+    },
+    {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Heavensturn/\">Heavensturn</a>",
+      "type": "event heavensturn",
+      "start": "2017-12-31T07:00:00-0800",
+      "end": "2018-01-15T06:59:00-0800"
+    },
+    {
       "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Valentiones_Day/\">Valentione's Day</a>",
       "type": "event valentiones-day",
       "start": "2018-02-02T00:00:00-0800",
@@ -26,40 +44,22 @@
       "end": "2016-03-28T07:59:00-0700"
     },
     {
-      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/4a05902b13287c82f5b096877ae9748cf08f69c9\">Free Login Campaign</a>",
-      "type": "campaign free-login",
-      "start": "2017-12-01T03:00:00-0800",
-      "end": "2018-01-04T06:59:00-0800"
-    },
-    {
       "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/the_make_it_rain_campaign/\">The Make It Rain Campaign</a>",
       "type": "event make-it-rain",
       "start": "2018-06-06T20:00:00-0700",
       "end": "2018-06-24T20:00:00-0700"
     },
     {
-      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/0959ee31d1107dc1934f0c544824a5ee79a8f6af\">Fanfest Tickets Available</a>",
-      "type": "fanfest",
-      "start": "2018-07-10T12:00:00-0700",
-      "endLabel": "On sale now"
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Moonfire_Faire/\">Moonfire Faire</a>",
+      "type": "event moonlight-faire",
+      "start": "2018-08-13T01:00:00-0700",
+      "end": "2018-08-26T07:59:00-0700"
     },
     {
       "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/The_Starlight_Celebration\">Starlight Celebration</a>",
       "type": "event starlight-celebration",
       "start": "2017-12-15T00:00:00-0800",
       "end": "2017-12-31T06:59:00-0800"
-    },
-    {
-      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Heavensturn/\">Heavensturn</a>",
-      "type": "event heavensturn",
-      "start": "2017-12-31T07:00:00-0800",
-      "end": "2018-01-15T06:59:00-0800"
-    },
-    {
-      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/6d6666ed8b669d6b6c6b9c6a38935191a68f0714\">Free Login Campaign</a>",
-      "type": "campaign free-login",
-      "start": "2018-03-27T04:00:00-0700",
-      "end": "2018-05-06T07:59:00-0700"
     }
   ]
 }
