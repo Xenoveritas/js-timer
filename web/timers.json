@@ -11,6 +11,12 @@
     "type": "event moonlight-faire",
     "start": "2018-08-13T01:00:00-0700",
     "end": "2018-08-26T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/The_Rising/\">The Rising</a>",
+    "type": "event the-rising",
+    "start": "2018-08-26T08:00:00-0700",
+    "end": "2018-09-17T03:00:00-0700"
   }
 ]
 }
