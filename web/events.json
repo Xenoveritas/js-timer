@@ -62,6 +62,12 @@
       "end": "2018-09-17T03:00:00-0700"
     },
     {
+      "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/All_Saints_Wake/\">All Saints' Wake</a>",
+      "type": "event all-saints-wake",
+      "start": "2018-10-18T01:00:00-0700",
+      "end": "2018-11-01T07:59:00-0700"
+    },
+    {
       "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2017/The_Starlight_Celebration\">Starlight Celebration</a>",
       "type": "event starlight-celebration",
       "start": "2017-12-15T00:00:00-0800",
