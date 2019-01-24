@@ -7,22 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/56ffcf11d86973f6f085459c8ec477a6534abab3\">Free Login Campaign</a>",
-    "type": "campaign free-login",
-    "start": "2018-11-13T00:00:00-0800",
-    "end": "2018-12-23T06:59:00-0800"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/The_Starlight_Celebration\">Starlight Celebration</a>",
-    "type": "event starlight-celebration",
-    "start": "2018-12-17T00:00:00-0800",
-    "end": "2018-12-31T06:59:00-0800"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2019/Heavensturn/\">Heavensturn</a>",
-    "type": "event heavensturn",
-    "start": "2018-12-31T07:00:00-0800",
-    "end": "2019-01-15T06:59:00-0800"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2019/Valentiones_Day/\">Valentione's Day</a>",
+    "type": "event valentiones-day",
+    "start": "2019-01-31T00:00:00-0800",
+    "end": "2019-02-15T06:59:00-0800"
   }
 ]
 }
