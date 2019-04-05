@@ -7,10 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2019/Little_Ladies_Day/\">Little Ladies' Day</a>",
-    "type": "event little-ladies-day",
-    "start": "2019-02-28T00:00:00-0800",
-    "end": "2019-03-13T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2019/Hatching_tide/\">Hatching-tide</a>",
+    "type": "event hatchingtide",
+    "start": "2019-04-09T01:00:00-0700",
+    "end": "2019-04-22T07:59:00-0700"
   }
 ]
 }
