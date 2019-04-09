@@ -11,6 +11,18 @@
     "type": "event hatchingtide",
     "start": "2019-04-09T01:00:00-0700",
     "end": "2019-04-22T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/5d8832c15e6c845e8c76b590f7a8acb26d4921da\">Free Login Campaign</a>",
+    "type": "campaign free-login",
+    "start": "2019-04-08T01:00:00-0700",
+    "end": "2019-06-17T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/ffxv/\">Final Fantasy XIV \u00D7 Final Fantasy XV</a>",
+    "type": "campaign free-login",
+    "start": "2019-04-16T01:00:00-0700",
+    "end": "2019-05-27T07:59:00-0700"
   }
 ]
 }
