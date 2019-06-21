@@ -7,22 +7,17 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2019/Hatching_tide/\">Hatching-tide</a>",
-    "type": "event hatchingtide",
-    "start": "2019-04-09T01:00:00-0700",
-    "end": "2019-04-22T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2019/the_make_it_rain_campaign/\">The Make It Rain Campaign</a>",
+    "type": "event make-it-rain",
+    "start": "2019-06-06T01:00:00-0700",
+    "end": "2019-06-24T07:59:00-0700"
   },
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/5d8832c15e6c845e8c76b590f7a8acb26d4921da\">Free Login Campaign</a>",
-    "type": "campaign free-login",
-    "start": "2019-04-08T01:00:00-0700",
-    "end": "2019-06-17T07:59:00-0700"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/ffxv/\">Final Fantasy XIV \u00D7 Final Fantasy XV</a>",
-    "type": "campaign free-login",
-    "start": "2019-04-16T01:00:00-0700",
-    "end": "2019-05-27T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/b219753dfcd6dd679bdad01b63a14ac2c1e68bb3\">Shadowbringers Early Access</a>",
+    "type": "campaign early-access",
+    "start": "2019-06-28T02:00:00-0700",
+    "end": "2019-07-05T23:59:00+0900",
+    "note": "End time is by server region and is displayed here for the Japanese data centers (JST) as that is the earliest end time. European data centers will end nine hours after that, and North American data centers will end an additional seven hours after the EU data centers."
   }
 ]
 }
