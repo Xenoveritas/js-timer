@@ -99,6 +99,7 @@ module.exports = function(grunt) {
   grunt.loadTasks('tasks');
 
   grunt.registerTask('default', ['htmlmin', 'requirejs', 'less', 'scrapelodestone', 'parsetimers', 'jsdoc', 'cacheBust']);
+  grunt.registerTask('nolodestone', ['htmlmin', 'requirejs', 'less', 'parsetimers', 'jsdoc', 'cacheBust']);
   // Create some aliases:
   grunt.registerTask('server', ['default', 'connect:dist']);
   grunt.registerTask('testserver', ['connect:test']);

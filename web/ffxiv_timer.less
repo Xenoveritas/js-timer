@@ -189,6 +189,17 @@ footer {
 // Import special event stuff.
 @import url(ffxiv_events.less);
 
+// Responsive design
+@media (max-width: 500px) {
+	html, body { margin: 0; padding: 0; }
+	.timer {
+		margin: 1em 0;
+	}
+	.timer:first-child {
+		margin-top: 0;
+	}
+}
+
 // Animations
 @keyframes fade-in {
 	from {
