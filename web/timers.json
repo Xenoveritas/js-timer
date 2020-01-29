@@ -7,16 +7,16 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2019/The_Starlight_Celebration\">Starlight Celebration</a>",
-    "type": "event starlight-celebration",
-    "start": "2019-12-18T00:00:00-0800",
-    "end": "2019-12-31T06:59:00-0800"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Valentiones_Day/\">Valentione's Day</a> (Voting Period)",
+    "type": "event valentiones-day",
+    "start": "2020-01-29T00:00:00-0800",
+    "end": "2020-02-09T06:59:00-0800"
   },
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/43e7d126141d197e07c9fbebec536794f172f722\">Free Login Campaign</a>",
-    "type": "campaign free-login",
-    "start": "2019-12-13T03:00:00-0800",
-    "end": "2020-01-14T06:59:00-0800"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Valentiones_Day/\">Valentione's Day</a> (Results)",
+    "type": "event valentiones-day",
+    "start": "2020-02-09T00:07:00-0800",
+    "end": "2020-02-17T06:59:00-0800"
   }
 ]
 }
