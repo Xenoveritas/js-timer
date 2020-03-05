@@ -7,16 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Valentiones_Day/\">Valentione's Day</a> (Voting Period)",
-    "type": "event valentiones-day",
-    "start": "2020-01-29T00:00:00-0800",
-    "end": "2020-02-09T06:59:00-0800"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Valentiones_Day/\">Valentione's Day</a> (Results)",
-    "type": "event valentiones-day",
-    "start": "2020-02-09T00:07:00-0800",
-    "end": "2020-02-17T06:59:00-0800"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Little_Ladies_Day/\">Little Ladies' Day</a>",
+    "type": "event little-ladies-day",
+    "start": "2020-03-02T00:00:00-0800",
+    "end": "2020-03-16T07:59:00-0700"
   }
 ]
 }

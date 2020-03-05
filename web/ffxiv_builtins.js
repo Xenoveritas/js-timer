@@ -20,9 +20,10 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
         + '<li>PvP Weekly Performance</li>'
         + '<li>Challenge Log challenges</li>'
         + '<li>A new Wondrous Tails journal is available</li>'
-        + '<li>Zhloe Aliapoh custom deliveries</li>'
-        + '<li>Doman Enclave Reconstruction Effort Donations</li>'
-        + '<li>Adventurer Squadron Priority mission</li></ul>',
+        + '<li>Custom deliveries allowances/individual allowances</li>'
+        + '<li>Doman Enclave Reconstruction Effort donations</li>'
+        + '<li>Adventurer Squadron Priority mission</li>'
+        + '<li>Fashion Report</li></ul>',
       'type': 'reset',
       // Period in MS for this event
       'every': 7*24*60*60*1000,
@@ -31,16 +32,25 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
       'offset': (5*24+8)*60*60*1000
     },
     {
-      'name': 'Daily Reset',
-      'info': 'On the daily reset, the following resets:<ul>'
+      'name': 'Duty/Beast Tribe Daily Reset',
+      'info': 'At this time, the following resets:<ul>'
         + '<li>Beastmen quest allowances</li>'
         + '<li>Duty Roulette daily bonuses</li>'
         + '<li>Daily repeatable quests</li>'
-        + '<li>Adventurer Squadron training allowances</li>'
         + '<li>Frontline Duty Availability</li></ul>',
       'type': 'reset',
       'every': 24*60*60*1000,
       'offset': 15*60*60*1000
+    },
+    {
+      'name': 'Grand Company/Rowena Daily Reset',
+      'info': 'At this time, the following resets:<ul>'
+        + '<li>Adventurer Squadron training allowances</li>'
+        + '<li>Grand Company Supply/Provisioning missions</li>'
+        + "<li>Rowena's House of Splendors</li></ul>",
+      'type': 'reset',
+      'every': 24*60*60*1000,
+      'offset': 20*60*60*1000
     }
   ];
   // Daily "duty finder jerk" reset (where the "three times per day" before
