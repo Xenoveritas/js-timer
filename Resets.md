@@ -6,6 +6,7 @@ Note: At present, this list was mostly created by searching for the word "reset"
 
 | Item                                  | Resets | Resets At           | Patch | Removed        |
 |---------------------------------------|--------|---------------------|-------|----------------|
+| Eden's Verse                          | Weekly | Tuesday, 00:00 PST  | 5.2   |                |
 | Blue Mage Weekly Targets              | Weekly | Tuesday, 00:00 PST  | 5.15  |                |
 | Epic of Alexander (Ultimate)          | Weekly | Tuesday, 00:00 PST  | 5.11  |                |
 | Copied Factory                        | Weekly | Tuesday, 00:00 PST  | 5.1   |                |
@@ -56,7 +57,11 @@ This is a simple list of the [various patch notes over the years](https://na.fin
 
 | Version | Released   | Patch Notes                                                                                                    |
 |---------|------------|----------------------------------------------------------------------------------------------------------------|
+| **Echoes of a Fallen Star** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_2/)                          |
+| 5.21    | 2020-03-10 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/9ee566b4cad525c8330bfb3c09591b3f63f433fd) |
+| 5.2     | 2020-02-18 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/b0151eaed1faecb46061b947cf9c08bed75d230d) |
 | **Vows of Virtue, Deeds of Cruelty** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_1/)                 |
+| 5.18    | 2019-12-24 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/36ab41b81c81a289336f63c1b9d40f6ed444ca9c) |
 | 5.15    | 2019-12-09 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/c8640b7f57d04db1acf5434d9812b102c455cb79) |
 | 5.11    | 2019-11-12 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/d7d53d91c131adfdc71ad0f270f1d38252e5aa39) |
 | 5.1     | 2019-10-29 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/3a23a8ba13b2c4152681ec4fa5716915b851002f) |
