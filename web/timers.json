@@ -7,10 +7,16 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Little_Ladies_Day/\">Little Ladies' Day</a>",
-    "type": "event little-ladies-day",
-    "start": "2020-03-02T00:00:00-0800",
-    "end": "2020-03-16T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Hatching_tide/\">Hatching-tide</a> (Chapter 1)",
+    "type": "event hatchingtide",
+    "start": "2020-03-30T01:00:00-0700",
+    "end": "2020-04-05T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Hatching_tide/\">Hatching-tide</a> (Chapter 2)",
+    "type": "event hatchingtide",
+    "start": "2020-04-05T08:00:00-0700",
+    "end": "2020-04-13T07:59:00-0700"
   }
 ]
 }
