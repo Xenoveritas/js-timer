@@ -7,10 +7,11 @@ Note: At present, this list was mostly created by searching for the word "reset"
 | Item                                  | Resets | Resets At           | Patch | Removed        |
 |---------------------------------------|--------|---------------------|-------|----------------|
 | Eden's Verse                          | Weekly | Tuesday, 00:00 PST  | 5.2   |                |
+| Allagan tomestones of allegory        | Weekly | Tuesday, 00:00 PST  | 5.2   |                |
 | Blue Mage Weekly Targets              | Weekly | Tuesday, 00:00 PST  | 5.15  |                |
-| Epic of Alexander (Ultimate)          | Weekly | Tuesday, 00:00 PST  | 5.11  |                |
-| Copied Factory                        | Weekly | Tuesday, 00:00 PST  | 5.1   |                |
-| Allagan tomestones of phantasmagoria  | Weekly | Tuesday, 00:00 PST  | 5.05  |                |
+| Epic of Alexander (Ultimate)          | Weekly | Tuesday, 00:00 PST  | 5.11  | 5.2            |
+| Copied Factory                        | Weekly | Tuesday, 00:00 PST  | 5.1   | 5.2            |
+| Allagan tomestones of phantasmagoria  | Weekly | Tuesday, 00:00 PST  | 5.05  | 5.2            |
 | Eden's Gate                           | Weekly | Tuesday, 00:00 PST  | 5.01  |                |
 | Masked Carnival Weekly Targets        | Weekly | Tuesday, 00:00 PST  | 4.5   |                |
 | Orbonne Monestary                     | Weekly | Tuesday, 00:00 PST  | 4.5   | 5.0            |
@@ -50,6 +51,31 @@ Note: At present, this list was mostly created by searching for the word "reset"
 | Labyrinth of the Ancients             | Weekly | Tuesday, 00:00 PST  | 2.1   | ?              |
 
 ¹ Never verified: presumably a typo?
+
+## Current Active Resets
+
+These are the current active resets.
+
+| Event                                 | Resets | As of patch |
+|---------------------------------------|--------|-------------|
+| Housing Message                       | Daily  | 4.3         |
+| Daily Friend Request Counter          | Daily  | 3.1         |
+| Triple Triad challenge bonus          | Daily  | 2.51        |
+| Triple Triad regional rules           | Daily  | 2.51        |
+| Mini-cactpot ticket allowance         | Daily  | 2.51        |
+| Allagan tomestones of allegory        | Weekly | 5.2         |
+| Eden's Verse lockouts                 | Weekly | 5.2         |
+| Challenge Log                         | Weekly | 2.2         |
+| Blue Mage Weekly Targets              | Weekly | 5.15        |
+| Masked Carnival Weekly Targets        | Weekly | 5.15        |
+| Doman Enclave Restoration Budget      | Weekly | 4.3         |
+| Custom Deliveries Reset               | Weekly | 4.1?        |
+| Crafting Specialties Reset            | Weekly | 4.0         |
+| The quest "Primal Focus"              | Weekly | 2.2         |
+| PvP Weekly Performance                | Weekly | 2.2         |
+| Adventurer Squadron mission allowance | Weekly | 3.4         |
+| Fashion Report                        | Weekly | ?           |
+| Wondorous Tales                       | Weekly | ?           |
 
 ## Patch Notes
 

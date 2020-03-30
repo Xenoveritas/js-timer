@@ -16,7 +16,10 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
     {
       'name': 'Weekly Reset',
       'info': 'On the weekly reset, the following resets:<ul>'
+        + '<li>Cap on Allagan tomestones of allegory</li>'
         + '<li>Weekly repeatable quests</li>'
+        + '<li>Eden\'s Verse lockouts</li>'
+        + '<li>Blue Mage/Masked Carnival Weekly Targets</li>'
         + '<li>PvP Weekly Performance</li>'
         + '<li>Challenge Log challenges</li>'
         + '<li>A new Wondrous Tails journal is available</li>'
@@ -37,7 +40,8 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
         + '<li>Beastmen quest allowances</li>'
         + '<li>Duty Roulette daily bonuses</li>'
         + '<li>Daily repeatable quests</li>'
-        + '<li>Frontline Duty Availability</li></ul>',
+        + '<li>Frontline Duty Availability</li>'
+        + '<li>Housing Message</ul>',
       'type': 'reset',
       'every': 24*60*60*1000,
       'offset': 15*60*60*1000
