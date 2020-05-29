@@ -12,7 +12,7 @@ Note: At present, this list was mostly created by searching for the word "reset"
 | Epic of Alexander (Ultimate)          | Weekly | Tuesday, 00:00 PST  | 5.11  | 5.2            |
 | Copied Factory                        | Weekly | Tuesday, 00:00 PST  | 5.1   | 5.2            |
 | Allagan tomestones of phantasmagoria  | Weekly | Tuesday, 00:00 PST  | 5.05  | 5.2            |
-| Eden's Gate                           | Weekly | Tuesday, 00:00 PST  | 5.01  |                |
+| Eden's Gate                           | Weekly | Tuesday, 00:00 PST  | 5.01  | 5.18           |
 | Masked Carnival Weekly Targets        | Weekly | Tuesday, 00:00 PST  | 4.5   |                |
 | Orbonne Monestary                     | Weekly | Tuesday, 00:00 PST  | 4.5   | 5.0            |
 | Omega: Alphascape                     | Weekly | Tuesday, 00:00 PST  | 4.4   | ?              |
@@ -84,6 +84,7 @@ This is a simple list of the [various patch notes over the years](https://na.fin
 | Version | Released   | Patch Notes                                                                                                    |
 |---------|------------|----------------------------------------------------------------------------------------------------------------|
 | **Echoes of a Fallen Star** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_2/)                          |
+| 5.25    | 2020-04-12 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/b1a1fb2c812285a29a27bf477b0c895c78666296) |
 | 5.21    | 2020-03-10 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/9ee566b4cad525c8330bfb3c09591b3f63f433fd) |
 | 5.2     | 2020-02-18 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/b0151eaed1faecb46061b947cf9c08bed75d230d) |
 | **Vows of Virtue, Deeds of Cruelty** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_1/)                 |
