@@ -7,16 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Hatching_tide/\">Hatching-tide</a> (Chapter 1)",
-    "type": "event hatchingtide",
-    "start": "2020-03-30T01:00:00-0700",
-    "end": "2020-04-05T07:59:00-0700"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Hatching_tide/\">Hatching-tide</a> (Chapter 2)",
-    "type": "event hatchingtide",
-    "start": "2020-04-05T08:00:00-0700",
-    "end": "2020-04-13T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/The_Maidens_Rhapsody/\">The Maiden\u2019s Rhapsody</a>",
+    "type": "event maidens-rhapsody",
+    "start": "2020-05-28T01:00:00-0700",
+    "end": "2020-06-22T07:59:00-0700"
   }
 ]
 }
