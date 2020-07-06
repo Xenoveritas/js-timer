@@ -7,10 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/The_Maidens_Rhapsody/\">The Maiden\u2019s Rhapsody</a>",
-    "type": "event maidens-rhapsody",
-    "start": "2020-05-28T01:00:00-0700",
-    "end": "2020-06-22T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Theres_Golems_in_Those_Hills/\">Breaking Brick Mountains</a>",
+    "type": "event breaking-brick-mountains",
+    "start": "2020-07-02T01:00:00-0700",
+    "end": "2020-07-27T07:59:00-0700"
   }
 ]
 }
