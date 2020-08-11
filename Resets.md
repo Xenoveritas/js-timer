@@ -2,11 +2,43 @@
 
 This attempts to document all the various reset times and when they were changed, since there is no global reset documentation anywhere provided by Square Enix themselves.
 
+## Current Active Resets
+
+These are the current active resets.
+
+| Event                                 | Resets | As of patch |
+|---------------------------------------|--------|-------------|
+| Housing Message                       | Daily  | 4.3         |
+| Daily Friend Request Counter          | Daily  | 3.1         |
+| Triple Triad challenge bonus          | Daily  | 2.51        |
+| Triple Triad regional rules           | Daily  | 2.51        |
+| Mini-cactpot ticket allowance         | Daily  | 2.51        |
+| Allagan tomestones of allegory        | Weekly | 5.2         |
+| Challenge Log                         | Weekly | 2.2         |
+| Blue Mage Weekly Targets              | Weekly | 5.15        |
+| Masked Carnival Weekly Targets        | Weekly | 5.15        |
+| Doman Enclave Restoration Budget      | Weekly | 4.3         |
+| Custom Deliveries Reset               | Weekly | 4.1?        |
+| Crafting Specialties Reset            | Weekly | 4.0         |
+| The quest "Primal Focus"              | Weekly | 2.2         |
+| PvP Weekly Performance                | Weekly | 2.2         |
+| Adventurer Squadron mission allowance | Weekly | 3.4         |
+| Fashion Report                        | Weekly | ?           |
+| Wondorous Tales                       | Weekly | ?           |
+| Faux Hollows                          | Weekly | 5.3         |
+
+## Historical Resets
+
+This is a list of all resets known, when they existed, and what patch changed them.
+
 Note: At present, this list was mostly created by searching for the word "reset" in the patch notes themselves.
+To-do: Look through for "restriction" in patch notes as that's usually the wording used when a reset is removed as the restriction no longer applies.
 
 | Item                                  | Resets | Resets At           | Patch | Removed        |
 |---------------------------------------|--------|---------------------|-------|----------------|
-| Eden's Verse                          | Weekly | Tuesday, 00:00 PST  | 5.2   |                |
+| Faux Hollows                          | Weekly | Tuesday, 00:00 PST  | 5.3   |                |
+| Puppet's Bunker                       | Weekly | Tuesday, 00:00 PST  | 5.3   |                |
+| Eden's Verse                          | Weekly | Tuesday, 00:00 PST  | 5.2   | 5.3            |
 | Allagan tomestones of allegory        | Weekly | Tuesday, 00:00 PST  | 5.2   |                |
 | Blue Mage Weekly Targets              | Weekly | Tuesday, 00:00 PST  | 5.15  |                |
 | Epic of Alexander (Ultimate)          | Weekly | Tuesday, 00:00 PST  | 5.11  | 5.2            |
@@ -52,37 +84,14 @@ Note: At present, this list was mostly created by searching for the word "reset"
 
 ¹ Never verified: presumably a typo?
 
-## Current Active Resets
-
-These are the current active resets.
-
-| Event                                 | Resets | As of patch |
-|---------------------------------------|--------|-------------|
-| Housing Message                       | Daily  | 4.3         |
-| Daily Friend Request Counter          | Daily  | 3.1         |
-| Triple Triad challenge bonus          | Daily  | 2.51        |
-| Triple Triad regional rules           | Daily  | 2.51        |
-| Mini-cactpot ticket allowance         | Daily  | 2.51        |
-| Allagan tomestones of allegory        | Weekly | 5.2         |
-| Eden's Verse lockouts                 | Weekly | 5.2         |
-| Challenge Log                         | Weekly | 2.2         |
-| Blue Mage Weekly Targets              | Weekly | 5.15        |
-| Masked Carnival Weekly Targets        | Weekly | 5.15        |
-| Doman Enclave Restoration Budget      | Weekly | 4.3         |
-| Custom Deliveries Reset               | Weekly | 4.1?        |
-| Crafting Specialties Reset            | Weekly | 4.0         |
-| The quest "Primal Focus"              | Weekly | 2.2         |
-| PvP Weekly Performance                | Weekly | 2.2         |
-| Adventurer Squadron mission allowance | Weekly | 3.4         |
-| Fashion Report                        | Weekly | ?           |
-| Wondorous Tales                       | Weekly | ?           |
-
 ## Patch Notes
 
 This is a simple list of the [various patch notes over the years](https://na.finalfantasyxiv.com/lodestone/special/patchnote_log/).
 
 | Version | Released   | Patch Notes                                                                                                    |
 |---------|------------|----------------------------------------------------------------------------------------------------------------|
+| **Reflections in Crystal** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_3/)                           |
+| 5.3     | 2020-08-10 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/c2f8c5ba14d9cfaa09d5aab63c5c2da260eae21a) |
 | **Echoes of a Fallen Star** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_2/)                          |
 | 5.25    | 2020-04-12 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/b1a1fb2c812285a29a27bf477b0c895c78666296) |
 | 5.21    | 2020-03-10 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/9ee566b4cad525c8330bfb3c09591b3f63f433fd) |
