@@ -11,6 +11,11 @@
     "type": "event moonfire-faire",
     "start": "2020-08-12T01:00:00-0700",
     "end": "2020-08-26T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/youkai-watch/vdnaiga67o\">Yo-kai Watch: Gather One, Gather All!</a>",
+    "type": "event yo-kai-watch",
+    "start": "2020-08-19T01:00:00-0700"
   }
 ]
 }
