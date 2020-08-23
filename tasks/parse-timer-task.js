@@ -97,6 +97,9 @@ function parseTimers(timers, filename, oldest) {
       // ...but if it doesn't, base it on the start.
       if ('start' in t && t['start'] > oldest) {
         timers.push(t);
+      } else if ('indefinite' in t && t['indefinite']) {
+        // Keep timers marked indefinite - they mark onging things that will end
+        timers.push(t);
       }
     }
   });
