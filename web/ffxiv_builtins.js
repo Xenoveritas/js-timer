@@ -48,11 +48,10 @@ define(['./ffxiv_countdown'], function(FFXIVCountdown) {
       'offset': 15*60*60*1000
     },
     {
-      'name': 'Grand Company/Rowena Daily Reset',
+      'name': 'Grand Company Daily Reset',
       'info': 'At this time, the following resets:<ul>'
         + '<li>Adventurer Squadron training allowances</li>'
-        + '<li>Grand Company Supply/Provisioning missions</li>'
-        + "<li>Rowena's House of Splendors</li></ul>",
+        + '<li>Grand Company Supply/Provisioning missions</li></ul>',
       'type': 'reset',
       'every': 24*60*60*1000,
       'offset': 20*60*60*1000
