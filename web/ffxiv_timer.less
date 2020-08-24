@@ -4,8 +4,15 @@
 @textColor: #404040;
 @linkColor: #2556B8;
 
+// Dark version
+@darkPageColor: #222;
+@darkTextColor: #CCC;
+@darkLinkColor: @linkColor;
+
 @timerBackgroundColor: mix(@pageColor, #FFF);
 @timerBorderColor: mix(@textColor, #FFF);
+@darkTimerBackgroundColor: mix(@darkPageColor, #000);
+@darkTimerBorderColor: mix(@textColor, #000);
 
 @countdownBackgroundColor: #404040;
 @countdownColor: #FFF;
@@ -70,11 +77,11 @@ a:hover { text-decoration: underline; }
 	text-align: left;
 	&.visible {
 		opacity: 1.0;
-		animation-duration: 1s;
+		animation-duration: 0.5s;
 		animation-name: fade-in;
 	}
 	&.hidden {
-		animation-duration: 1s;
+		animation-duration: 0.5s;
 		animation-name: fade-out;
 		opacity: 0.0;
 	}
@@ -197,6 +204,30 @@ footer {
 	}
 	.timer:first-child {
 		margin-top: 0;
+	}
+}
+
+// Styles for DARK MODE
+@media (prefers-color-scheme: dark) {
+	html {
+		background-color: @darkPageColor;
+		color: @darkTextColor;
+	}
+	a, a:visited { color: @darkLinkColor; }
+	.timer, .subtimer, .error, .info, .message {
+		border-color: @darkTimerBorderColor;
+		background-color: @darkTimerBackgroundColor;
+	}
+	.error {
+		border-color: mix(#F00, @darkTimerBorderColor);
+		background-color: mix(#F00, @darkTimerBackgroundColor);
+		color: mix(#F00, @darkTextColor);
+	}
+	footer {
+		color: mix(@darkTextColor, @darkPageColor, 75%);
+		a, a:visited {
+			color: mix(@darkLinkColor, @darkPageColor, 75%);
+		}
 	}
 }
 
