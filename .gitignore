@@ -1,3 +1,8 @@
+/.tscache
 /node_modules
 /build
 /doc
+
+# Ignore clock.js - it's built from TypeScript now
+/clock.js
+/clock.js.map

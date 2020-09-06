@@ -1,9 +1,10 @@
 {
   "name": "timer",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A very simply utility for creating a clock or timer.",
   "main": "clock.js",
   "scripts": {
+    "prepare": "grunt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,7 +25,9 @@
     "grunt": "^1.0.0",
     "grunt-contrib-uglify": "^5.0.0",
     "grunt-jsdoc": "^2.1.0",
-    "ink-docstrap": "^1.3.0"
+    "grunt-ts": "^6.0.0-beta.22",
+    "ink-docstrap": "^1.3.0",
+    "typescript": "^4.0.2"
   },
   "dependencies": {
     "amdefine": "^1.0.0"

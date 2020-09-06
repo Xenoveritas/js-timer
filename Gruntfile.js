@@ -2,6 +2,11 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    ts: {
+      default: {
+        src: [ 'clock.ts' ]
+      }
+    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -25,8 +30,9 @@ module.exports = function(grunt) {
   });
 
   // Load plugins
+  grunt.loadNpmTasks('grunt-ts');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('default', ['uglify', 'jsdoc']);
+  grunt.registerTask('default', ['ts', 'uglify', 'jsdoc']);
 };

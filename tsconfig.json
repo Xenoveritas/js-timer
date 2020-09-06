@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": ".",
+    "target": "ES5"
+  },
+  "include": [
+    "./clock.ts"
+  ]
+}
