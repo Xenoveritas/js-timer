@@ -3,7 +3,24 @@
  * like when various resets are.
  * @module ffxiv_countdown
  */
-define(['clock'], function(Clock) {
+import Clock, { Interval } from '../clock';
+
+type TimestampDefinition = string | number;
+
+interface TimerDefinition {
+	start: TimestampDefinition;
+	end: TimestampDefinition;
+	name: string;
+	info?: string;
+	note?: string;
+	type: string;
+	endLabel?: string;
+	every?: number;
+	offset?: number;
+	showDuration?: boolean;
+	removeOnActive?: boolean;
+	removeOnComplete?: boolean;
+}
 
 /**
  * FFXIV countdown object.
@@ -20,52 +37,50 @@ define(['clock'], function(Clock) {
  * @param {Boolean} showWeeks
  *   when `true`, show weeks instead of just days
  */
-function FFXIVCountdown(container, timers, addBuiltins, showWeeks) {
-	if (arguments.length < 2) {
-		timers = [];
+class FFXIVCountdown {
+	updateURL?: string;
+
+	constructor(
+		public container: HTMLElement,
+		timers: string | unknown[] = [],
+		public addBuiltins = true,
+		public showWeeks = false
+	) {
+		if (typeof timers == 'string') {
+			// Assume it's a URL and try and pull it using AJAX
+			this.load(timers);
+		} else {
+			this._init(timers);
+		}
 	}
-	if (arguments.length < 3)
-		addBuiltins = true;
-	if (arguments.length < 4)
-		showWeeks = false;
-	this.container = container;
-	this.addBuiltins = addBuiltins;
-	this.showWeeks = showWeeks;
-	if (typeof timers == 'string') {
-		// Assume it's a URL and try and pull it using AJAX
-		this.load(timers);
-	} else {
-		this._init(timers);
-	}
-}
 
-/**
- * Maximum age (in milliseconds) before a timer won't be shown any more.
- */
-FFXIVCountdown.MAX_TIMER_AGE = (24*60*60*1000);
+	/**
+	 * Maximum age (in milliseconds) before a timer won't be shown any more.
+	 */
+	static MAX_TIMER_AGE = (24*60*60*1000);
 
-/**
- * Global array of "built-in" timers. By default this is empty. To populate it
- * with actual builtins, require the
- * {@link module:ffxiv_builtins ffxiv_builtins} module.
- */
-FFXIVCountdown.builtins = [];
+	/**
+	 * Global array of "built-in" timers. By default this is empty. To populate it
+	 * with actual builtins, require the
+	 * {@link module:ffxiv_builtins ffxiv_builtins} module.
+	 */
+	static builtins = [];
 
-FFXIVCountdown.prototype = {
 	/**
 	 * Reload timers from the initial URL if there was one or a NO-OP if
 	 * there wasn't.
 	 */
-	reload: function() {
+	reload(): void {
 		if (this.updateURL) {
 			this.load(this.updateURL);
 		}
-	},
+	}
+
 	/**
 	 * Load timers from the given URL. When constructed with a URL, this is called
 	 * automatically.
 	 */
-	load: function(url) {
+	load(url: string): void {
 		this.updateURL = url;
 		var loading = this.makeMessage('loading', "Loading timer data...");
 		this.container.appendChild(loading);
@@ -99,7 +114,7 @@ FFXIVCountdown.prototype = {
 						console.log(xhr.response);
 						return;
 					}
-					if (!'timers' in timers) {
+					if (!('timers' in timers)) {
 						error("No timers present in data sent from server.");
 						console.log(xhr.response);
 						return;
@@ -118,18 +133,19 @@ FFXIVCountdown.prototype = {
 			console.log(message);
 			me.container.appendChild(me.makeError(message));
 		}
-	},
+	}
+
 	/**
 	 * An internal method to constuct the actual UI.
 	 * @private
 	 */
-	_init: function(timers) {
+	private _init(timers) {
 		if (this.addBuiltins) {
 			Array.prototype.push.apply(timers, FFXIVCountdown.builtins);
 		}
 		var now = new Date().getTime(), skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;
 		for (var i = 0; i < timers.length; i++) {
-			timers[i] = new FFXIVCountdown.Timer(this, timers[i]);
+			timers[i] = new Timer(this, timers[i]);
 			var t = timers[i];
 			if (t.isOutdated(skipTimersBefore)) {
 				// Remove out of date timers from the list.
@@ -144,9 +160,9 @@ FFXIVCountdown.prototype = {
 			//t.start = now + (3+i) * 1000;
 			//t.end = now + (6+i) * 1000;
 		}
-		var timer = new Clock();
-		timer.ontick = function(now) {
-			var now = now.getTime(), time;
+		let timer = new Clock();
+		timer.ontick = (nowDate: Date) => {
+			const now = nowDate.getTime();
 			for (var i = 0; i < timers.length; i++) {
 				if (!timers[i].update(now)) {
 					// Remove from the list.
@@ -160,69 +176,94 @@ FFXIVCountdown.prototype = {
 			}
 		}
 		timer.start();
-	},
-	makeError: function(message) {
+	}
+
+	makeError(message) {
 		return this.makeMessage("error", message);
-	},
-	makeMessage: function(className, message) {
+	}
+
+	makeMessage(className: string, message: string): HTMLElement {
 		var div = document.createElement('div');
 		div.className = className + " message";
 		div.appendChild(document.createTextNode(message));
 		return div;
-	},
+	}
+
 	/**
 	 * Formats a date. Override to provide a custom format. The default
 	 * just does `"YYYY-MM-DD at hh:mm"`.
 	 * @param {Date} date the date to format
-	 * @return {String} the date formatted to be human readable as a string
+	 * @return {string} the date formatted to be human readable as a string
 	 */
-	formatDate: function(date) {
+	formatDate(date: Date): string {
 		return date.getFullYear() + '-' + Clock.zeropad(date.getMonth() + 1) + '-' +
 			Clock.zeropad(date.getDate()) + ' at ' + date.getHours() + ':' +
 			Clock.zeropad(date.getMinutes());
 	}
-};
+}
+
+type Timestamp = number;
 
 /**
  * A single timer.
  */
-FFXIVCountdown.Timer = function(controller, definition) {
-	this.controller = controller;
-	// Copy over definition fields:
-	this.start = definition['start'];
-	this.end = definition['end'];
-	// Parse dates if necessary. Note that this won't work in all browsers.
-	if (typeof this.start == 'string') {
-		this.start = Date.parse(this.start);
+class Timer {
+	start: Timestamp;
+	end: Timestamp;
+	name: string;
+	info?: string;
+	note?: string;
+	type: string;
+	endLabel?: string;
+	every?: number;
+	offset?: number;
+	showDuration?: boolean;
+	removeOnActive?: boolean;
+	removeOnComplete?: boolean;
+	div: HTMLDivElement;
+	titleDiv: HTMLDivElement;
+	timerDiv: HTMLDivElement;
+	beforeClass: string;
+	activeClass: string;
+	afterClass: string;
+	_times: HTMLDivElement;
+	constructor(public controller: FFXIVCountdown, definition: TimerDefinition) {
+		// Copy over definition fields:
+		let start = definition['start'];
+		let end = definition['end'];
+		// Parse dates if necessary. Note that this won't work in all browsers.
+		if (typeof start == 'string') {
+			start = Date.parse(start);
+		}
+		if (typeof end == 'string') {
+			end = Date.parse(end);
+		}
+		this.start = start;
+		this.end = end;
+		this.name = definition['name'];
+		this.info = definition['info'];
+		this.note = definition['note'];
+		this.type = definition['type'];
+		if (!this.type)
+			this.type = '';
+		this.endLabel = definition['endLabel'];
+		if (!this.endLabel) {
+			this.endLabel = '(over)';
+		}
+		this.every = definition['every'];
+		this.offset = definition['offset'];
+		this.showDuration = definition['showDuration'];
+		// Default show duration to true in maintenance timers.
+		if (!('showDuration' in definition) && this.type == 'maintenance')
+			this.showDuration = true;
+		this.removeOnActive = definition['removeOnActive'];
+		this.removeOnComplete = definition['removeOnComplete'];
 	}
-	if (typeof this.end == 'string') {
-		this.end = Date.parse(this.end);
-	}
-	this.name = definition['name'];
-	this.info = definition['info'];
-	this.note = definition['note'];
-	this.type = definition['type'];
-	if (!this.type)
-		this.type = '';
-	this.endLabel = definition['endLabel'];
-	if (!this.endLabel) {
-		this.endLabel = '(over)';
-	}
-	this.every = definition['every'];
-	this.offset = definition['offset'];
-	this.showDuration = definition['showDuration'];
-	// Default show duration to true in maintenance timers.
-	if ((!'showDuration' in definition) && this.type == 'maintenance')
-		this.showDuration = true;
-	this.removeOnActive = definition['removeOnActive'];
-	this.removeOnComplete = definition['removeOnComplete'];
-}
 
-FFXIVCountdown.Timer.prototype = {
 	/**
 	 * Initialize the timer based on a given time.
 	 */
-	init: function(container, now) {
+	init(container, now) {
 		container.appendChild(this.div = this._makeHTML());
 		if (this.every) {
 			if (typeof this.offset != 'number') {
@@ -233,14 +274,13 @@ FFXIVCountdown.Timer.prototype = {
 			// And set the end correctly.
 			this.resetRecurring(now);
 		}
-	},
+	}
+
 	/**
 	 * Creates the HTML for the timer.
 	 * @private
 	 */
-	_makeHTML: function(className) {
-		if (arguments.length < 1)
-			className = 'timer';
+	private _makeHTML(className = 'timer') {
 		var div = document.createElement('div');
 		div.className = this.type;
 		var d = document.createElement('div');
@@ -291,11 +331,12 @@ FFXIVCountdown.Timer.prototype = {
 		this._makePopover(div, this.info);
 		this._updateTimes();
 		return div;
-	},
+	}
+
 	/**
 	 * Populate the "local time" display.
 	 */
-	_updateTimes: function() {
+	private _updateTimes() {
 		var html = [ '<table><tbody>' ];
 		function addRow(header, value) {
 			html.push('<tr><th>');
@@ -310,12 +351,13 @@ FFXIVCountdown.Timer.prototype = {
 			addRow(this.every ? 'Next at' : 'Ends at', this.controller.formatDate(new Date(this.end)));
 		html.push("</tbody></table>Times displayed are based on your computer's timezone.");
 		this._times.innerHTML = html.join('');
-	},
+	}
+
 	/**
 	 * Internal function for generating the popover.
 	 * @private
 	 */
-	_makePopover: function(div, popoverHTML) {
+	private _makePopover(div, popoverHTML) {
 		var popover = document.createElement('div'), visible = false, sticky = false;
 		popover.className = 'info';
 		if (popoverHTML) {
@@ -355,11 +397,13 @@ FFXIVCountdown.Timer.prototype = {
 			}
 			toggle();
 		};
-	},
+	}
+
 	/**
 	 * Update the timer for the given time, potentially removing it.
 	 */
-	update: function(now) {
+	update(now) {
+		let time: Interval;
 		if (now <= this.start) {
 			this.div.className = this.beforeClass;
 			time = new Clock.Interval(this.start - now + 1000, this.controller.showWeeks);
@@ -395,24 +439,25 @@ FFXIVCountdown.Timer.prototype = {
 		m += '<span class="hours">' + Clock.zeropad(time.hours) + ':' + Clock.zeropad(time.minutes) + ':' + Clock.zeropad(time.seconds) + '</span>';
 		this.timerDiv.innerHTML = m;
 		return true;
-	},
+	}
+
 	/**
 	 * Determine if the timer is outdated.
 	 */
-	isOutdated: function(cutoff) {
+	isOutdated(cutoff): boolean {
 		// Recurring timers are never outdated.
 		return (!this.every) && this.end <= cutoff;
-	},
+	}
+
 	/**
 	 * If a recurring timer, reset the end fields to the next instance based on
 	 * the given time. Otherwise, this does nothing.
 	 */
-	resetRecurring: function(now) {
+	resetRecurring(now) {
 		if (this.every)
 			this.end = (Math.floor(((now+1000) - this.offset) / this.every) + 1) * this.every + this.offset;
 		this._updateTimes();
 	}
 }
 
-return FFXIVCountdown;
-});
+export default FFXIVCountdown;

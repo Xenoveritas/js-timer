@@ -2,6 +2,20 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    ts: {
+      default: {
+        src: [ 'clock.ts', 'web/**/*.ts' ]
+      }
+    },
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      build: {
+        src: '<%= pkg.main %>',
+        dest: 'build/<%= pkg.name %>.min.js'
+      }
+    },
     jsdoc: {
       dist: {
         src: [ 'clock.js', 'clock-debug.js', 'web/ffxiv_countdown.js', 'web/ffxiv_builtins.js' ],
@@ -94,12 +108,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-ts');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-cache-bust');
   grunt.loadTasks('tasks');
 
-  grunt.registerTask('default', ['htmlmin', 'requirejs', 'less', 'scrapelodestone', 'parsetimers', 'jsdoc', 'cacheBust']);
-  grunt.registerTask('nolodestone', ['htmlmin', 'requirejs', 'less', 'parsetimers', 'jsdoc', 'cacheBust']);
+  grunt.registerTask('default', ['htmlmin', 'ts', 'less', 'scrapelodestone', 'parsetimers', 'jsdoc', 'cacheBust']);
+  grunt.registerTask('nolodestone', ['htmlmin', 'ts', 'less', 'parsetimers', 'jsdoc', 'cacheBust']);
   // Create some aliases:
   grunt.registerTask('server', ['default', 'connect:dist']);
   grunt.registerTask('testserver', ['connect:test']);
