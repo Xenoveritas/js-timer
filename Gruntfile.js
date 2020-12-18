@@ -3,6 +3,9 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     ts: {
+      options: {
+        module: 'umd'
+      },
       default: {
         src: [ 'clock.ts' ]
       }
