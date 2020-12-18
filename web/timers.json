@@ -7,23 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/Moonfire_Faire/d5130d4b53\">Moonfire Faire</a>",
-    "type": "event moonfire-faire",
-    "start": "2020-08-12T01:00:00-0700",
-    "end": "2020-08-26T07:59:00-0700"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/The_Rising/89gmadhdzc\">The Rising</a>",
-    "type": "event the-rising",
-    "start": "2020-08-27T00:00:00-0700",
-    "end": "2020-09-14T07:59:00-0700"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/youkai-watch/vdnaiga67o\">Yo-kai Watch: Gather One, Gather All!</a>",
-    "type": "event yo-kai-watch",
-    "start": "2020-08-19T01:00:00-0700",
-    "endLabel": "Until Patch 5.4",
-    "indefinite": true
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/The_Starlight_Celebration/uho06l3k9d\">Starlight Celebration</a>",
+    "type": "event starlight-celebration",
+    "start": "2020-12-14T00:00:00-0800",
+    "end": "2020-12-31T06:59:00-0800"
   }
 ]
 }
