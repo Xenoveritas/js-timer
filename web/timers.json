@@ -7,16 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/the_make_it_rain_campaign/cx5vklj29q\">The Make It Rain Campaign</a>",
-    "type": "event make-it-rain",
-    "start": "2020-10-21T01:00:00-0700",
-    "end": "2020-11-20T06:59:00-0800"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/youkai-watch/vdnaiga67o\">Yo-kai Watch: Gather One, Gather All!</a>",
-    "type": "event yo-kai-watch",
-    "start": "2020-08-19T01:00:00-0700",
-    "end": "2020-12-07T02:00:00-0800"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/The_Starlight_Celebration/uho06l3k9d\">Starlight Celebration</a>",
+    "type": "event starlight-celebration",
+    "start": "2020-12-14T00:00:00-0800",
+    "end": "2020-12-31T06:59:00-0800"
   }
 ]
 }
