@@ -1,41 +1,44 @@
 // Basic color definitions.
 
-@pageColor: #EEE;
-@textColor: #404040;
-@linkColor: #2556B8;
+$pageColor: #EEE;
+$textColor: #404040;
+$linkColor: #2556B8;
 
 // Dark version
-@darkPageColor: #222;
-@darkTextColor: #CCC;
-@darkLinkColor: @linkColor;
+$darkPageColor: #222;
+$darkTextColor: #CCC;
+$darkLinkColor: $linkColor;
 
-@timerBackgroundColor: mix(@pageColor, #FFF);
-@timerBorderColor: mix(@textColor, #FFF);
-@darkTimerBackgroundColor: mix(@darkPageColor, #000);
-@darkTimerBorderColor: mix(@textColor, #000);
+$timerBackgroundColor: mix($pageColor, #FFF);
+$timerBorderColor: mix($textColor, #FFF);
+$darkTimerBackgroundColor: mix($darkPageColor, #000);
+$darkTimerBorderColor: mix($textColor, #000);
 
-@countdownBackgroundColor: #404040;
-@countdownColor: #FFF;
-@countdownGlowColor: #101010;
+$countdownBackgroundColor: #404040;
+$countdownColor: #FFF;
+$countdownGlowColor: #101010;
 
 // Background used when something is "up" - eg, maintenance is over:
-@countdownUpBackgroundColor: mix(#0F0, @countdownBackgroundColor);
-@countdownUpColor: #FFF;
-@countdownUpGlowColor: #060;
+$countdownUpBackgroundColor: mix(#0F0, $countdownBackgroundColor);
+$countdownUpColor: #FFF;
+$countdownUpGlowColor: #060;
 // Background used when something is "pending" - eg, maintenance is coming up:
-@countdownPendingBackgroundColor: #808050;
-@countdownPendingColor: #FFF;
-@countdownPendingGlowColor: #660;
+$countdownPendingBackgroundColor: #808050;
+$countdownPendingColor: #FFF;
+$countdownPendingGlowColor: #660;
 // Background used when something is "off" - eg, maintenance is ongoing:
-@countdownDownBackgroundColor: mix(#F00, @countdownBackgroundColor);
-@countdownDownColor: #FFF;
-@countdownDownGlowColor: #600;
+$countdownDownBackgroundColor: mix(#F00, $countdownBackgroundColor);
+$countdownDownColor: #FFF;
+$countdownDownGlowColor: #600;
 
-.textglow (@color) {
+// Import special event stuff.
+@use './ffxiv_events';
+
+@mixin textglow ($color) {
 	// Original shadow:
-	//text-shadow: @color 0px 0px 4px, @color 0px 0px 3px, @color 0px 0px 2px;
-	text-shadow: @color -2px -2px 0px, @color 2px -2px 0px, @color 2px 2px 0px, @color -2px 2px 0px,
-		@color 0px -2px 0px, @color 2px 0px 0px, @color 0px 2px 0px, @color -2px 0px 0px;
+	//text-shadow: $color 0px 0px 4px, $color 0px 0px 3px, $color 0px 0px 2px;
+	text-shadow: $color -2px -2px 0px, $color 2px -2px 0px, $color 2px 2px 0px, $color -2px 2px 0px,
+		$color 0px -2px 0px, $color 2px 0px 0px, $color 0px 2px 0px, $color -2px 0px 0px;
 }
 
 // Grab Droid Sans from Google.
@@ -44,29 +47,29 @@
 html {
 	font-family: "Droid Sans", Helvetica, Arial, sans-serif;
 	font-size: 12px;
-	background-color: @pageColor;
-	color: @textColor;
+	background-color: $pageColor;
+	color: $textColor;
 	width: 100%;
 	margin: 0;
 }
-a, a:visited { color: @linkColor; text-decoration: none; }
+a, a:visited { color: $linkColor; text-decoration: none; }
 a:hover { text-decoration: underline; }
 .timer {
 	text-align: center;
 }
 .timer, .subtimer, .error, .info, .message {
-	border: solid 2px @timerBorderColor;
+	border: solid 2px $timerBorderColor;
 	padding: 16px;
 	margin: 16px;
-	background-color: @timerBackgroundColor;
+	background-color: $timerBackgroundColor;
 }
 .error, .message {
 	font-size: 150%;
 }
 .error {
-	border-color: mix(#F00, @timerBorderColor);
-	background-color: mix(#F00, @timerBackgroundColor);
-	color: mix(#F00, @textColor);
+	border-color: mix(#F00, $timerBorderColor);
+	background-color: mix(#F00, $timerBackgroundColor);
+	color: mix(#F00, $textColor);
 }
 .subtimer {
 	font-size: 80%;
@@ -135,40 +138,40 @@ a:hover { text-decoration: underline; }
 	}
 }
 .countdown {
-	@size: 48px;
-	@padding: @size / 4;
-	@borderRadius: (@size + (@padding * 2)) / 2;
-	color: @countdownColor;
-	.textglow(@countdownGlowColor);
-	background-color: @countdownBackgroundColor;
+	$size: 48px;
+	$padding: $size / 4;
+	$borderRadius: ($size + ($padding * 2)) / 2;
+	color: $countdownColor;
+	@include textglow($countdownGlowColor);
+	background-color: $countdownBackgroundColor;
 	// Make the actual countdown a "pill"
 	display: inline-block;
-	margin: @padding 0;
-	padding: @padding @borderRadius;
+	margin: $padding 0;
+	padding: $padding $borderRadius;
 	font-family: "Droid Sans", Helvetica, sans-serif;
-	font-size: @size * 3 / 4;
-	line-height: @size;
+	font-size: $size * 3 / 4;
+	line-height: $size;
 	vertical-align: middle;
 	width: auto;
-	border-radius: @borderRadius;
+	border-radius: $borderRadius;
 	box-shadow: #000 1px 1px 4px;
 	// Styles for things that are "up"
 	.maintenance.after &, .event.active &, .campaign.active & {
-		background-color: @countdownUpBackgroundColor;
-		color: @countdownUpColor;
-		.textglow(@countdownUpGlowColor);
+		background-color: $countdownUpBackgroundColor;
+		color: $countdownUpColor;
+		@include textglow($countdownUpGlowColor);
 	}
 	// Styles for things that are "pending"
 	.maintenance.before &, .event.before &, .campaign.before & {
-		background-color: @countdownPendingBackgroundColor;
-		color: @countdownPendingColor;
-		.textglow(@countdownPendingGlowColor);
+		background-color: $countdownPendingBackgroundColor;
+		color: $countdownPendingColor;
+		@include textglow($countdownPendingGlowColor);
 	}
 	// Styles for things that are "down"
 	.maintenance.active & {
-		background-color: @countdownDownBackgroundColor;
-		color: @countdownDownColor;
-		.textglow(@countdownDownGlowColor);
+		background-color: $countdownDownBackgroundColor;
+		color: $countdownDownColor;
+		@include textglow($countdownDownGlowColor);
 	}
 }
 .duration {
@@ -186,15 +189,12 @@ a:hover { text-decoration: underline; }
 	font-size: 250%;
 }
 footer {
-	color: mix(@textColor, @pageColor, 75%);
+	color: mix($textColor, $pageColor, 75%);
 	text-align: right;
 	a, a:visited {
-		color: mix(@linkColor, @pageColor, 75%);
+		color: mix($linkColor, $pageColor, 75%);
 	}
 }
-
-// Import special event stuff.
-@import url(ffxiv_events.less);
 
 // Responsive design
 @media (max-width: 500px) {
@@ -210,23 +210,23 @@ footer {
 // Styles for DARK MODE
 @media (prefers-color-scheme: dark) {
 	html {
-		background-color: @darkPageColor;
-		color: @darkTextColor;
+		background-color: $darkPageColor;
+		color: $darkTextColor;
 	}
-	a, a:visited { color: @darkLinkColor; }
+	a, a:visited { color: $darkLinkColor; }
 	.timer, .subtimer, .error, .info, .message {
-		border-color: @darkTimerBorderColor;
-		background-color: @darkTimerBackgroundColor;
+		border-color: $darkTimerBorderColor;
+		background-color: $darkTimerBackgroundColor;
 	}
 	.error {
-		border-color: mix(#F00, @darkTimerBorderColor);
-		background-color: mix(#F00, @darkTimerBackgroundColor);
-		color: mix(#F00, @darkTextColor);
+		border-color: mix(#F00, $darkTimerBorderColor);
+		background-color: mix(#F00, $darkTimerBackgroundColor);
+		color: mix(#F00, $darkTextColor);
 	}
 	footer {
-		color: mix(@darkTextColor, @darkPageColor, 75%);
+		color: mix($darkTextColor, $darkPageColor, 75%);
 		a, a:visited {
-			color: mix(@darkLinkColor, @darkPageColor, 75%);
+			color: mix($darkLinkColor, $darkPageColor, 75%);
 		}
 	}
 }

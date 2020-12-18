@@ -7,20 +7,31 @@ import Clock, { Interval } from '../clock';
 
 type TimestampDefinition = string | number;
 
-interface TimerDefinition {
-	start: TimestampDefinition;
-	end: TimestampDefinition;
+/**
+ * The core of a timer definition: common properties across both types.
+ */
+export interface BaseTimerDefinition {
 	name: string;
 	info?: string;
 	note?: string;
 	type: string;
-	endLabel?: string;
+}
+
+export interface SingleTimerDefinition extends BaseTimerDefinition {
 	every?: number;
 	offset?: number;
 	showDuration?: boolean;
 	removeOnActive?: boolean;
 	removeOnComplete?: boolean;
 }
+
+export interface RecurringTimerDefinition extends BaseTimerDefinition {
+	start: TimestampDefinition;
+	end: TimestampDefinition;
+	endLabel?: string;
+}
+
+export type TimerDefinition = SingleTimerDefinition | RecurringTimerDefinition;
 
 /**
  * FFXIV countdown object.

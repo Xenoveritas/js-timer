@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": ".",
+    "outDir": "build/ts",
     "target": "ES5"
   },
   "include": [
