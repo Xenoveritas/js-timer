@@ -92,11 +92,15 @@ class FFXIVCountdown {
 	 * automatically.
 	 */
 	load(url: string): void {
+		// Mini helper function for showing error messages
+		const error = (message: string): void => {
+			console.log(message);
+			this.container.appendChild(this.makeError(message));
+		}
 		this.updateURL = url;
-		var loading = this.makeMessage('loading', "Loading timer data...");
+		const loading = this.makeMessage('loading', "Loading timer data...");
 		this.container.appendChild(loading);
-		var xhr = new XMLHttpRequest();
-		var me = this;
+		const xhr = new XMLHttpRequest();
 		// Firefox will indefinitely cache the JSON file, even though the server
 		// is configured to require it to revalidate. Because... who cares.
 		// Add junk to the end of the URL to force Firefox to treat it like a
@@ -105,32 +109,38 @@ class FFXIVCountdown {
 		url = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Math.floor(new Date().getTime() / 3600000).toString(36);
 		try {
 			xhr.open("GET", url);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4) {
+			xhr.onreadystatechange = () => {
+				if (xhr.readyState === 4) {
 					// All set.
-					me.container.removeChild(loading);
-					var timers = xhr.response;
-					if (typeof timers == 'string') {
-						// avoid infinite recursion and re-sending things
-						try {
-							timers = JSON.parse(timers);
-						} catch (ex) {
-							error("Unable to parse timer data.");
+					this.container.removeChild(loading);
+					if (xhr.status === 200) {
+						var timers = xhr.response;
+						if (typeof timers == 'string') {
+							// avoid infinite recursion and re-sending things
+							try {
+								timers = JSON.parse(timers);
+							} catch (ex) {
+								error("Unable to parse timer data.");
+								console.log(xhr.response);
+								return;
+							}
+						}
+						if (typeof timers != 'object') {
+							error("Unable to parse timer data (bad JSON type).");
 							console.log(xhr.response);
 							return;
 						}
+						if (!('timers' in timers)) {
+							error("No timers present in data sent from server.");
+							console.log(xhr.response);
+							return;
+						}
+						this._init(timers['timers']);
+					} else {
+						error('Unable to load timer data, server replied with error: ' + xhr.status + ' ' + xhr.statusText);
+						// Still load builtins
+						this._init([]);
 					}
-					if (typeof timers != 'object') {
-						error("Unable to parse timer data (bad JSON type).");
-						console.log(xhr.response);
-						return;
-					}
-					if (!('timers' in timers)) {
-						error("No timers present in data sent from server.");
-						console.log(xhr.response);
-						return;
-					}
-					me._init(timers['timers']);
 				}
 			}
 			xhr.responseType = "json";
@@ -138,11 +148,7 @@ class FFXIVCountdown {
 		} catch (ex) {
 			error('Unable to load timer data: ' + ex.toString());
 			// In this case, go ahead and do the built-ins
-			me._init([]);
-		}
-		function error(message) {
-			console.log(message);
-			me.container.appendChild(me.makeError(message));
+			this._init([]);
 		}
 	}
 
@@ -189,7 +195,7 @@ class FFXIVCountdown {
 		timer.start();
 	}
 
-	makeError(message) {
+	makeError(message: string): HTMLElement {
 		return this.makeMessage("error", message);
 	}
 

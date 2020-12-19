@@ -5,7 +5,8 @@
   "main": "clock.js",
   "private": true,
   "scripts": {
-    "prepare": "webpack",
+    "build:tools": "tsc --build tsconfig.tools.json",
+    "prepare": "yarn run build:tools && yarn run webpack",
     "start": "webpack serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,6 +25,9 @@
   },
   "homepage": "https://github.com/Xenoveritas/js-timer#readme",
   "devDependencies": {
+    "@types/cheerio": "^0.22.23",
+    "@types/node": "^14.14.14",
+    "@types/request": "^2.48.5",
     "cheerio": "^0.22.0",
     "css-loader": "^5.0.1",
     "html-webpack-plugin": "^4.5.0",

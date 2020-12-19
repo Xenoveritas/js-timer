@@ -4,6 +4,7 @@
 # Generated files
 /.tscache
 /build
+/build-plugins
 /doc
 
 # Ignore clock.js - it's built from TypeScript now

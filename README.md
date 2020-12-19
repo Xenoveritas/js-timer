@@ -4,26 +4,15 @@ This branch contains an FFXIV-specific timer implementation.
 
 ## Using
 
-You must run `grunt` at least once to install the necessary third party libraries that this uses. So the setup process should effectively be:
+As of now, this uses Webpack to build the entire thing.
 
 1. Install [Node](https://nodejs.org/)
-2. Run `npm install` to install necessary libraries
-3. Run `npm install -g grunt-cli` to install the CLI for grunt
-4. Run `grunt` itself
+2. Install [Yarn](https://yarnpkg.com/)
+3. Run `yarn` to install and build everything
 
-## Testing with browsers that block AJAX to file: URLs
+## Testing
 
-In some browsers, you can just run [ffxiv_timer_test.html](web/ffxiv_timer_test.html) directly (after running `grunt` to install dependencies), but some disallow that as a security precaution. In order to work around that, you can use the existing `grunt` build to run a test server using the `testserver` task:
-
-    grunt testserver
-
-After that, you can go to http://localhost:8000/web/ffxiv_timer_test.html to run the test version of the page.
-
-To test the compiled versions, use the `server` task instead:
-
-    grunt server
-
-The compiled version will then be available at http://localhost:8000/web/ffxiv_timer.html .
+Use `yarn start` to start a webserver in development mode. Once the server is ready, go to http://localhost:8080/ffxiv_timer.html to run the site.
 
 # Clock module
 

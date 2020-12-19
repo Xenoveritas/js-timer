@@ -1,11 +1,9 @@
-var util = require('util');
-
-function crushNumber(num) {
-	var s = num.toString();
+export function crushNumber(num: number): string {
+	let s = num.toString();
 	// Is this an integer with a bunch of 0s on the end?
 	if (s.indexOf('.') < 0 && s.length > 3 && s.substring(s.length-3) == '000') {
 		// Count the 0s on the end
-		var i;
+		let i;
 		for (i = s.length-3; s.charAt(i) == '0' && i >= 0; i--) {
 		}
 		// Increment i (it's pointing to the first non-zero)
@@ -18,10 +16,10 @@ function crushNumber(num) {
 
 // Can't use the built-in JSON.stringify because it's dumb, so we have to do it
 // manually. Whatever.
-function json_stringify(obj, out) {
+function json_stringify(obj: unknown, out: string[]) {
 	if (typeof obj == 'object') {
 		var comma = false;
-		if (util.isArray(obj)) {
+		if (Array.isArray(obj)) {
 			out.push('[');
 			obj.forEach(function(v) {
 				if (comma) {
@@ -55,7 +53,7 @@ function json_stringify(obj, out) {
 	}
 }
 
-module.exports = function(obj) {
+export default function(obj: unknown): string {
 	var string = [];
 	json_stringify(obj, string);
 	return string.join('');

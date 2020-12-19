@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "outDir": "build-plugins",
+      "target": "ES5"
+    },
+    "include": [
+      "./src/lib/**/*.ts", "./src/plugins/**/*.ts"
+    ]
+  }
