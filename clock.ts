@@ -220,6 +220,7 @@ export class Clock {
 	 * @param date {Date} the current time.
 	 */
 	ontick(date: Date): void {
+		// Stub method: does nothing
 	}
 	/**
 	 * Generally speaking it can be assumed that ticks will only ever increase the
@@ -241,6 +242,7 @@ export class Clock {
 	 *   {@code ontick}.
 	 */
 	onbackwards(date: Date): void {
+		// Stub method: does nothing
 	}
 
 	/**
