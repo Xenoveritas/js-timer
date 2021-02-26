@@ -13,8 +13,9 @@ These are the current active resets.
 | Triple Triad challenge bonus          | Daily  | 2.51        |
 | Triple Triad regional rules           | Daily  | 2.51        |
 | Mini-cactpot ticket allowance         | Daily  | 2.51        |
-| Allagan tomestones of allegory        | Weekly | 5.2         |
+| Allagan tomestones of Revelation      | Weekly | 5.4         |
 | Puppets' Bunker                       | Weekly | 5.3         |
+| Eden's Promise                        | Weekly | 5.4         |
 | Challenge Log                         | Weekly | 2.2         |
 | Blue Mage Weekly Targets              | Weekly | 5.15        |
 | Masked Carnival Weekly Targets        | Weekly | 5.15        |
@@ -25,7 +26,7 @@ These are the current active resets.
 | PvP Weekly Performance                | Weekly | 2.2         |
 | Adventurer Squadron mission allowance | Weekly | 3.4         |
 | Fashion Report                        | Weekly | ?           |
-| Wondorous Tales                       | Weekly | ?           |
+| Wondrous Tales                        | Weekly | ?           |
 | Faux Hollows                          | Weekly | 5.3         |
 
 ## Historical Resets
@@ -40,7 +41,7 @@ To-do: Look through for "restriction" in patch notes as that's usually the wordi
 | Faux Hollows                          | Weekly | Tuesday, 00:00 PST  | 5.3   |                |
 | Puppets' Bunker                       | Weekly | Tuesday, 00:00 PST  | 5.3   |                |
 | Eden's Verse                          | Weekly | Tuesday, 00:00 PST  | 5.2   | 5.3            |
-| Allagan tomestones of allegory        | Weekly | Tuesday, 00:00 PST  | 5.2   |                |
+| Allagan tomestones of allegory        | Weekly | Tuesday, 00:00 PST  | 5.2   | 5.4            |
 | Blue Mage Weekly Targets              | Weekly | Tuesday, 00:00 PST  | 5.15  |                |
 | Epic of Alexander (Ultimate)          | Weekly | Tuesday, 00:00 PST  | 5.11  | 5.2            |
 | Copied Factory                        | Weekly | Tuesday, 00:00 PST  | 5.1   | 5.2            |
@@ -91,6 +92,10 @@ This is a simple list of the [various patch notes over the years](https://na.fin
 
 | Version | Released   | Patch Notes                                                                                                    |
 |---------|------------|----------------------------------------------------------------------------------------------------------------|
+| **Futures Rewritten** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_4/)                                |
+| 5.45    | 2021-02-01 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/a65cab900e97855414cd1acab0a2070ed1b8e41b) |
+| 5.41    | 2021-01-12 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/bb3c277326e77817273a0029760223422d86935a) |
+| 5.4     | 2020-12-08 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/230f6e0af3536f9a40654d783c8c2f1094131070) |
 | **Reflections in Crystal** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_3/)                           |
 | 5.3     | 2020-08-10 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/c2f8c5ba14d9cfaa09d5aab63c5c2da260eae21a) |
 | **Echoes of a Fallen Star** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_2/)                          |
