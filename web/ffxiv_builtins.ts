@@ -21,9 +21,9 @@ export const builtins: TimerDefinition[] = [
   {
     'name': 'Weekly Reset',
     'info': 'On the weekly reset, the following resets:<ul>'
-      + '<li>Cap on Allagan tomestones of allegory</li>'
+      + '<li>Cap on Allagan tomestones of revelation</li>'
       + '<li>Weekly repeatable quests</li>'
-      + '<li>Puppets\u2019 Bunker reward eligibility</li>'
+      + '<li>Eden\u2019s Promise reward eligibility</li>'
       + '<li>Blue Mage/Masked Carnival Weekly Targets</li>'
       + '<li>PvP Weekly Performance</li>'
       + '<li>Challenge Log challenges</li>'

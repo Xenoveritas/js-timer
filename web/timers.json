@@ -7,16 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2020/The_Starlight_Celebration/uho06l3k9d\">Starlight Celebration</a>",
-    "type": "event starlight-celebration",
-    "start": "2020-12-14T00:00:00-0800",
-    "end": "2020-12-31T06:59:00-0800"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2021/Heavensturn/ua6dxnj3ya\">Heavensturn</a>",
-    "type": "event heavensturn",
-    "start": "2020-12-31T07:00:00-0800",
-    "end": "2021-01-18T06:59:00-0800"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2018/Valentiones_Day/\">Valentione's Day</a>",
+    "type": "event valentiones-day",
+    "start": "2021-02-10T00:00:00-0800",
+    "end": "2021-03-08T06:59:00-0800"
   }
 ]
 }

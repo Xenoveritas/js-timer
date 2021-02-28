@@ -13,8 +13,7 @@ These are the current active resets.
 | Triple Triad challenge bonus          | Daily  | 2.51        |
 | Triple Triad regional rules           | Daily  | 2.51        |
 | Mini-cactpot ticket allowance         | Daily  | 2.51        |
-| Allagan tomestones of Revelation      | Weekly | 5.4         |
-| Puppets' Bunker                       | Weekly | 5.3         |
+| Allagan tomestones of revelation      | Weekly | 5.4         |
 | Eden's Promise                        | Weekly | 5.4         |
 | Challenge Log                         | Weekly | 2.2         |
 | Blue Mage Weekly Targets              | Weekly | 5.15        |
@@ -23,6 +22,7 @@ These are the current active resets.
 | Custom Deliveries Reset               | Weekly | 4.1?        |
 | Crafting Specialties Reset            | Weekly | 4.0         |
 | The quest "Primal Focus"              | Weekly | 2.2         |
+| The quest "One Man's Relic"           | Weekly | 5.45        |
 | PvP Weekly Performance                | Weekly | 2.2         |
 | Adventurer Squadron mission allowance | Weekly | 3.4         |
 | Fashion Report                        | Weekly | ?           |
@@ -38,8 +38,11 @@ To-do: Look through for "restriction" in patch notes as that's usually the wordi
 
 | Item                                  | Resets | Resets At           | Patch | Removed        |
 |---------------------------------------|--------|---------------------|-------|----------------|
+| The quest "One Man's Relic"           | Weekly | Tuesday, 00:00 PST  | 5.45  |                |
+| Allagan tomestones of revelation      | Weekly | Tuesday, 00:00 PST  | 5.4   |                |
+| Eden's Promise                        | Weekly | Tuesday, 00:00 PST  | 5.4   |                |
 | Faux Hollows                          | Weekly | Tuesday, 00:00 PST  | 5.3   |                |
-| Puppets' Bunker                       | Weekly | Tuesday, 00:00 PST  | 5.3   |                |
+| Puppets' Bunker                       | Weekly | Tuesday, 00:00 PST  | 5.3   | 5.4            |
 | Eden's Verse                          | Weekly | Tuesday, 00:00 PST  | 5.2   | 5.3            |
 | Allagan tomestones of allegory        | Weekly | Tuesday, 00:00 PST  | 5.2   | 5.4            |
 | Blue Mage Weekly Targets              | Weekly | Tuesday, 00:00 PST  | 5.15  |                |

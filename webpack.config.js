@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // Check if this is in dev mode or not
-const devMode = process.env.NODE_ENV !== 'production';
+const devMode = process.env.WEBPACK_ENV !== 'production';
 
 module.exports = {
     entry: './web/ffxiv_main.ts',
