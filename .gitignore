@@ -11,6 +11,9 @@
 /clock.js
 /clock.js.map
 
+# Ignore all .map files - they're generated at compile time
+*.map
+
 # General junk
 *~
 .DS_Store
