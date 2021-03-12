@@ -24,6 +24,9 @@ export interface ProtoTimer extends BaseTimer {
   subtimers?: ProtoTimer[];
 };
 
+/**
+ * A complete timer (with timestamps for start/end).
+ */
 export interface Timer extends BaseTimer {
   title?: string,
   href?: string,
