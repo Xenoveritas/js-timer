@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
       "outDir": "build-plugins",
-      "target": "ES5"
+      "moduleResolution": "node",
+      "module": "CommonJS",
+      "target": "ES6"
     },
     "include": [
       "./src/lib/**/*.ts", "./src/plugins/**/*.ts"

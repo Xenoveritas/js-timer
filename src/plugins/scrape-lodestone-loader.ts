@@ -8,6 +8,9 @@ import * as moment from 'moment';
 import Timer, { ProtoTimer } from '../lib/timer';
 import { LodestoneScraper, LodestoneTimer } from '../lib/scrape-lodestone';
 import * as fs from 'fs';
+import { debuglog } from 'util';
+
+const verboseLog = debuglog('lodestone');
 
 // Webpack is missing types for the loader interface, which is actually
 // declared in loader-runner, which is also missing types. Yay!
@@ -43,6 +46,7 @@ function loadCache(filename: string): Promise<LodestoneTimer[]> {
     fs.readFile(filename, { encoding: 'utf-8' }, (err, data) => {
       if (err) {
         if (err.code === 'ENOENT') {
+          verboseLog('No cache file %s, using empty cache', filename);
           // No cache file? Resovle as no timers
           resolve([]);
         } else {
@@ -53,6 +57,7 @@ function loadCache(filename: string): Promise<LodestoneTimer[]> {
           const json = JSON.parse(data);
           if (Array.isArray(json)) {
             // In the future maybe there will be more data stored in the cache?
+            verboseLog('Restored cache from %s', filename);
             resolve(json as LodestoneTimer[]);
           } else {
             reject(new Error('Invalid type in cache'));
@@ -71,6 +76,7 @@ function saveCache(filename: string, timers: LodestoneTimer[]): Promise<void> {
       if (err) {
         reject(err);
       } else {
+        verboseLog('Saved cache to %s', filename);
         resolve();
       }
     })
@@ -125,7 +131,7 @@ export async function scrapeLodestone(source: string, options: LodestoneOptions)
   if (options.cacheFile) {
     // If we have a cache, go ahead and load that.
     try {
-      await saveCache(options.cacheFile, timers);
+      await saveCache(options.cacheFile, scraper.cachedTimers());
     } catch (ex) {
       // This is fine
       console.error('Unable to save cache: %o', ex);
@@ -154,6 +160,9 @@ export default function loader(this: WebpackLoader, source: string) {
     parseDuration(webpackOptions, options, 'scrapeTimeLimit', 'day');
     parseDuration(webpackOptions, options, 'timeLimit', 'day');
     parseDuration(webpackOptions, options, 'cacheTime', 'minute');
+    if (typeof webpackOptions['cacheFile'] === 'string') {
+      options.cacheFile = webpackOptions['cacheFile'];
+    }
   }
   // As this explicitly involves calling web resources, we are very not cacheable
   this.cacheable(false);

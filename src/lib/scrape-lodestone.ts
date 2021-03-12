@@ -1,7 +1,6 @@
 import * as request from 'request';
 import * as cheerio from 'cheerio';
 import * as moment from 'moment';
-import * as url from 'url';
 import { debuglog, format } from 'util';
 import Timer from './timer';
 
@@ -29,15 +28,19 @@ export interface LodestoneScraperOptions {
   ignoredURLs?: string[];
   skipScrapeBefore?: Time;
   skipTimerBefore?: Time;
+  refetchTime?: Time;
 }
 
-function parseTime(time: Time): number {
-  if (typeof time === 'string') {
-    return moment(time).valueOf();
-  } else if (typeof time === 'object') {
-    return time.valueOf();
-  } else {
-    return time;
+function parseTime(time: Time | undefined, defaultValue: number, delta = false): number {
+  switch(typeof time) {
+    case 'string':
+      return moment(time).valueOf();
+    case 'object':
+      return time.valueOf();
+    case 'number':
+      return time;
+    default:
+      return delta ? new Date().getTime() - defaultValue : defaultValue;
   }
 }
 
@@ -60,7 +63,8 @@ export class LodestoneScraper {
   };
   skipScrapeBefore: number;
   skipTimerBefore: number;
-  lodestoneURL: string;
+  refetchAfter: number;
+  lodestoneURL: URL;
   ignoredURLs: string[];
   constructor(options?: LodestoneScraperOptions) {
     if (options?.cache) {
@@ -69,10 +73,12 @@ export class LodestoneScraper {
       }
     }
     // Default to skipping all posts posted more than a week ago.
-    this.skipScrapeBefore = options?.skipScrapeBefore ? parseTime(options.skipScrapeBefore) : (new Date().getTime() - (7 * 24 * 60 * 60 * 1000));
+    this.skipScrapeBefore = parseTime(options?.skipScrapeBefore, 7 * 24 * 60 * 60 * 1000, true);
     // Default to skipping all timers that are more than 24 hours old
-    this.skipTimerBefore = options?.skipTimerBefore ? parseTime(options.skipTimerBefore) : (new Date().getTime() - (24 * 60 * 60 * 1000));
-    this.lodestoneURL = options?.lodestoneURL ? options.lodestoneURL : 'https://na.finalfantasyxiv.com/lodestone/';
+    this.skipTimerBefore = parseTime(options?.skipTimerBefore, 24 * 60 * 60 * 1000, true);
+    this.lodestoneURL = new URL(options?.lodestoneURL ? options.lodestoneURL : 'https://na.finalfantasyxiv.com/lodestone/');
+    // Default to refetching after an hour
+    this.refetchAfter = parseTime(options?.refetchTime, 60 * 60 * 1000);
     this.ignoredURLs = options?.ignoredURLs ? options.ignoredURLs : [];
   }
 
@@ -109,6 +115,27 @@ export class LodestoneScraper {
     // than attempt a Set
     return this.ignoredURLs.indexOf(url) >= 0;
   }
+
+  cacheTimer(timer: LodestoneTimer): void {
+    // URL is in the sourceURL field
+    this.cache.set(timer.sourceURL, timer);
+  }
+
+  latestCacheEntry(): number {
+    let result = -Infinity;
+    for (const entry of this.cache.values()) {
+      if (entry.loadedAt > result)
+        result = entry.loadedAt;
+    }
+    return result;
+  }
+
+  /**
+   * Gets an array of all cached timers, ready to be reinserted via the cache option.
+   */
+  cachedTimers(): LodestoneTimer[] {
+    return Array.from(this.cache.values());
+  }
   
   /**
    * Attempts to scrape the Lodestone using the options given at construction time.
@@ -119,7 +146,7 @@ export class LodestoneScraper {
     return new Promise((resolve, reject) => {
       request({
         method: 'GET',
-        uri: this.lodestoneURL,
+        uri: this.lodestoneURL.toString(),
         gzip: true
       }, (error, response, body) => {
         if (error) {
@@ -142,8 +169,10 @@ export class LodestoneScraper {
           const urls = Object.keys(links);
           this.log.info('Found %s URL%s to check.', urls.length, urls.length === 1 ? '' : 's');
           const loadURL = (i: number): void => {
-            this.loadPost(url.resolve(this.lodestoneURL, urls[i])).then((timer) => {
+            this.loadPost(new URL(urls[i], this.lodestoneURL).toString()).then((timer) => {
               if (error === null && timer !== null) {
+                // No matter what, we always cache the timer
+                this.cacheTimer(timer);
                 if (timer.end <= this.skipTimerBefore) {
                   this.log.verbose('Skipping timer "%s": it is too old', timer.title);
                 } else {
@@ -187,7 +216,7 @@ export class LodestoneScraper {
       if (title.length > 0) {
         const tag = title.find('.news__list--tag');
         const href = item.attr('href');
-        const postURL = url.resolve(this.lodestoneURL, href);
+        const postURL = new URL(href, this.lodestoneURL).toString();
         // TODO: Possibly look this up in a more efficient fashion (although
         // it's almost always going to be an empty list)
         if (this.isIgnored(postURL)) {
@@ -228,6 +257,11 @@ export class LodestoneScraper {
   }
 
   loadPost(postURL: string): Promise<LodestoneTimer | null> {
+    const cachedResult = this.cache.get(postURL);
+    if (cachedResult && cachedResult.loadedAt > (new Date().getTime() - this.refetchAfter)) {
+      this.log.verbose('Using cached entry for "%s"...', postURL);
+      return Promise.resolve(cachedResult);
+    }
     this.log.info("Pulling %s...", postURL);
     return new Promise((resolve, reject) => {
       request({

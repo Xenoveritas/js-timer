@@ -17,8 +17,8 @@ export function crushNumber(num: number): string {
 // Can't use the built-in JSON.stringify because it's dumb, so we have to do it
 // manually. Whatever.
 function json_stringify(obj: unknown, out: string[]) {
-	if (typeof obj == 'object') {
-		var comma = false;
+	if (typeof obj === 'object') {
+		let comma = false;
 		if (Array.isArray(obj)) {
 			out.push('[');
 			obj.forEach(function(v) {
@@ -32,7 +32,7 @@ function json_stringify(obj: unknown, out: string[]) {
 			out.push(']');
 		} else {
 			out.push('{');
-			for (var k in obj) {
+			for (const k in obj) {
 				if (comma) {
 					out.push(',');
 				} else {
@@ -41,7 +41,7 @@ function json_stringify(obj: unknown, out: string[]) {
 				// Let JSON.stringify handle the key
 				out.push(JSON.stringify(k));
 				out.push(':');
-				json_stringify(obj[k], out);
+				json_stringify(obj[k] as unknown, out);
 			}
 			out.push('}');
 		}
@@ -54,7 +54,7 @@ function json_stringify(obj: unknown, out: string[]) {
 }
 
 export default function(obj: unknown): string {
-	var string = [];
+	const string: string[] = [];
 	json_stringify(obj, string);
 	return string.join('');
 };

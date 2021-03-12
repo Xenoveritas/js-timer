@@ -25,8 +25,14 @@ module.exports = {
         {
             test: /timers.json$/,
             use: [
-                './build-plugins/plugins/timer-loader',
-                './build-plugins/plugins/scrape-lodestone-loader'
+                { loader: './build-plugins/plugins/timer-loader' },
+                {
+                    loader: './build-plugins/plugins/scrape-lodestone-loader',
+                    options: {
+                        // TODO: Is this a safe place to store the cache?
+                        cacheFile: './build/timer-cache.json'
+                    }
+                }
             ],
             type: 'asset/resource',
             generator: {
