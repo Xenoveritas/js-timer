@@ -6,7 +6,7 @@
 import { getOptions } from 'loader-utils';
 import * as moment from 'moment';
 import Timer, { ProtoTimer } from '../lib/timer';
-import { LodestoneScraper, LodestoneTimer } from '../lib/scrape-lodestone';
+import { LodestoneScraper, LodestoneScraperOptions, LodestoneTimer, TimerCache, isTimerCache } from '../lib/scrape-lodestone';
 import * as fs from 'fs';
 import { debuglog } from 'util';
 
@@ -41,24 +41,23 @@ function parseDuration(configuration: Record<string, unknown>, options: Lodeston
   }
 }
 
-function loadCache(filename: string): Promise<LodestoneTimer[]> {
+function loadCache(filename: string): Promise<TimerCache | null> {
   return new Promise((resolve, reject) => {
     fs.readFile(filename, { encoding: 'utf-8' }, (err, data) => {
       if (err) {
         if (err.code === 'ENOENT') {
           verboseLog('No cache file %s, using empty cache', filename);
           // No cache file? Resovle as no timers
-          resolve([]);
+          resolve(null);
         } else {
           reject(err);
         }
       } else {
         try {
           const json = JSON.parse(data);
-          if (Array.isArray(json)) {
-            // In the future maybe there will be more data stored in the cache?
+          if (isTimerCache(json)) {
             verboseLog('Restored cache from %s', filename);
-            resolve(json as LodestoneTimer[]);
+            resolve(json);
           } else {
             reject(new Error('Invalid type in cache'));
           }
@@ -70,9 +69,9 @@ function loadCache(filename: string): Promise<LodestoneTimer[]> {
   });
 }
 
-function saveCache(filename: string, timers: LodestoneTimer[]): Promise<void> {
+function saveCache(filename: string, cache: TimerCache): Promise<void> {
   return new Promise((resolve, reject) => {
-    fs.writeFile(filename, JSON.stringify(timers), { encoding: 'utf-8' }, (err) => {
+    fs.writeFile(filename, JSON.stringify(cache), { encoding: 'utf-8' }, (err) => {
       if (err) {
         reject(err);
       } else {
@@ -93,7 +92,7 @@ export async function scrapeLodestone(source: string, options: LodestoneOptions)
   // Grab whatever configuration we can from the source we're given
   const data = JSON.parse(source);
   const existingTimers: ProtoTimer[] = typeof data === 'object' && data !== null && Array.isArray(data['timers']) ? data['timers'] : [];
-  let cache: LodestoneTimer[] | null = null;
+  let cache: TimerCache | null = null;
 
   if (options.cacheFile) {
     // If we have a cache, go ahead and load that.
@@ -105,8 +104,8 @@ export async function scrapeLodestone(source: string, options: LodestoneOptions)
     }
   }
 
-  const skipScrapeBefore = new Date().getTime() - options.scrapeTimeLimit.asMilliseconds(),
-    skipTimerBefore = new Date().getTime() - options.timeLimit.asMilliseconds();
+  const skipScrapeBefore = options.scrapeTimeLimit.asMilliseconds(),
+    skipTimerBefore = options.timeLimit.asMilliseconds();
 
   const ignoredURLs = Array.isArray(options.ignore) ? options.ignore : [];
   if (typeof data === 'object' && data !== null
@@ -120,18 +119,21 @@ export async function scrapeLodestone(source: string, options: LodestoneOptions)
   }
 
   // Create the scraper
-  const scraper = new LodestoneScraper({
+  const scraperOptions: LodestoneScraperOptions = {
     lodestoneURL: options.url,
     skipScrapeBefore: skipScrapeBefore,
     skipTimerBefore: skipTimerBefore,
-    ignoredURLs: ignoredURLs,
-    cache: cache
-  });
+    ignoredURLs: ignoredURLs
+  };
+  if (cache) {
+    scraperOptions.cache = cache;
+  }
+  const scraper = new LodestoneScraper(scraperOptions);
   const timers = await scraper.loadLodestone();
   if (options.cacheFile) {
     // If we have a cache, go ahead and load that.
     try {
-      await saveCache(options.cacheFile, scraper.cachedTimers());
+      await saveCache(options.cacheFile, scraper.getCacheJSON());
     } catch (ex) {
       // This is fine
       console.error('Unable to save cache: %o', ex);

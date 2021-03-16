@@ -18,12 +18,35 @@ export interface LodestoneTimer extends Timer {
   sourceURL: string;
 }
 
+/**
+ * The cache as returned by getCacheJSON and which can be restored with the cache option.
+ * While this is documented, it should be considered "opaque" as it may change in the future.
+ */
+export interface TimerCache {
+  [key: string]: unknown;
+  /**
+   * The time the Lodestone was loaded.
+   */
+  lastLoadedAt: number;
+  /**
+   * The actual cached timer data.
+   */
+  timers: LodestoneTimer[];
+}
+
+export function isTimerCache(o: unknown): o is TimerCache {
+  if (typeof o !== 'object' || o === null)
+    return false;
+  const cache = o as TimerCache;
+  return typeof cache.lastLoadedAt === 'number' && Array.isArray(cache.timers);
+}
+
 export type Logger = (message: string, ...optionalParams: unknown[]) => void;
 
 export type Time = moment.Moment | string | number;
 
 export interface LodestoneScraperOptions {
-  cache?: LodestoneTimer[] | null;
+  cache?: TimerCache;
   lodestoneURL?: string;
   ignoredURLs?: string[];
   skipScrapeBefore?: Time;
@@ -64,11 +87,16 @@ export class LodestoneScraper {
   skipScrapeBefore: number;
   skipTimerBefore: number;
   refetchAfter: number;
+  /**
+   * The last time the Lodestone was loaded. Defaults to -Infinity.
+   */
+  lastLoadedAt = -Infinity;
   lodestoneURL: URL;
   ignoredURLs: string[];
   constructor(options?: LodestoneScraperOptions) {
     if (options?.cache) {
-      for (const entry of options.cache) {
+      this.lastLoadedAt = options.cache.lastLoadedAt;
+      for (const entry of options.cache.timers) {
         this.cache.set(entry.sourceURL, entry);
       }
     }
@@ -136,12 +164,29 @@ export class LodestoneScraper {
   cachedTimers(): LodestoneTimer[] {
     return Array.from(this.cache.values());
   }
+
+  getCacheJSON(): TimerCache {
+    return {
+      lastLoadedAt: this.lastLoadedAt,
+      timers: this.cachedTimers()
+    };
+  }
   
   /**
    * Attempts to scrape the Lodestone using the options given at construction time.
    * @returns a Promise that resolves to any loaded timers
    */
   loadLodestone(): Promise<LodestoneTimer[]> {
+    const now = new Date().getTime();
+    const skipTimersBeforeTimestamp = now - this.skipTimerBefore;
+    const skipScrapingBefore = now - this.skipScrapeBefore;
+    const mostRecent = this.latestCacheEntry();
+    if (mostRecent > now - this.refetchAfter) {
+      this.log.verbose('Cache is still fresh (loaded at %s, current time is %s), reusing timer data within the cache.', moment(mostRecent).format(), moment(now).format());
+      return Promise.resolve(this.cachedTimers().filter((timer) => {
+        return timer.end ? timer.end > skipTimersBeforeTimestamp : true;
+      }));
+    }
     this.log.verbose('Pulling %s...', this.lodestoneURL);
     return new Promise((resolve, reject) => {
       request({
@@ -154,14 +199,16 @@ export class LodestoneScraper {
           reject(error);
         }
         if (response.statusCode === 200) {
-          const links = { };
+          const links: Record<string, string> = { };
           try {
-            this.scrapeLodestone(body, links);
+            this.scrapeLodestone(body, links, skipScrapingBefore);
           } catch (ex) {
             this.log.error("Unable to parse Lodestone: " + ex);
             reject(ex);
             return;
           }
+          // Set the last loaded time to be the time when this request started
+          this.lastLoadedAt = now;
           const timers: LodestoneTimer[] = [];
           // We now want to iterate through the links but we want to pull them
           // sequentially, so this ends up being a bit horrible. All we care
@@ -173,7 +220,7 @@ export class LodestoneScraper {
               if (error === null && timer !== null) {
                 // No matter what, we always cache the timer
                 this.cacheTimer(timer);
-                if (timer.end <= this.skipTimerBefore) {
+                if (timer.end <= skipTimersBeforeTimestamp) {
                   this.log.verbose('Skipping timer "%s": it is too old', timer.title);
                 } else {
                   timers.push(timer);
@@ -205,9 +252,9 @@ export class LodestoneScraper {
     });
   }
 
-  scrapeLodestone(html: string, links) {
+  scrapeLodestone(html: string, links: Record<string, string>, skipBefore?: number) {
     const $ = cheerio.load(html);
-    const cutoff = moment(this.skipScrapeBefore).format();
+    const cutoff = moment(skipBefore ?? new Date().getTime() - this.skipScrapeBefore).format();
     // Sweet lord is the FFXIV Lodestone HTML terrible
     $('a.ic__maintenance--list').each((i, e) => {
       // See if this is a maintenance news item.
@@ -237,7 +284,7 @@ export class LodestoneScraper {
         if (m) {
           // Time on the Lodestone is helpfully stored as a UNIX timestamp in seconds and then formatted in JS
           const time = parseInt(m[1]) * 1000;
-          if (time < this.skipScrapeBefore) {
+          if (time < skipBefore) {
             this.log.verbose('Skipping "%s" its time (%s) is before cutoff %s', name, moment(time).format(), cutoff);
           } else {
             if (href in links) {
