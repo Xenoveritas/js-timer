@@ -10,8 +10,13 @@
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202103/2ozonfi9xh\">Moogle Treasure Trove the Hunt for Esoterics</a>",
     "type": "event irregular-tomestone",
     "start": "2021-03-15T01:00:00-0700",
-    "endLabel": "Ongoing",
-    "indefinite": true
+    "end": 16182756E5
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2021/Hatching_tide/82rmia4in6\">Hatching-tide</a>",
+    "type": "event hatchingtide",
+    "start": "2021-04-14T01:00:00-0700",
+    "end": "2021-04-28T07:59:00-0700"
   }
 ]
 }
