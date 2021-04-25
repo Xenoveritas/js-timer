@@ -53,7 +53,7 @@ class FFXIVCountdown {
 
 	constructor(
 		public container: HTMLElement,
-		timers: string | unknown[] = [],
+		timers: string | TimerDefinition[] = [],
 		public addBuiltins = true,
 		public showWeeks = false
 	) {
@@ -75,7 +75,7 @@ class FFXIVCountdown {
 	 * with actual builtins, require the
 	 * {@link module:ffxiv_builtins ffxiv_builtins} module.
 	 */
-	static builtins = [];
+	static builtins: TimerDefinition[] = [];
 
 	/**
 	 * Reload timers from the initial URL if there was one or a NO-OP if
@@ -156,14 +156,16 @@ class FFXIVCountdown {
 	 * An internal method to constuct the actual UI.
 	 * @private
 	 */
-	private _init(timers) {
+	private _init(definitions: TimerDefinition[]) {
 		if (this.addBuiltins) {
-			Array.prototype.push.apply(timers, FFXIVCountdown.builtins);
+			Array.prototype.push.apply(definitions, FFXIVCountdown.builtins);
 		}
-		var now = new Date().getTime(), skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;
-		for (var i = 0; i < timers.length; i++) {
-			timers[i] = new Timer(this, timers[i]);
-			var t = timers[i];
+		const now = new Date().getTime(),
+			skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;
+		// Convert definitions to timer elements
+		const timers: Timer[] = definitions.map(definition => new Timer(this, definition));
+		for (let i = 0; i < timers.length; i++) {
+			let t = timers[i];
 			if (t.isOutdated(skipTimersBefore)) {
 				// Remove out of date timers from the list.
 				timers.splice(i, 1);
@@ -177,7 +179,7 @@ class FFXIVCountdown {
 			//t.start = now + (3+i) * 1000;
 			//t.end = now + (6+i) * 1000;
 		}
-		let timer = new Clock();
+		const timer = new Clock();
 		timer.ontick = (nowDate: Date) => {
 			const now = nowDate.getTime();
 			for (var i = 0; i < timers.length; i++) {
@@ -244,6 +246,7 @@ class Timer {
 	activeClass: string;
 	afterClass: string;
 	_times: HTMLDivElement;
+
 	constructor(public controller: FFXIVCountdown, definition: TimerDefinition) {
 		// Copy over definition fields:
 		let start = definition['start'];
@@ -280,7 +283,7 @@ class Timer {
 	/**
 	 * Initialize the timer based on a given time.
 	 */
-	init(container, now) {
+	init(container: HTMLElement, now) {
 		container.appendChild(this.div = this._makeHTML());
 		if (this.every) {
 			if (typeof this.offset != 'number') {
@@ -298,9 +301,9 @@ class Timer {
 	 * @private
 	 */
 	private _makeHTML(className = 'timer') {
-		var div = document.createElement('div');
+		const div = document.createElement('div');
 		div.className = this.type;
-		var d = document.createElement('div');
+		let d = document.createElement('div');
 		d.innerHTML = this.name;
 		d.className = 'title';
 		div.appendChild(d);
@@ -345,7 +348,7 @@ class Timer {
 			d.className = 'note';
 			d.appendChild(document.createTextNode(this.note));
 		}
-		this._makePopover(div, this.info);
+		this._makeDetails(div, this.info);
 		this._updateTimes();
 		return div;
 	}
@@ -353,7 +356,7 @@ class Timer {
 	/**
 	 * Populate the "local time" display.
 	 */
-	private _updateTimes() {
+	private _updateTimes(): void {
 		var html = [ '<table><tbody>' ];
 		function addRow(header, value) {
 			html.push('<tr><th>');
@@ -374,46 +377,40 @@ class Timer {
 	 * Internal function for generating the popover.
 	 * @private
 	 */
-	private _makePopover(div, popoverHTML) {
-		var popover = document.createElement('div'), visible = false, sticky = false;
-		popover.className = 'info';
-		if (popoverHTML) {
-			// If the popover HTML is null, leave this empty.
-			popover.innerHTML = popoverHTML;
+	private _makeDetails(container: HTMLElement, detailHTML: string): void {
+		const detailsContainer = document.createElement('div');
+		detailsContainer.className = 'details';
+		container.append(detailsContainer);
+		const detailExpander = document.createElement('button');
+		detailExpander.append('Details');
+		detailExpander.setAttribute('aria-expanded', 'false');
+		detailExpander.className = 'details-expander';
+		detailsContainer.append(detailExpander);
+		const detailsDiv = document.createElement('div');
+		detailsDiv.className = 'info';
+		if (detailHTML) {
+			// If the detail HTML is null, leave this empty.
+			detailsDiv.innerHTML = detailHTML;
 		}
 		// Add the time information to the popover
-		popover.appendChild(this._times = document.createElement('div'));
+		detailsDiv.appendChild(this._times = document.createElement('div'));
 		this._times.className = 'times';
-		div.appendChild(popover);
-		function toggle() {
-			if (visible || sticky) {
-				popover.style.left = div.offsetLeft + "px";
-				popover.style.top = div.offsetTop + "px";
-				popover.className = 'info visible';
-			} else {
-				popover.className = 'info hidden';
-			}
+		detailsContainer.appendChild(detailsDiv);
+		let expanded = false;
+		function setExpanded(newExpanded: boolean): void {
+			expanded = newExpanded;
+			detailExpander.setAttribute('aria-expanded', expanded.toString());
+			detailsContainer.className = 'details ' + (expanded ? 'expanded expanding' : 'collapsed collapsing');
 		}
-		div.onmouseenter = function(event) {
-			visible = true;
-			toggle();
-		};
-		div.onmouseleave = function(event) {
-			visible = false;
-			toggle();
-		};
-		// For compatibility with touch devices, also allow clicking on items to
-		// make the popup "sticky"
-		div.onclick = function(event) {
-			if (sticky) {
-				// If currently sticky, force it to be hidden
-				visible = sticky = false;
-			} else {
-				// Otherwise, force it to be visible
-				visible = sticky = true;
-			}
-			toggle();
-		};
+		setExpanded(false);
+		detailExpander.addEventListener('click', (event) => {
+			event.preventDefault();
+			setExpanded(!expanded);
+		});
+		detailsContainer.addEventListener('animationend', () => {
+			// All this exists to do is remove the expanding/collapsing events to reset the animation
+			detailsContainer.classList.remove('expanding', 'collapsing');
+		});
 	}
 
 	/**

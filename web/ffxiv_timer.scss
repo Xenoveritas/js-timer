@@ -46,7 +46,7 @@ $countdownDownGlowColor: #600;
 
 html {
 	font-family: "Droid Sans", Helvetica, Arial, sans-serif;
-	font-size: 12px;
+	font-size: 14px;
 	background-color: $pageColor;
 	color: $textColor;
 	width: 100%;
@@ -74,20 +74,66 @@ a:hover { text-decoration: underline; }
 .subtimer {
 	font-size: 80%;
 }
-.info {
-	position: absolute;
-	opacity: 0.0;
+
+// Icons for the detail expander
+
+// Function for converting colors to something that can be embedded into an SVG data url
+@function encode-svg-color($color) {
+	// Have to convert color to a hex string if possible
+	@if type-of($color) == 'color' {
+		@return '%23' + str-slice(ie-hex-str($color), 4);
+	}
+	@return $color;
+}
+
+// caret-right-fill from Bootstrap icons
+// https://icons.getbootstrap.com/icons/caret-right-fill/
+@mixin bootstrap-caret-right($color: #000) {
+	background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='#{encode-svg-color($color)}' viewBox='0 0 16 16'><path d='m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z'/></svg>");
+}
+
+// caret-down-fill from Bootstrap icons
+// https://icons.getbootstrap.com/icons/caret-down-fill/
+@mixin bootstrap-caret-down($color: #000) {
+	background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='#{encode-svg-color($color)}' viewBox='0 0 16 16'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");
+}
+
+.details {
 	text-align: left;
-	&.visible {
-		opacity: 1.0;
-		animation-duration: 0.5s;
-		animation-name: fade-in;
+	button {
+		// Completely change the way this looks...
+		font-family: "Droid Sans", Arial, Helvetica, sans-serif;
+		font-size: inherit;
+		font-weight: bold;
+		text-align: left;
+		background-color: transparent;
+		color: $textColor;
+		@include bootstrap-caret-right($textColor);
+		padding-left: 20px;
+		min-height: 16px;
+		background-position: left;
+		background-repeat: no-repeat;
+		border: none;
+		width: 100%;
 	}
-	&.hidden {
-		animation-duration: 0.5s;
-		animation-name: fade-out;
-		opacity: 0.0;
+	.info {
+		border: none;
+		padding: 0;
+		margin: 1em;
 	}
+	&.collapsed .info {
+		display: none;
+	}
+	&.expanded {
+		button {
+			@include bootstrap-caret-down($textColor);
+		}
+		.info {
+			display: block;
+		}
+	}
+}
+.info {
 	table th {
 		text-align: right;
 	}
@@ -229,24 +275,15 @@ footer {
 			color: mix($darkLinkColor, $darkPageColor, 75%);
 		}
 	}
-}
-
-// Animations
-@keyframes fade-in {
-	from {
-		opacity: 0.0;
-	}
-	to {
-		opacity: 1.0;
-	}
-}
-@keyframes fade-out {
-	from {
-		opacity: 1.0;
-		display: block;
-	}
-	to {
-		opacity: 0.0;
-		display: none;
+	.details {
+		button {
+			color: $darkTextColor;
+			@include bootstrap-caret-right($darkTextColor);
+		}
+		&.expanded {
+			button {
+				@include bootstrap-caret-down($darkTextColor);
+			}
+		}
 	}
 }
