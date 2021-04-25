@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const devMode = process.env.WEBPACK_ENV !== 'production';
 
 module.exports = {
+    mode: devMode ? 'development' : 'production',
     entry: './web/ffxiv_main.ts',
     devServer: {
         contentBase: './build'
