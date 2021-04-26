@@ -114,7 +114,7 @@ class FFXIVCountdown {
 					// All set.
 					this.container.removeChild(loading);
 					if (xhr.status === 200) {
-						var timers = xhr.response;
+						let timers = xhr.response;
 						if (typeof timers == 'string') {
 							// avoid infinite recursion and re-sending things
 							try {
@@ -182,7 +182,7 @@ class FFXIVCountdown {
 		const timer = new Clock();
 		timer.ontick = (nowDate: Date) => {
 			const now = nowDate.getTime();
-			for (var i = 0; i < timers.length; i++) {
+			for (let i = 0; i < timers.length; i++) {
 				if (!timers[i].update(now)) {
 					// Remove from the list.
 					timers.splice(i, 1);
@@ -202,7 +202,7 @@ class FFXIVCountdown {
 	}
 
 	makeMessage(className: string, message: string): HTMLElement {
-		var div = document.createElement('div');
+		const div = document.createElement('div');
 		div.className = className + " message";
 		div.appendChild(document.createTextNode(message));
 		return div;
@@ -283,7 +283,7 @@ class Timer {
 	/**
 	 * Initialize the timer based on a given time.
 	 */
-	init(container: HTMLElement, now) {
+	init(container: HTMLElement, now: number) {
 		container.appendChild(this.div = this._makeHTML());
 		if (this.every) {
 			if (typeof this.offset != 'number') {
@@ -327,8 +327,8 @@ class Timer {
 			d = document.createElement('div');
 			div.appendChild(d);
 			d.className = 'duration';
-			var lasts = new Clock.Interval(this.end - this.start);
-			var m = [];
+			const lasts = new Clock.Interval(this.end - this.start);
+			const m: string[] = [];
 			if (lasts.weeks > 0) {
 				m.push(lasts.weeks + (lasts.weeks > 1 ? ' weeks' : ' week'));
 			}
@@ -357,7 +357,7 @@ class Timer {
 	 * Populate the "local time" display.
 	 */
 	private _updateTimes(): void {
-		var html = [ '<table><tbody>' ];
+		const html = [ '<table><tbody>' ];
 		function addRow(header, value) {
 			html.push('<tr><th>');
 			html.push(header);
@@ -416,7 +416,7 @@ class Timer {
 	/**
 	 * Update the timer for the given time, potentially removing it.
 	 */
-	update(now) {
+	update(now: number): boolean {
 		let time: Interval;
 		if (now <= this.start) {
 			this.div.className = this.beforeClass;
@@ -443,7 +443,7 @@ class Timer {
 				return false;
 			}
 		}
-		var m = '';
+		let m = '';
 		if (time.weeks > 0) {
 			m = '<span class="weeks">' + time.weeks + (time.weeks > 1 ? ' weeks' : ' week') + ', </span>';
 		}
@@ -458,7 +458,7 @@ class Timer {
 	/**
 	 * Determine if the timer is outdated.
 	 */
-	isOutdated(cutoff): boolean {
+	isOutdated(cutoff: number): boolean {
 		// Recurring timers are never outdated.
 		return (!this.every) && this.end <= cutoff;
 	}
@@ -467,7 +467,7 @@ class Timer {
 	 * If a recurring timer, reset the end fields to the next instance based on
 	 * the given time. Otherwise, this does nothing.
 	 */
-	resetRecurring(now) {
+	resetRecurring(now: number): void {
 		if (this.every)
 			this.end = (Math.floor(((now+1000) - this.offset) / this.every) + 1) * this.every + this.offset;
 		this._updateTimes();
