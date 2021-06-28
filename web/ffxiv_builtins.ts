@@ -23,7 +23,7 @@ export const builtins: TimerDefinition[] = [
     'info': 'On the weekly reset, the following resets:<ul>'
       + '<li>Cap on Allagan tomestones of revelation</li>'
       + '<li>Weekly repeatable quests</li>'
-      + '<li>Tower at Paraidigm\u2019ss Breach reward eligibility</li>'
+      + '<li>Tower at Paradigm\u2019s Breach reward eligibility</li>'
       + '<li>Blue Mage/Masked Carnival Weekly Targets</li>'
       + '<li>PvP Weekly Performance</li>'
       + '<li>Challenge Log challenges</li>'

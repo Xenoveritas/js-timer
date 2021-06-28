@@ -38,7 +38,7 @@ To-do: Look through for "restriction" in patch notes as that's usually the wordi
 
 | Item                                  | Resets | Resets At           | Patch | Removed        |
 |---------------------------------------|--------|---------------------|-------|----------------|
-| Tower at Paraidigm's Breach           | Weekly | Tuesday, 00:00 PST  | 5.5   |                |
+| Tower at Paradigm's Breach           | Weekly | Tuesday, 00:00 PST  | 5.5   |                |
 | The quest "One Man's Relic"           | Weekly | Tuesday, 00:00 PST  | 5.45  |                |
 | Allagan tomestones of revelation      | Weekly | Tuesday, 00:00 PST  | 5.4   |                |
 | Eden's Promise                        | Weekly | Tuesday, 00:00 PST  | 5.4   | 5.57           |
