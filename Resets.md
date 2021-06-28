@@ -14,7 +14,7 @@ These are the current active resets.
 | Triple Triad regional rules           | Daily  | 2.51        |
 | Mini-cactpot ticket allowance         | Daily  | 2.51        |
 | Allagan tomestones of revelation      | Weekly | 5.4         |
-| Eden's Promise                        | Weekly | 5.4         |
+| Tower at Paradigm's Breach            | Weekly | 5.5         |
 | Challenge Log                         | Weekly | 2.2         |
 | Blue Mage Weekly Targets              | Weekly | 5.15        |
 | Masked Carnival Weekly Targets        | Weekly | 5.15        |
@@ -38,9 +38,10 @@ To-do: Look through for "restriction" in patch notes as that's usually the wordi
 
 | Item                                  | Resets | Resets At           | Patch | Removed        |
 |---------------------------------------|--------|---------------------|-------|----------------|
+| Tower at Paraidigm's Breach           | Weekly | Tuesday, 00:00 PST  | 5.5   |                |
 | The quest "One Man's Relic"           | Weekly | Tuesday, 00:00 PST  | 5.45  |                |
 | Allagan tomestones of revelation      | Weekly | Tuesday, 00:00 PST  | 5.4   |                |
-| Eden's Promise                        | Weekly | Tuesday, 00:00 PST  | 5.4   |                |
+| Eden's Promise                        | Weekly | Tuesday, 00:00 PST  | 5.4   | 5.57           |
 | Faux Hollows                          | Weekly | Tuesday, 00:00 PST  | 5.3   |                |
 | Puppets' Bunker                       | Weekly | Tuesday, 00:00 PST  | 5.3   | 5.4            |
 | Eden's Verse                          | Weekly | Tuesday, 00:00 PST  | 5.2   | 5.3            |
@@ -95,6 +96,10 @@ This is a simple list of the [various patch notes over the years](https://na.fin
 
 | Version | Released   | Patch Notes                                                                                                    |
 |---------|------------|----------------------------------------------------------------------------------------------------------------|
+| **Death unto Dawn** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_5/)                                  |
+| 5.57    | 2021-06-22 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/4f379e06b6471c55ea02f138b6ada581b088ab2e) |
+| 5.55    | 2021-05-25 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/fdea72f70dafb7da0f7145ebc3f8c7d56dacb702) |
+| 5.5     | 2021-04-13 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/6526ce95a595e8a557b55736f85f19687dc11883) |
 | **Futures Rewritten** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_4/)                                |
 | 5.45    | 2021-02-01 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/a65cab900e97855414cd1acab0a2070ed1b8e41b) |
 | 5.41    | 2021-01-12 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/bb3c277326e77817273a0029760223422d86935a) |
