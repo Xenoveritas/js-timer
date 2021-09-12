@@ -23,6 +23,12 @@
     "type": "event moonfire-faire",
     "start": "2021-08-13T01:00:00-0700",
     "end": "2021-08-26T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/ffxv/7qr15z1wnh\">Final Fantasy XIV \u00D7 Final Fantasy XV</a>",
+    "type": "campaign free-login",
+    "start": "2021-09-13T01:00:00-0700",
+    "end": "2021-10-18T07:59:00-0700"
   }
 ]
 }
