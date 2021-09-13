@@ -7,22 +7,10 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/freelogincampaign/\">Free Login Campaign</a>",
-    "type": "event free-login",
-    "start": "2021-07-09T01:00:00-0700",
-    "end": "2021-08-23T07:59:00-0700"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2021/the_make_it_rain_campaign/b1nyoh167i\">The Make It Rain Campaign</a>",
-    "type": "event make-it-rain",
-    "start": "2021-07-19T01:00:00-0700",
-    "end": "2021-08-11T07:59:00-0700"
-  },
-  {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2021/Moonfire_Faire/y2mjm7r1v6\">Moonfire Faire</a>",
-    "type": "event moonfire-faire",
-    "start": "2021-08-13T01:00:00-0700",
-    "end": "2021-08-26T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/ffxv/7qr15z1wnh/\">A Nocturne for Heroes</a> (FFXIV \u00D7 FFXV)",
+    "type": "event ffxv",
+    "start": "2021-09-13T01:00:00-0700",
+    "end": "2021-10-18T07:59:00-0700"
   }
 ]
 }
