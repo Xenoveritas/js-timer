@@ -63,6 +63,7 @@ module.exports = {
     },
     output: {
         filename: devMode ? '[name].js' : '[name].[hash].js',
-        path: path.resolve(__dirname, 'build')
+        path: path.resolve(__dirname, 'build'),
+        hashFunction: "sha256"
     }
 };
