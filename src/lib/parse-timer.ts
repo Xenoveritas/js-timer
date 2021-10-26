@@ -46,7 +46,7 @@ function isTimerOld(timer: Timer, oldest: number): boolean {
     return false;
   }
   // Otherwise, if the timer is marked indefinite, it can never be too old
-  return timer.indefinite === true;
+  return timer.indefinite !== true;
 }
 
 export function parseTimers(json: unknown, oldest: number): Timer[] {
