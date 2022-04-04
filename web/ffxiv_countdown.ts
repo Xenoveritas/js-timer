@@ -41,7 +41,7 @@ export type TimerDefinition = SingleTimerDefinition | RecurringTimerDefinition;
  *   the DOM object to place the generated HTML timers in
  * @param {Object|String} timers
  *   if an object, the JSON object describing the timers; if a string, a URL
- *   that will be fetched containing the JSON object describing the timers
+ *   that will be fetched containing the JSON object describing the timers
  * @param {Boolean} addBuiltins
  *   when `true` (the default), adds the set of builtin timers defined in
  *   {@link module:ffxiv_countdown.builtins FFXIVCountdown.builtins}
@@ -358,18 +358,22 @@ class Timer {
 	 */
 	private _updateTimes(): void {
 		const html = [ '<table><tbody>' ];
-		function addRow(header, value) {
+		const addRow = (header: string, time: Date) => {
 			html.push('<tr><th>');
 			html.push(header);
 			html.push('</th><td>');
-			html.push(value);
+			html.push(this.controller.formatDate(time));
 			html.push('</td></tr>');
+			// TODO: Add function to copy Discord timestamp
+			// html.push('</td><td class="discord-timestamp"><span>&lt;t:');
+			// html.push((time.valueOf() / 1000).toString());
+			// html.push('&gt;</span></td></tr>');
 		}
 		if (this.start)
-			addRow('Starts at', this.controller.formatDate(new Date(this.start)));
+			addRow('Starts at', new Date(this.start));
 		if (this.end)
-			addRow(this.every ? 'Next at' : 'Ends at', this.controller.formatDate(new Date(this.end)));
-		html.push("</tbody></table>Times displayed are based on your computer's timezone.");
+			addRow(this.every ? 'Next at' : 'Ends at', new Date(this.end));
+		html.push("</tbody></table>Times displayed are based on your browser's timezone.");
 		this._times.innerHTML = html.join('');
 	}
 
