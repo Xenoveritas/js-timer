@@ -8,13 +8,13 @@ These are the current active resets.
 
 | Event                                 | Resets | As of patch |
 |---------------------------------------|--------|-------------|
+| Pandæmonium: Asphodelos               | Weekly | 6.01        |
+| Allagan tomestones of astronomy       | Weekly | 6.05        |
 | Housing Message                       | Daily  | 4.3         |
 | Daily Friend Request Counter          | Daily  | 3.1         |
 | Triple Triad challenge bonus          | Daily  | 2.51        |
 | Triple Triad regional rules           | Daily  | 2.51        |
 | Mini-cactpot ticket allowance         | Daily  | 2.51        |
-| Allagan tomestones of revelation      | Weekly | 5.4         |
-| Tower at Paradigm's Breach            | Weekly | 5.5         |
 | Challenge Log                         | Weekly | 2.2         |
 | Blue Mage Weekly Targets              | Weekly | 5.15        |
 | Masked Carnival Weekly Targets        | Weekly | 5.15        |
@@ -38,9 +38,12 @@ To-do: Look through for "restriction" in patch notes as that's usually the wordi
 
 | Item                                  | Resets | Resets At           | Patch | Removed        |
 |---------------------------------------|--------|---------------------|-------|----------------|
-| Tower at Paradigm's Breach           | Weekly | Tuesday, 00:00 PST  | 5.5   |                |
+| Pandæmonium: Asphodelos (Savage)      | Weekly | Tuesday, 00:00 PST  | 6.05  |                |
+| Pandæmonium: Asphodelos               | Weekly | Tuesday, 00:00 PST  | 6.01  |                |
+| Allagan tomestones of astronomy       | Weekly | Tuesday, 00:00 PST  | 6.05  |                |
+| Tower at Paradigm's Breach            | Weekly | Tuesday, 00:00 PST  | 5.5   | 6.0            |
 | The quest "One Man's Relic"           | Weekly | Tuesday, 00:00 PST  | 5.45  |                |
-| Allagan tomestones of revelation      | Weekly | Tuesday, 00:00 PST  | 5.4   |                |
+| Allagan tomestones of revelation      | Weekly | Tuesday, 00:00 PST  | 5.4   | 6.0            |
 | Eden's Promise                        | Weekly | Tuesday, 00:00 PST  | 5.4   | 5.57           |
 | Faux Hollows                          | Weekly | Tuesday, 00:00 PST  | 5.3   |                |
 | Puppets' Bunker                       | Weekly | Tuesday, 00:00 PST  | 5.3   | 5.4            |
@@ -96,6 +99,11 @@ This is a simple list of the [various patch notes over the years](https://na.fin
 
 | Version | Released   | Patch Notes                                                                                                    |
 |---------|------------|----------------------------------------------------------------------------------------------------------------|
+| **Endwalker**        | | [Promotional Site](https://na.finalfantasyxiv.com/endwalker/) |
+| 6.08    | 2022-01-25 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/9325d2a5dae2ac34b9f970c803848e8fb1c3aaf7/) |
+| 6.05    | 2022-01-04 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/674bcc0a4da4caba1ded710a7af99389094d52a8/) |
+| 6.01    | 2021-12-20 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/bba3f0b1f5c8d2708d7a126957ad76fb30c4eb71/) |
+| 6.0     | 2021-12-02 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/bdd208b52ddababad086dc9679e96a8412962edf/) |
 | **Death unto Dawn** | | [Promotional Site](https://na.finalfantasyxiv.com/shadowbringers/patch_5_5/)                                  |
 | 5.57    | 2021-06-22 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/4f379e06b6471c55ea02f138b6ada581b088ab2e) |
 | 5.55    | 2021-05-25 | [Patch Notes](https://na.finalfantasyxiv.com/lodestone/topics/detail/fdea72f70dafb7da0f7145ebc3f8c7d56dacb702) |
