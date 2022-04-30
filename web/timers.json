@@ -10,8 +10,13 @@
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202203/dceh8sj926\">Moogle Treasure Trove the Hunt for Scripture</a>",
     "type": "event mogtome",
     "start": "2022-03-14T01:00:00-0700",
-    "indefinite": true,
-    "endLabel": "Until Patch 6.1"
+    "end": 16496712E5
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2022/Hatching_tide/qeng0r6k46\">Hatching-tide</a>",
+    "type": "event mogtome",
+    "start": "2022-04-13T01:00:00-0700",
+    "end": "2022-04-27T07:59:00-0700"
   }
 ]
 }
