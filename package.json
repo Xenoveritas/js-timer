@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/Xenoveritas/js-timer#readme",
   "devDependencies": {
-    "grunt": "^1.0.0",
+    "grunt": "^1.5.3",
     "grunt-contrib-uglify": "^5.0.0",
     "grunt-jsdoc": "^2.1.0",
     "grunt-ts": "^6.0.0-beta.22",
