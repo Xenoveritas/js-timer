@@ -7,16 +7,16 @@
 },
 "timers": [
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202203/dceh8sj926\">Moogle Treasure Trove the Hunt for Scripture</a>",
-    "type": "event mogtome",
-    "start": "2022-03-14T01:00:00-0700",
-    "end": 16496712E5
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2022/The_Maidens_Rhapsody/u8fwlp9ev3\">The Maiden\u2019s Rhapsody</a>",
+    "type": "event maidens-rhapsody",
+    "start": "2022-04-28T01:00:00-0700",
+    "end": "2022-05-18T07:59:00-0700"
   },
   {
-    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2022/Hatching_tide/qeng0r6k46\">Hatching-tide</a>",
-    "type": "event mogtome",
-    "start": "2022-04-13T01:00:00-0700",
-    "end": "2022-04-27T07:59:00-0700"
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2022/the_make_it_rain_campaign/gvewqi34l6\">The Make It Rain Campaign</a>",
+    "type": "event make-it-rain",
+    "start": "2022-06-03T01:00:00-0700",
+    "end": "2022-06-20T07:59:00-0700"
   }
 ]
 }
