@@ -17,6 +17,30 @@
     "type": "event make-it-rain",
     "start": "2022-06-03T01:00:00-0700",
     "end": "2022-06-20T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202207/ujz24q0uim\">Moogle Treasure Trove the Hunt for Verity</a>",
+    "type": "event mogtome",
+    "start": "2022-07-25T01:00:00-0700",
+    "end": "2022-08-22T19:00:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2022/Moonfire_Faire/0vfxyiytu0\">Moonfire Faire 2022</a>",
+    "type": "event moonfire-faire",
+    "start": "2022-08-10T01:00:00-0700",
+    "end": "2022-08-26T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2022/The_Rising/hirh6wbu52\">The Rising</a>",
+    "type": "event rising",
+    "start": "2022-08-27T00:00:00-0700",
+    "end": "2022-09-12T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2022/All_Saints_Wake/34nzplu2qj\">All Saints\u2019 Wake</a>",
+    "type": "event all-saints-wake",
+    "start": "2022-10-19T01:00:00-0700",
+    "end": "2022-11-01T07:59:00-0700"
   }
 ]
 }
