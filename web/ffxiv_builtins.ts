@@ -41,9 +41,9 @@ export const builtins: TimerDefinition[] = [
     'offset': (5*24+8)*60*60*1000
   },
   {
-    'name': 'Duty/Beast Tribe Daily Reset',
+    'name': 'Duty/Tribal Daily Reset',
     'info': 'At this time, the following resets:<ul>'
-      + '<li>Beastmen quest allowances</li>'
+      + '<li>Tribal daily quest allowances</li>'
       + '<li>Duty Roulette daily bonuses</li>'
       + '<li>Daily repeatable quests</li>'
       + '<li>Frontline Duty Availability</li>'
