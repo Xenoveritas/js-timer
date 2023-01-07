@@ -58,8 +58,7 @@
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202212/cx604we391\">Moogle Treasure Trove \u2014 The Hunt for Creation",
     "type": "event mogtome",
     "start": "2022-12-12T00:00:00-0800",
-    "endLabel": "Until Patch 6.3",
-    "indefinite": true
+    "end": 1673316E6
   }
 ]
 }
