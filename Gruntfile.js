@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         module: 'umd'
       },
       default: {
-        src: [ 'clock.ts' ]
+        tsconfig: true
       }
     },
     uglify: {
@@ -15,13 +15,13 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: '<%= pkg.main %>',
+        src: 'build/<%= pkg.main %>',
         dest: 'build/<%= pkg.name %>.min.js'
       }
     },
     jsdoc: {
       dist: {
-        src: [ '<%= pkg.main %>', 'clock-debug.js' ],
+        src: [ 'src/clock.ts', 'src/clock-debug.ts' ],
         options: {
           destination: 'doc',
           template: "node_modules/ink-docstrap/template",

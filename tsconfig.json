@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": ".",
+    "outDir": "./build",
+    "rootDir": "./src",
     "strict": true,
     "target": "ES5"
   },
   "include": [
-    "./clock.ts"
+    "./src/clock.ts", "./src/clock-debug.ts"
   ]
 }
