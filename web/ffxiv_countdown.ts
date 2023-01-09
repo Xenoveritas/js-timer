@@ -3,7 +3,7 @@
  * like when various resets are.
  * @module ffxiv_countdown
  */
-import Clock, { Interval } from '../clock';
+import Clock, { Interval } from '../src/clock';
 
 type TimestampDefinition = string | number;
 

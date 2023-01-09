@@ -65,7 +65,7 @@ export class Interval {
 	 *         present, they'll just be set to 0.
 	 */
 	constructor(interval: number, periods?: number | boolean) {
-		if (arguments.length < 2 || periods === true) {
+		if (arguments.length < 2 || periods === true || periods === undefined) {
 			periods = 5;
 		} else if (periods === false) {
 			periods = 4;
@@ -220,6 +220,7 @@ export class Clock {
 	 * @param date {Date} the current time.
 	 */
 	ontick(date: Date): void {
+		// Stub method: does nothing
 	}
 	/**
 	 * Generally speaking it can be assumed that ticks will only ever increase the
@@ -241,6 +242,7 @@ export class Clock {
 	 *   {@code ontick}.
 	 */
 	onbackwards(date: Date): void {
+		// Stub method: does nothing
 	}
 
 	/**
@@ -256,11 +258,11 @@ export class Clock {
 	/**
 	 * Returns an interval between two dates.
 	 *
-	 * @param {Date} firstDate the first date
-	 * @param {Date} secondDate the second date
+	 * @param firstDate the first date
+	 * @param secondDate the second date
 	 * @return {Timer.Interval} interval between the two.
 	 */
-	static difference(firstDate, secondDate) {
+	static difference(firstDate: Date | number, secondDate: Date | number): Interval {
 		if (firstDate instanceof Date)
 			firstDate = firstDate.getTime();
 		if (secondDate instanceof Date)
