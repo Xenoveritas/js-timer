@@ -5,6 +5,6 @@
     "target": "ES5"
   },
   "include": [
-    "./clock.ts", "./web/**/*.ts"
+    "./src/clock.ts", "./web/**/*.ts"
   ]
 }
