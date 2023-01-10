@@ -285,25 +285,30 @@ interface TimerBlock {
 
 class SubtimerBlock implements TimerBlock {
 	name: string;
+	type: string;
 	subtimers: Timer[];
 
 	constructor(public controller: FFXIVCountdown, definition: SubtimerTimerDefinition) {
 		this.name = definition.name;
+		this.type = definition.type;
 		this.subtimers = definition.subtimers.map((subtimerDef) => new Timer(controller, subtimerDef));
 	}
 
 	init(container: HTMLElement, now: number) {
 		// This is fairly simple, we just have a large container block
-		const timerBlock = document.createElement('div');
-		timerBlock.className = 'timer';
-		container.appendChild(timerBlock);
+		const timerDiv = document.createElement('div');
+		timerDiv.className = 'timer ' + this.type;
+		container.appendChild(timerDiv);
 		let d = document.createElement('div');
 		d.innerHTML = this.name;
 		d.className = 'title';
-		timerBlock.appendChild(d);
+		timerDiv.appendChild(d);
+		const subtimerDiv = document.createElement('div');
+		timerDiv.appendChild(subtimerDiv);
+		subtimerDiv.className = 'subtimers';
 		// And then append all the children
 		this.subtimers.forEach((subtimer) => {
-			subtimer.init(timerBlock, now);
+			subtimer.init(subtimerDiv, now);
 		});
 	}
 
@@ -476,8 +481,20 @@ class Timer implements TimerBlock {
 		}
 		if (this.start)
 			addRow('Starts at', new Date(this.start));
-		if (this.end)
-			addRow(this.every ? 'Next at' : 'Ends at', new Date(this.end));
+		if (this.end) {
+			if (this.every) {
+				if (this.activeOffset) {
+					// In this case, indicate both when this one ends and the next begins
+					addRow('Ends at', new Date(this.end));
+					addRow('Next at', new Date(this.start + this.every));
+				} else {
+					// Otherwise, just indcate when the next one is
+					addRow('Next at', new Date(this.end));
+				}
+			} else {
+				addRow('Ends at', new Date(this.end));
+			}
+		}
 		html.push("</tbody></table>Times displayed are based on your browser's timezone.");
 		this._times.innerHTML = html.join('');
 	}
@@ -585,6 +602,13 @@ class Timer implements TimerBlock {
 				// It may also adjust the end
 				if (this.activeOffset.end) {
 					this.end = this.end - this.every + this.activeOffset.end;
+					// If it does, this creates another neat edge case: the period between the end of the
+					// last cycle, and the start of the next one. Thankfully, this is somewhat easy to
+					// deal with: move the start and end times to the next cycle.
+					if (this.end <= now) {
+						this.start += this.every;
+						this.end += this.every;
+					}
 				}
 			}
 		}
