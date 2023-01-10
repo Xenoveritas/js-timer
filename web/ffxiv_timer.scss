@@ -57,7 +57,7 @@ a:hover { text-decoration: underline; }
 .timer {
 	text-align: center;
 }
-.timer, .subtimer, .error, .info, .message {
+.timer, .error, .info, .message {
 	border: solid 2px $timerBorderColor;
 	padding: 16px;
 	margin: 16px;
@@ -70,9 +70,6 @@ a:hover { text-decoration: underline; }
 	border-color: mix(#F00, $timerBorderColor);
 	background-color: mix(#F00, $timerBackgroundColor);
 	color: mix(#F00, $textColor);
-}
-.subtimer {
-	font-size: 80%;
 }
 
 // Icons for the detail expander
@@ -150,17 +147,11 @@ a:hover { text-decoration: underline; }
 .reset .title:after {
 	display: none;
 }
-.before .title:after, .subtimer.before .title:after {
+.before .title:after {
 	content: " starts in:";
 }
-.active .title:after, .subtimer.active .title:after {
+.active .title:after {
 	content: " ongoing, ends in:";
-}
-.subtimer.active.ends-with-parent {
-	// Highlight when active
-	.countdown, .title:after {
-		display: none;
-	}
 }
 .active.maintenance .title:after {
 	content: " ongoing, completes in:";
@@ -170,7 +161,7 @@ a:hover { text-decoration: underline; }
 }
 .after {
 	opacity: 0.5;
-	.title:after, &.subtimer .title:after {
+	.title:after {
 		content: " over";
 	}
 	&.release .title:after {
@@ -231,14 +222,52 @@ a:hover { text-decoration: underline; }
 .note {
 	margin-top: 1em;
 }
-.subtimer .countdown {
-	font-size: 250%;
-}
 footer {
 	color: mix($textColor, $pageColor, 75%);
 	text-align: right;
 	a, a:visited {
 		color: mix($linkColor, $pageColor, 75%);
+	}
+}
+
+// Remove margins from subtimers
+.timer .timer {
+	margin: 0;
+	border-top-style: none;
+	&:first-child {
+		border-top-style: solid;
+	}
+}
+.timer .subtimers {
+	margin: 1em;
+}
+
+// Housing is weird because it's cyclical and cycles between two periods.
+.housing {
+	// For housing, the timers displayed are always the same, so for now, just
+	// show it for whichever one is currently active.
+	.application, .results {
+		&.before {
+			.countdown {
+				display: none;
+			}
+		}
+	}
+	.application.before {
+		.title:after {
+			content: "opens once results period ends";
+		}
+	}
+	.results.before {
+		.title:after {
+			content: "starts once applications close";
+		}
+	}
+	// Highlight whichever is active
+	.active .countdown {
+		background-color: $countdownUpBackgroundColor;
+		color: $countdownUpColor;
+		@include textglow($countdownUpGlowColor);
 	}
 }
 
@@ -260,7 +289,7 @@ footer {
 		color: $darkTextColor;
 	}
 	a, a:visited { color: $darkLinkColor; }
-	.timer, .subtimer, .error, .info, .message {
+	.timer, .error, .info, .message {
 		border-color: $darkTimerBorderColor;
 		background-color: $darkTimerBackgroundColor;
 	}

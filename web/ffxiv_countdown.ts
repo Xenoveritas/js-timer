@@ -17,26 +17,50 @@ export interface BaseTimerDefinition {
 	type: string;
 }
 
-export interface SingleTimerDefinition extends BaseTimerDefinition {
+export interface RecurringTimerActivePeriod {
+	/**
+	 * ms after the start of a cycle that this individual timer is active
+	 */
+	start?: number;
+	/**
+	 * ms after the start of a cycle that this individual timer stops being active
+	 */
+	end?: number;
+}
+
+export interface RecurringTimerDefinition extends BaseTimerDefinition {
 	every?: number;
 	offset?: number;
+	/**
+	 * If present, indicates that a recurring timer is only active during a portion
+	 * of its cycle. It starts start ms after the normal cycle start, and ends end
+	 * ms after the cycle ends. Start defaults to 0, end defaults to the end of the
+	 * cycle.
+	 */
+	activeOffset?: RecurringTimerActivePeriod;
 	showDuration?: boolean;
 	removeOnActive?: boolean;
 	removeOnComplete?: boolean;
 }
 
-export interface RecurringTimerDefinition extends BaseTimerDefinition {
+export interface SingleTimerDefinition extends BaseTimerDefinition {
 	start: TimestampDefinition;
 	end: TimestampDefinition;
 	endLabel?: string;
 }
 
-export type TimerDefinition = SingleTimerDefinition | RecurringTimerDefinition;
+export interface SubtimerTimerDefinition extends BaseTimerDefinition {
+	subtimers: (SingleTimerDefinition | RecurringTimerDefinition)[];
+}
+
+export type TimerDefinition = SingleTimerDefinition | RecurringTimerDefinition | SubtimerTimerDefinition;
+
+export function isSubtimerDefinition(definition: unknown): definition is SubtimerTimerDefinition {
+	return Array.isArray((definition as SubtimerTimerDefinition).subtimers);
+}
 
 /**
  * FFXIV countdown object.
- * @constructor
- * @alias module:ffxiv_countdown
  */
 class FFXIVCountdown {
 	updateURL?: string;
@@ -178,7 +202,7 @@ class FFXIVCountdown {
 		const now = new Date().getTime(),
 			skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;
 		// Convert definitions to timer elements
-		const timers: Timer[] = definitions.map(definition => new Timer(this, definition));
+		const timers: TimerBlock[] = definitions.map(definition => this.parse(definition));
 		for (let i = 0; i < timers.length; i++) {
 			let t = timers[i];
 			if (t.isOutdated(skipTimersBefore)) {
@@ -188,8 +212,6 @@ class FFXIVCountdown {
 				continue;
 			}
 			t.init(this.container, now);
-			// FIXME: Subtimers haven't been used in quite some time and for now are
-			// a dead feature. They may be revived at some point in the future.
 			// Debug:
 			//t.start = now + (3+i) * 1000;
 			//t.end = now + (6+i) * 1000;
@@ -234,14 +256,85 @@ class FFXIVCountdown {
 			Clock.zeropad(date.getDate()) + ' at ' + date.getHours() + ':' +
 			Clock.zeropad(date.getMinutes());
 	}
+
+	parse(definition: TimerDefinition): TimerBlock {
+		if (isSubtimerDefinition(definition)) {
+			return new SubtimerBlock(this, definition);
+		} else {
+			return new Timer(this, definition);
+		}
+	}
 }
 
 type Timestamp = number;
 
 /**
+ * Base interface for the timer blocks (mostly due to subtimers).
+ */
+interface TimerBlock {
+	init: (HTMLElement, number) => void;
+	isOutdated: (number) => boolean;
+	/**
+	 * 
+	 * @param now the current time
+	 * @returns true if the timer is still active, false if it will stop updating
+	 */
+	update: (now: number) => boolean;
+}
+
+
+class SubtimerBlock implements TimerBlock {
+	name: string;
+	type: string;
+	subtimers: Timer[];
+
+	constructor(public controller: FFXIVCountdown, definition: SubtimerTimerDefinition) {
+		this.name = definition.name;
+		this.type = definition.type;
+		this.subtimers = definition.subtimers.map((subtimerDef) => new Timer(controller, subtimerDef));
+	}
+
+	init(container: HTMLElement, now: number) {
+		// This is fairly simple, we just have a large container block
+		const timerDiv = document.createElement('div');
+		timerDiv.className = 'timer ' + this.type;
+		container.appendChild(timerDiv);
+		let d = document.createElement('div');
+		d.innerHTML = this.name;
+		d.className = 'title';
+		timerDiv.appendChild(d);
+		const subtimerDiv = document.createElement('div');
+		timerDiv.appendChild(subtimerDiv);
+		subtimerDiv.className = 'subtimers';
+		// And then append all the children
+		this.subtimers.forEach((subtimer) => {
+			subtimer.init(subtimerDiv, now);
+		});
+	}
+
+	/**
+	 * If this block is outdated. True only if every subtimer is outdated.
+	 * @param cutoff the cutoff
+	 * @returns 
+	 */
+	isOutdated(cutoff: number): boolean {
+		return this.subtimers.every((timer) => timer.isOutdated(cutoff));
+	}
+
+	update(now: number): boolean {
+		return this.subtimers.reduce((active, timer) => {
+			// && is technically short-circuit logic but also boolean logic,
+			// so this returns true only if update is true AND all previous
+			// runs were true
+			return timer.update(now) && active;
+		}, true);
+	}
+}
+
+/**
  * A single timer.
  */
-class Timer {
+class Timer implements TimerBlock {
 	start: Timestamp;
 	end: Timestamp;
 	name: string;
@@ -251,6 +344,7 @@ class Timer {
 	endLabel?: string;
 	every?: number;
 	offset?: number;
+	activeOffset?: RecurringTimerActivePeriod;
 	showDuration?: boolean;
 	removeOnActive?: boolean;
 	removeOnComplete?: boolean;
@@ -287,6 +381,7 @@ class Timer {
 		}
 		this.every = definition['every'];
 		this.offset = definition['offset'];
+		this.activeOffset = definition['activeOffset'];
 		this.showDuration = definition['showDuration'];
 		// Default show duration to true in maintenance timers.
 		if (!('showDuration' in definition) && this.type == 'maintenance')
@@ -386,8 +481,20 @@ class Timer {
 		}
 		if (this.start)
 			addRow('Starts at', new Date(this.start));
-		if (this.end)
-			addRow(this.every ? 'Next at' : 'Ends at', new Date(this.end));
+		if (this.end) {
+			if (this.every) {
+				if (this.activeOffset) {
+					// In this case, indicate both when this one ends and the next begins
+					addRow('Ends at', new Date(this.end));
+					addRow('Next at', new Date(this.start + this.every));
+				} else {
+					// Otherwise, just indcate when the next one is
+					addRow('Next at', new Date(this.end));
+				}
+			} else {
+				addRow('Ends at', new Date(this.end));
+			}
+		}
 		html.push("</tbody></table>Times displayed are based on your browser's timezone.");
 		this._times.innerHTML = html.join('');
 	}
@@ -487,8 +594,24 @@ class Timer {
 	 * the given time. Otherwise, this does nothing.
 	 */
 	resetRecurring(now: number): void {
-		if (this.every)
+		if (this.every) {
 			this.end = (Math.floor(((now+1000) - this.offset) / this.every) + 1) * this.every + this.offset;
+			if (this.activeOffset) {
+				// If there's an active offset, also update the start time
+				this.start = this.end - this.every + (this.activeOffset.start ?? 0);
+				// It may also adjust the end
+				if (this.activeOffset.end) {
+					this.end = this.end - this.every + this.activeOffset.end;
+					// If it does, this creates another neat edge case: the period between the end of the
+					// last cycle, and the start of the next one. Thankfully, this is somewhat easy to
+					// deal with: move the start and end times to the next cycle.
+					if (this.end <= now) {
+						this.start += this.every;
+						this.end += this.every;
+					}
+				}
+			}
+		}
 		this._updateTimes();
 	}
 }

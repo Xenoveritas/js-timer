@@ -14,6 +14,17 @@ import FFXIVCountdown, { TimerDefinition } from './ffxiv_countdown';
  * @module ffxiv_builtins
  */
 
+// Housing constants! For calculating when the lottery period.
+// This is based on the schedule listed here:
+// https://na.finalfantasyxiv.com/lodestone/news/detail/5c4cd37bfb238a792d5e0b831ea5f56acbae437b
+// Cycle Period: 9 Days
+const housingPeriod = 9*24*60*60*1000;
+// Cycle Start Date: 2022-05-26T15:00:00
+// OK, so the offset is basically "what is the offset to the first instance of
+// the timer starting since the UNIX epoch." So, basically, the known starting
+// time mod nine days.
+const housingOffset = 1653577200000 % (9*24*60*60*1000);
+
 /**
  * The actual builtins.
  */
@@ -60,7 +71,7 @@ export const builtins: TimerDefinition[] = [
     'type': 'reset',
     'every': 24*60*60*1000,
     'offset': 20*60*60*1000
-  }
+  },
   // Daily "duty finder jerk" reset (where the "three times per day" before
   // withdrawing always gives you a half-hour penalty) is apparently every day
   // at 9AM PDT/12PM EDT/16:00 UTC.
@@ -68,6 +79,34 @@ export const builtins: TimerDefinition[] = [
   // I also wonder if that's a patch note typo and they meant "8AM PDT"
   // to match the daily reset and screwed up their Daylight Saving
   // Time conversion.
+  {
+    'name': 'Housing Lottery',
+    'type': 'housing',
+    'info': 'The housing lottery runs in a nine-day cycle. For the first five '
+      + 'days, entries can be made, then for the remaining four, winners can '
+      + 'finalize their purchase and everyone else may retrieve their fee.',
+    'subtimers': [
+      {
+        'name': 'Application Period',
+        'type': 'application',
+        'info': 'During this time, you may place an entry into the housing lottery.',
+        'every': housingPeriod,
+        // OK, so the offset is basically "what is the offset to the first
+        // instance of the timer starting since the UNIX epoch." So, basically, the
+        // known starting time mod nine days.
+        'offset': housingOffset,
+        'activeOffset': { 'end': 5*24*60*60*1000 }
+      },
+      {
+        'name': 'Results Period',
+        'type': 'results',
+        'info': 'During this time, you may accept a winning bid.',
+        'every': housingPeriod,
+        'offset': housingOffset,
+        'activeOffset': { 'start': 5*24*60*60*1000 }
+      }
+    ]
+  }
 ];
 
 export default builtins;
