@@ -7,7 +7,7 @@ const devMode = process.env.WEBPACK_ENV !== 'production';
 
 module.exports = {
     mode: devMode ? 'development' : 'production',
-    entry: './web/ffxiv_main.ts',
+    entry: `./web/ffxiv_main${devMode ? '_debug' : ''}.ts`,
     devServer: {
         contentBase: './build'
     },

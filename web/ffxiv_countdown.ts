@@ -37,26 +37,41 @@ export type TimerDefinition = SingleTimerDefinition | RecurringTimerDefinition;
  * FFXIV countdown object.
  * @constructor
  * @alias module:ffxiv_countdown
- * @param {Element} container
- *   the DOM object to place the generated HTML timers in
- * @param {Object|String} timers
- *   if an object, the JSON object describing the timers; if a string, a URL
- *   that will be fetched containing the JSON object describing the timers
- * @param {Boolean} addBuiltins
- *   when `true` (the default), adds the set of builtin timers defined in
- *   {@link module:ffxiv_countdown.builtins FFXIVCountdown.builtins}
- * @param {Boolean} showWeeks
- *   when `true`, show weeks instead of just days
  */
 class FFXIVCountdown {
 	updateURL?: string;
+	clock: Clock;
+	addBuiltins = true;
+	showWeeks = false;
 
+	/**
+	 * Create a new FFXIV countdown.
+	 * @param container the DOM element to place all generated HTML elements within
+	 * @param timers the timer definitions object or a string to use as a URL 
+	 * @param options extra options that may be specified
+	 */
 	constructor(
 		public container: HTMLElement,
 		timers: string | TimerDefinition[] = [],
-		public addBuiltins = true,
-		public showWeeks = false
+		options?: {
+			addBuiltins?: boolean;
+			showWeeks?: boolean;
+			clock: Clock;
+		}
 	) {
+		let clock: Clock;
+		if (options) {
+			if (options.addBuiltins) {
+				this.addBuiltins = options.addBuiltins;
+			}
+			if (options.showWeeks) {
+				this.showWeeks = options.showWeeks;
+			}
+			if (options.clock) {
+				clock = options.clock;
+			}
+		}
+		this.clock = clock ?? new Clock();
 		if (typeof timers == 'string') {
 			// Assume it's a URL and try and pull it using AJAX
 			this.load(timers);
@@ -179,7 +194,7 @@ class FFXIVCountdown {
 			//t.start = now + (3+i) * 1000;
 			//t.end = now + (6+i) * 1000;
 		}
-		const timer = new Clock();
+		const timer = this.clock;
 		timer.ontick = (nowDate: Date) => {
 			const now = nowDate.getTime();
 			for (let i = 0; i < timers.length; i++) {
