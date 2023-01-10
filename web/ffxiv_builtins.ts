@@ -23,6 +23,8 @@ const housingPeriod = 9*24*60*60*1000;
 // OK, so the offset is basically "what is the offset to the first instance of
 // the timer starting since the UNIX epoch." So, basically, the known starting
 // time mod nine days.
+// The starting point is from Date.UTC(2022, 5-1, 26, 15, 0, 0)
+// (In case they ever stop and restart it again)
 const housingOffset = 1653577200000 % (9*24*60*60*1000);
 
 /**
@@ -35,6 +37,7 @@ export const builtins: TimerDefinition[] = [
       + '<li>Cap on Allagan tomestones of causality</li>'
       + '<li>Weekly repeatable quests</li>'
       + '<li>Pand\u00E6monium: Abyssos reward eligibility</li>'
+      + '<li>Euphrosyne reward eligibility</li>'
       + '<li>Blue Mage/Masked Carnival Weekly Targets</li>'
       + '<li>PvP Weekly Performance</li>'
       + '<li>Challenge Log challenges</li>'
