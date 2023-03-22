@@ -59,6 +59,24 @@
     "type": "event mogtome",
     "start": "2022-12-12T00:00:00-0800",
     "end": 1673316E6
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/Valentiones_Day/6ahu1ryjqv\">Valentione\u2019s Day</a>",
+    "type": "event valentiones-day",
+    "start": "2023-02-01T00:00:00-0800",
+    "end": "2023-02-15T06:59:00-0800"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/Little_Ladies_Day/mtqd47qw49\">Little Ladies\u2019 Day</a>",
+    "type": "event little-ladies-day",
+    "start": "2023-03-01T00:00:00-0800",
+    "end": "2023-03-15T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/Hatching_tide/gkonsy0g3l\">Hatching-tide</a>",
+    "type": "event hatchingtide",
+    "start": "2023-03-27T01:00:00-0700",
+    "end": "2023-04-10T07:59:00-0700"
   }
 ]
 }
