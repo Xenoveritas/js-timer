@@ -77,6 +77,38 @@
     "type": "event hatchingtide",
     "start": "2023-03-27T01:00:00-0700",
     "end": "2023-04-10T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202304/y7377p4z7j\">Moogle Treasure Trove the Hunt for Mendacity</a>",
+    "type": "event mogtome",
+    "start": "2023-04-24T01:00:00-0700",
+    "end": 16848072E5
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/topics/detail/9a7bc79ec34cc26afdf85aacc89a85b3aba438cb\">The Make It Rain Campaign</a>",
+    "type": "event make-it-rain",
+    "start": "2023-06-30T01:00:00-0700",
+    "end": "2023-07-17T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/Moonfire_Faire/oct9miki0d\">Moonfire Faire</a>",
+    "type": "event moonfire-faire",
+    "start": "2023-08-10T01:00:00-0700",
+    "end": "2023-08-26T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/The_Rising/eykg76bc2d\">The Rising</a>",
+    "type": "event rising",
+    "start": "2023-08-27T00:00:00-0700",
+    "indefinite": true,
+    "endLabel": "Until Patch 6.5"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202308/1ny0ji96di\">Moogle Treasure Trove: the 10th Anniversary Hunt</a>",
+    "type": "event rising",
+    "start": "2023-08-27T00:00:00-0700",
+    "indefinite": true,
+    "endLabel": "Until Patch 6.5"
   }
 ]
 }
