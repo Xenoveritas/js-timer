@@ -100,15 +100,19 @@
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/The_Rising/eykg76bc2d\">The Rising</a>",
     "type": "event rising",
     "start": "2023-08-27T00:00:00-0700",
-    "indefinite": true,
-    "endLabel": "Until Patch 6.5"
+    "end": 16962408E5
   },
   {
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202308/1ny0ji96di\">Moogle Treasure Trove: the 10th Anniversary Hunt</a>",
     "type": "event rising",
     "start": "2023-08-27T00:00:00-0700",
-    "indefinite": true,
-    "endLabel": "Until Patch 6.5"
+    "end": 16962408E5
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/All_Saints_Wake/gtjs3j7xq6\">All Saints\u2019 Wake</a>",
+    "type": "event all-saints-wake",
+    "start": "2023-10-27T00:01:00-0700",
+    "end": "2023-11-13T00:06:59-0800"
   }
 ]
 }
