@@ -1,3 +1,4 @@
+@use "sass:math";
 // Basic color definitions.
 
 $pageColor: #EEE;
@@ -176,8 +177,8 @@ a:hover { text-decoration: underline; }
 }
 .countdown {
 	$size: 48px;
-	$padding: $size / 4;
-	$borderRadius: ($size + ($padding * 2)) / 2;
+	$padding: math.div($size, 4);
+	$borderRadius: math.div(($size + ($padding * 2)), 2);
 	color: $countdownColor;
 	@include textglow($countdownGlowColor);
 	background-color: $countdownBackgroundColor;
@@ -186,7 +187,7 @@ a:hover { text-decoration: underline; }
 	margin: $padding 0;
 	padding: $padding $borderRadius;
 	font-family: "Droid Sans", Helvetica, sans-serif;
-	font-size: $size * 3 / 4;
+	font-size: math.div($size * 3, 4);
 	line-height: $size;
 	vertical-align: middle;
 	width: auto;
