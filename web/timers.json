@@ -111,8 +111,14 @@
   {
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/All_Saints_Wake/gtjs3j7xq6\">All Saints\u2019 Wake</a>",
     "type": "event all-saints-wake",
-    "start": "2023-10-27T00:01:00-0700",
-    "end": "2023-11-13T00:06:59-0800"
+    "start": "2023-10-27T01:00:00-0700",
+    "end": "2023-11-13T06:59:00-0800"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/fallguys/\">Blunderville (FFXIV \u00D7 Fall Guys)</a>",
+    "type": "crossover fallguys",
+    "start": "2023-10-31T03:00:00-0700",
+    "end": "2023-12-31T06:59:00-0700"
   }
 ]
 }
