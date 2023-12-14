@@ -3,9 +3,9 @@
  */
 
 import { getOptions } from 'loader-utils';
-import crushJSON from '../lib/crush-json';
-import * as moment from 'moment';
-import { stripIgnoredFields, parseTimers } from '../lib/parse-timer';
+import crushJSON from '../lib/crush-json.mjs';
+import moment from '../lib/horrible-moment-hack.mjs';
+import { stripIgnoredFields, parseTimers } from '../lib/parse-timer.mjs';
 
 export default function compile(source) {
   const webpackOptions = getOptions(this);

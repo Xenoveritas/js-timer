@@ -1,4 +1,4 @@
-import Timer, { ProtoTimer, convertTimer } from './timer';
+import Timer, { ProtoTimer, convertTimer } from './timer.mjs';
 
 /**
  * The set of fields the timer cares about and that should survive

@@ -64,7 +64,7 @@ export function convertTimer(timer: ProtoTimer): Timer {
     const resultTimer = timer as Timer;
     const subtimers = timer['subtimers'];
     if (Array.isArray(subtimers)) {
-      resultTimer.subtimers = timer.subtimers.map((subtimer) => convertTimer(subtimer));
+      resultTimer.subtimers = timer.subtimers?.map((subtimer) => convertTimer(subtimer));
     }
     return resultTimer;
   } else {

@@ -9,7 +9,6 @@ module.exports = {
     mode: devMode ? 'development' : 'production',
     entry: `./web/ffxiv_main${devMode ? '_debug' : ''}.ts`,
     devServer: {
-        contentBase: './build'
     },
     devtool: devMode ? 'inline-source-map' : false,
     plugins: [
@@ -26,9 +25,9 @@ module.exports = {
         {
             test: /timers.json$/,
             use: [
-                { loader: './build-plugins/plugins/timer-loader' },
+                { loader: './build-plugins/plugins/timer-loader.mjs' },
                 {
-                    loader: './build-plugins/plugins/scrape-lodestone-loader',
+                    loader: './build-plugins/plugins/scrape-lodestone-loader.mjs',
                     options: {
                         // TODO: Is this a safe place to store the cache?
                         cacheFile: './build/timer-cache.json'

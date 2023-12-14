@@ -2,10 +2,10 @@
     "compilerOptions": {
       "outDir": "build-plugins",
       "moduleResolution": "node",
-      "module": "CommonJS",
-      "target": "ES6"
+      "module": "ES2022",
+      "target": "ES2022"
     },
     "include": [
-      "./src/lib/**/*.ts", "./src/plugins/**/*.ts"
+      "./src/lib/**/*.mts", "./src/plugins/**/*.mts"
     ]
   }

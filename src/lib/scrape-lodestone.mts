@@ -1,8 +1,8 @@
-import * as request from 'request';
+import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
-import * as moment from 'moment';
+import moment from './horrible-moment-hack.mjs';
 import { debuglog, format } from 'util';
-import Timer from './timer';
+import Timer from './timer.mjs';
 
 /**
  * Defines the guaranteed entries of a timer produced by the scraper.
@@ -73,7 +73,7 @@ function parseTime(time: Time | undefined, defaultValue: number, delta = false):
 export class LodestoneScraper {
   cache = new Map<string, LodestoneTimer>();
   log = {
-    verbose: debuglog('lodestone'),
+    verbose: debuglog('lodestone') as Logger,
     info: (message: string, ...optionalParams: unknown[]): void => {
       console.log(message, ...optionalParams);
     },
@@ -176,80 +176,55 @@ export class LodestoneScraper {
    * Attempts to scrape the Lodestone using the options given at construction time.
    * @returns a Promise that resolves to any loaded timers
    */
-  loadLodestone(): Promise<LodestoneTimer[]> {
+  async loadLodestone(): Promise<LodestoneTimer[]> {
     const now = new Date().getTime();
     const skipTimersBeforeTimestamp = now - this.skipTimerBefore;
     const skipScrapingBefore = now - this.skipScrapeBefore;
     const mostRecent = this.latestCacheEntry();
     if (mostRecent > now - this.refetchAfter) {
       this.log.verbose('Cache is still fresh (loaded at %s, current time is %s), reusing timer data within the cache.', moment(mostRecent).format(), moment(now).format());
-      return Promise.resolve(this.cachedTimers().filter((timer) => {
+      return this.cachedTimers().filter((timer) => {
         return timer.end ? timer.end > skipTimersBeforeTimestamp : true;
-      }));
+      });
     }
     this.log.verbose('Pulling %s...', this.lodestoneURL);
-    return new Promise((resolve, reject) => {
-      request({
-        method: 'GET',
-        uri: this.lodestoneURL.toString(),
-        gzip: true
-      }, (error, response, body) => {
-        if (error) {
-          this.log.error('%o', error);
-          reject(error);
+    const response = await fetch(this.lodestoneURL.toString());
+    if (response.status === 200) {
+      const links: Record<string, string> = { };
+      try {
+        this.scrapeLodestone(await response.text(), links, skipScrapingBefore);
+      } catch (ex) {
+        this.log.error("Unable to parse Lodestone: " + ex);
+        throw ex;
+      }
+      // Set the last loaded time to be the time when this request started
+      this.lastLoadedAt = now;
+      const timers: LodestoneTimer[] = [];
+      // We now want to iterate through the links but we want to pull them
+      // sequentially, so this ends up being a bit horrible. All we care
+      // about are the object keys.
+      const urls = Object.keys(links);
+      this.log.info('Found %s URL%s to check.', urls.length, urls.length === 1 ? '' : 's');
+      for (const url of urls) {
+        try {
+          const timer = await this.loadPost(new URL(url, this.lodestoneURL).toString());
+          if (timer !== null) {
+            // No matter what, we always cache the timer
+            this.cacheTimer(timer);
+            if (timer.end && timer.end <= skipTimersBeforeTimestamp) {
+              this.log.verbose('Skipping timer "%s": it is too old', timer.title);
+            } else {
+              timers.push(timer);
+            }
+          }
+        } catch (ex) {
+          this.log.error('Error fetching %s: %o', url.toString(), ex);
         }
-        if (response.statusCode === 200) {
-          const links: Record<string, string> = { };
-          try {
-            this.scrapeLodestone(body, links, skipScrapingBefore);
-          } catch (ex) {
-            this.log.error("Unable to parse Lodestone: " + ex);
-            reject(ex);
-            return;
-          }
-          // Set the last loaded time to be the time when this request started
-          this.lastLoadedAt = now;
-          const timers: LodestoneTimer[] = [];
-          // We now want to iterate through the links but we want to pull them
-          // sequentially, so this ends up being a bit horrible. All we care
-          // about are the object keys.
-          const urls = Object.keys(links);
-          this.log.info('Found %s URL%s to check.', urls.length, urls.length === 1 ? '' : 's');
-          const loadURL = (i: number): void => {
-            this.loadPost(new URL(urls[i], this.lodestoneURL).toString()).then((timer) => {
-              if (error === null && timer !== null) {
-                // No matter what, we always cache the timer
-                this.cacheTimer(timer);
-                if (timer.end <= skipTimersBeforeTimestamp) {
-                  this.log.verbose('Skipping timer "%s": it is too old', timer.title);
-                } else {
-                  timers.push(timer);
-                }
-              }
-            }).catch(() => {
-              // Do nothing for now
-            }).finally(() => {
-              // Regardless of outcome:
-              i++;
-              if (i < urls.length) {
-                // Keep going
-                loadURL(i);
-              } else {
-                // Otherwise, we're done
-                resolve(timers);
-              }
-            });
-          }
-          if (urls.length > 0) {
-            loadURL(0);
-          } else {
-            resolve([]);
-          }
-        } else {
-          this.log.error("Got error response from the Lodestone: " + response.statusCode + ' ' + response.statusMessage);
-        }
-      });
-    });
+      }
+      return timers;
+    } else {
+      throw new Error("Got error response from the Lodestone: " + response.status + ' ' + response.statusText);
+    }
   }
 
   scrapeLodestone(html: string, links: Record<string, string>, skipBefore?: number) {
@@ -258,11 +233,15 @@ export class LodestoneScraper {
     // Sweet lord is the FFXIV Lodestone HTML terrible
     $('a.ic__maintenance--list').each((i, e) => {
       // See if this is a maintenance news item.
-      const item = cheerio(e);
+      const item = $(e);
       const title = item.find('p.news__list--title');
       if (title.length > 0) {
         const tag = title.find('.news__list--tag');
         const href = item.attr('href');
+        if (!href) {
+          // Didn't find anything
+          return;
+        }
         const postURL = new URL(href, this.lodestoneURL).toString();
         // TODO: Possibly look this up in a more efficient fashion (although
         // it's almost always going to be an empty list)
@@ -284,7 +263,7 @@ export class LodestoneScraper {
         if (m) {
           // Time on the Lodestone is helpfully stored as a UNIX timestamp in seconds and then formatted in JS
           const time = parseInt(m[1]) * 1000;
-          if (time < skipBefore) {
+          if (skipBefore && time < skipBefore) {
             this.log.verbose('Skipping "%s" its time (%s) is before cutoff %s', name, moment(time).format(), cutoff);
           } else {
             if (href in links) {
@@ -303,33 +282,24 @@ export class LodestoneScraper {
     });
   }
 
-  loadPost(postURL: string): Promise<LodestoneTimer | null> {
+  async loadPost(postURL: string): Promise<LodestoneTimer | null> {
     const cachedResult = this.cache.get(postURL);
     if (cachedResult && cachedResult.loadedAt > (new Date().getTime() - this.refetchAfter)) {
       this.log.verbose('Using cached entry for "%s"...', postURL);
       return Promise.resolve(cachedResult);
     }
     this.log.info("Pulling %s...", postURL);
-    return new Promise((resolve, reject) => {
-      request({
-        method: 'GET',
-        uri: postURL,
-        gzip: true
-      }, (error, response, body) => {
-        if (error) {
-          this.log.error('%o', error);
-          reject(error);
-        }
-        if (response.statusCode == 200) {
-          const timer = this.parsePost(body, postURL);
-          if (timer == null)
-            this.log.error("Unable to parse post.");
-          else
-            this.log.info("Generated a " + timer.type + " timer");
-          resolve(timer);
-        }
-      });
-    });
+    const response = await fetch(postURL);
+    if (response.status == 200) {
+      const timer = this.parsePost(await response.text(), postURL);
+      if (timer == null)
+        this.log.error("Unable to parse post.");
+      else
+        this.log.info("Generated a " + timer.type + " timer");
+      return timer;
+    } else {
+      throw new Error(`Error response from server: ${response.status} ${response.statusText}`);
+    }
   }
 
   parsePost(html: string, postURL: string): LodestoneTimer | null {

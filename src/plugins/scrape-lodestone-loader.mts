@@ -4,9 +4,9 @@
  */
 
 import { getOptions } from 'loader-utils';
-import * as moment from 'moment';
-import Timer, { ProtoTimer } from '../lib/timer';
-import { LodestoneScraper, LodestoneScraperOptions, LodestoneTimer, TimerCache, isTimerCache } from '../lib/scrape-lodestone';
+import moment from '../lib/horrible-moment-hack.mjs';
+import Timer, { ProtoTimer } from '../lib/timer.mjs';
+import { LodestoneScraper, LodestoneScraperOptions, LodestoneTimer, TimerCache, isTimerCache } from '../lib/scrape-lodestone.mjs';
 import * as fs from 'fs';
 import { debuglog } from 'util';
 
