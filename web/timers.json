@@ -116,8 +116,14 @@
   },
   {
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/fallguys/\">Blunderville (FFXIV \u00D7 Fall Guys)</a>",
-    "type": "crossover fallguys",
+    "type": "event crossover fallguys",
     "start": "2023-10-31T03:00:00-0700",
+    "end": "2023-12-31T06:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2023/Starlight_Celebration/1zhfx0729r\">Starlight Celebration</a>",
+    "type": "event starlight",
+    "start": "2023-12-15T00:00:00-0700",
     "end": "2023-12-31T06:59:00-0700"
   }
 ]
