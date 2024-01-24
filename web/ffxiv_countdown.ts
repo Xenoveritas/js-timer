@@ -67,6 +67,7 @@ class FFXIVCountdown {
 	clock: Clock;
 	addBuiltins = true;
 	showWeeks = false;
+	dateTimeFormat?: Intl.DateTimeFormat;
 
 	/**
 	 * Create a new FFXIV countdown.
@@ -101,6 +102,17 @@ class FFXIVCountdown {
 			this.load(timers);
 		} else {
 			this._init(timers);
+		}
+		if (Intl.DateTimeFormat) {
+			this.dateTimeFormat = new Intl.DateTimeFormat('en', {
+				'weekday': 'short',
+				'year': 'numeric',
+				'month': 'short',
+				'day': '2-digit',
+				'hour': 'numeric',
+				'minute': '2-digit',
+				'timeZoneName': 'short'
+			});
 		}
 	}
 
@@ -252,6 +264,9 @@ class FFXIVCountdown {
 	 * @return {string} the date formatted to be human readable as a string
 	 */
 	formatDate(date: Date): string {
+		if (this.dateTimeFormat) {
+			return this.dateTimeFormat.format(date);
+		}
 		return date.getFullYear() + '-' + Clock.zeropad(date.getMonth() + 1) + '-' +
 			Clock.zeropad(date.getDate()) + ' at ' + date.getHours() + ':' +
 			Clock.zeropad(date.getMinutes());
