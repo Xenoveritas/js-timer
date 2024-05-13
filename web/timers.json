@@ -167,6 +167,19 @@
     "type": "event crossover ffxvi",
     "start": "2024-04-02T01:00:00-0700",
     "end": "2024-05-08T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2024/youkai-watch/j9rq1fpxxd\">Yokai Watch: Gather One, Gather All</a>",
+    "type": "event crossover yokai-watch",
+    "start": "2024-04-24T01:00:00-0700",
+    "endLabel": "Until Patch 7.0",
+    "indefinite": true
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2024/the_make_it_rain_campaign/jgmo8djkm5\">The Make It Rain Campaign</a>",
+    "type": "event make-it-rain",
+    "start": "2024-05-14T01:00:00-0700",
+    "end": "2024-05-31T07:59:00-0700"
   }
 ]
 }
