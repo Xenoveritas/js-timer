@@ -4,12 +4,13 @@
 
 import { getOptions } from 'loader-utils';
 import crushJSON from '../lib/crush-json.mjs';
-import moment from '../lib/horrible-moment-hack.mjs';
 import { stripIgnoredFields, parseTimers } from '../lib/parse-timer.mjs';
 
 export default function compile(source) {
   const webpackOptions = getOptions(this);
-  let sort = true, stripUnusedFields = true, crush = true, oldest = moment.duration(1, 'day');
+  let sort = true, stripUnusedFields = true, crush = true;
+  // Default to 1 day
+  let oldest = 24 * 60 * 60 * 1000;
   if (typeof webpackOptions === 'object' && webpackOptions !== null) {
     if (typeof webpackOptions.sort === 'boolean')
       sort = webpackOptions.sort;
@@ -17,25 +18,22 @@ export default function compile(source) {
       stripUnusedFields = webpackOptions.stripUnusedFields;
     if (typeof webpackOptions.crush === 'boolean')
       crush = webpackOptions.crush;
-    if (typeof webpackOptions.oldest === 'string') {
-      oldest = moment.duration(webpackOptions.oldest);
+    // For now, only allow number of ms...
+    if (typeof webpackOptions.oldest === 'number') {
+      oldest = webpackOptions.oldest;
     }
   }
-  const timers = parseTimers(JSON.parse(source), new Date().getTime() - oldest.asMilliseconds());
+  const timers = parseTimers(JSON.parse(source), new Date().getTime() - oldest);
   if (sort) {
     // Sort the timers by start time before writing them. Earlier timers
     // should be higher on the list.
     timers.sort(function(a,b) {
-      var d = a['start'] - b['start'];
+      const d = a['start'] - b['start'];
       if (d != 0)
         return d;
-      // Sort by title instead.
-      if ('title' in a && 'title' in b) {
-        return a['title'] < b['title'] ? -1 : (a['title'] == b['title'] ? 0 : 1);
-      } else {
-        // Otherwise, sort by the name field.
-        return a['name'] < b['name'] ? -1 : (a['name'] == b['name'] ? 0 : 1);
-      }
+      // Sort by effective title instead (either the title field, if set, or the name field, if not)
+      const aTitle = a.title ?? a.name ?? '', bTitle = b.title ?? b.name ?? '';
+      return aTitle < bTitle ? -1 : (aTitle == bTitle ? 0 : 1);
     });
   }
   if (stripUnusedFields) {

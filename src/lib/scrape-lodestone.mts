@@ -54,6 +54,13 @@ export interface LodestoneScraperOptions {
   refetchTime?: Time;
 }
 
+/**
+ * Parses the current time.
+ * @param time the time to parse
+ * @param defaultValue the default value
+ * @param delta if true, the default value is a delta before the current time to use
+ * @returns time as milliseconds since the UNIX epoch, i.e., what Date.getTime returns
+ */
 function parseTime(time: Time | undefined, defaultValue: number, delta = false): number {
   switch(typeof time) {
     case 'string':
@@ -123,7 +130,7 @@ export class LodestoneScraper {
     // It's possible for the end time NOT to include the date. If we're given
     // the previous time and have no date component, use that.
     this.log.verbose('Parsing time [%s]', str);
-    var rv = moment.utc(str, 'MMM. D, YYYY h:mm a');
+    let rv = moment.utc(str, 'MMM. D, YYYY h:mm a');
     if (!rv.isValid() && previous) {
       rv = moment.utc(str, 'h:mm a');
       if (rv !== null) {
