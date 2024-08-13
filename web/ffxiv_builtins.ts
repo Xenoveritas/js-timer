@@ -34,9 +34,9 @@ export const builtins: TimerDefinition[] = [
   {
     'name': 'Weekly Reset',
     'info': 'On the weekly reset, the following resets:<ul>'
-      + '<li>Cap on Allagan tomestones of comedy</li>'
+      + '<li>Cap on Allagan tomestones of heliometry</li>'
       + '<li>Weekly repeatable quests</li>'
-      + '<li>Thaleia reward eligibility</li>'
+      + '<li>AAC Light-heavyweight Tier (Savage) reward eligibility</li>'
       + '<li>Blue Mage/Masked Carnival Weekly Targets</li>'
       + '<li>PvP Weekly Performance</li>'
       + '<li>Challenge Log challenges</li>'
