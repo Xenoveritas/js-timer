@@ -54,9 +54,9 @@ export const builtins: TimerDefinition[] = [
     'offset': (5*24+8)*60*60*1000
   },
   {
-    'name': 'Duty/Tribal Daily Reset',
+    'name': 'Duty/Allied Society Daily Reset',
     'info': 'At this time, the following resets:<ul>'
-      + '<li>Tribal daily quest allowances</li>'
+      + '<li>Allied society daily quest allowances</li>'
       + '<li>Duty Roulette daily bonuses</li>'
       + '<li>Daily repeatable quests</li>'
       + '<li>Frontline Duty Availability</li>'
