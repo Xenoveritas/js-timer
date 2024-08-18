@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
 import moment from './horrible-moment-hack.mjs';
 import { debuglog, format } from 'util';
