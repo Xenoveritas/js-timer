@@ -198,6 +198,12 @@
     "type": "event crossover fallguys",
     "start": "2024-05-23T01:00:00-0700",
     "end": "2024-06-10T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2024/Moonfire_Faire/vk09iygn4m\">Moonfire Faire</a>",
+    "type": "event moonfire-faire",
+    "start": "2024-08-08T01:00:00-0700",
+    "end": "2024-08-26T07:59:00-0700"
   }
 ]
 }
