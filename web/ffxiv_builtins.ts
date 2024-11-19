@@ -37,6 +37,7 @@ export const builtins: TimerDefinition[] = [
       + '<li>Cap on Allagan tomestones of heliometry</li>'
       + '<li>Weekly repeatable quests</li>'
       + '<li>AAC Light-heavyweight Tier (Savage) reward eligibility</li>'
+      + '<li>Jeuno: The First Walk reward eligibility</li>'
       + '<li>Blue Mage/Masked Carnival Weekly Targets</li>'
       + '<li>PvP Weekly Performance</li>'
       + '<li>Challenge Log challenges</li>'

@@ -208,8 +208,7 @@
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202410/ik3ur7rfxb\">Moogle Treasure Trove: The Hunt for Goetia</a>",
     "type": "event mogtome",
     "start": "2024-10-15T01:00:00-0700",
-    "endLabel": "Until Patch 7.1",
-    "indefinite": true
+    "end": 17313804E5
   },
   {
     "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2024/All_Saints_Wake/5or4qa29uw\">All Saints\u2019 Wake</a>",
