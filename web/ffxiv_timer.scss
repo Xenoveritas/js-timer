@@ -1,4 +1,7 @@
+@use "sass:color";
 @use "sass:math";
+@use "sass:meta";
+@use "sass:string";
 // Basic color definitions.
 
 $pageColor: #EEE;
@@ -10,17 +13,17 @@ $darkPageColor: #222;
 $darkTextColor: #CCC;
 $darkLinkColor: $linkColor;
 
-$timerBackgroundColor: mix($pageColor, #FFF);
-$timerBorderColor: mix($textColor, #FFF);
-$darkTimerBackgroundColor: mix($darkPageColor, #000);
-$darkTimerBorderColor: mix($textColor, #000);
+$timerBackgroundColor: color.mix($pageColor, #FFF);
+$timerBorderColor: color.mix($textColor, #FFF);
+$darkTimerBackgroundColor: color.mix($darkPageColor, #000);
+$darkTimerBorderColor: color.mix($textColor, #000);
 
 $countdownBackgroundColor: #404040;
 $countdownColor: #FFF;
 $countdownGlowColor: #101010;
 
 // Background used when something is "up" - eg, maintenance is over:
-$countdownUpBackgroundColor: mix(#0F0, $countdownBackgroundColor);
+$countdownUpBackgroundColor: color.mix(#0F0, $countdownBackgroundColor);
 $countdownUpColor: #FFF;
 $countdownUpGlowColor: #060;
 // Background used when something is "pending" - eg, maintenance is coming up:
@@ -28,7 +31,7 @@ $countdownPendingBackgroundColor: #808050;
 $countdownPendingColor: #FFF;
 $countdownPendingGlowColor: #660;
 // Background used when something is "off" - eg, maintenance is ongoing:
-$countdownDownBackgroundColor: mix(#F00, $countdownBackgroundColor);
+$countdownDownBackgroundColor: color.mix(#F00, $countdownBackgroundColor);
 $countdownDownColor: #FFF;
 $countdownDownGlowColor: #600;
 
@@ -68,9 +71,9 @@ a:hover { text-decoration: underline; }
 	font-size: 150%;
 }
 .error {
-	border-color: mix(#F00, $timerBorderColor);
-	background-color: mix(#F00, $timerBackgroundColor);
-	color: mix(#F00, $textColor);
+	border-color: color.mix(#F00, $timerBorderColor);
+	background-color: color.mix(#F00, $timerBackgroundColor);
+	color: color.mix(#F00, $textColor);
 }
 
 // Icons for the detail expander
@@ -78,8 +81,8 @@ a:hover { text-decoration: underline; }
 // Function for converting colors to something that can be embedded into an SVG data url
 @function encode-svg-color($color) {
 	// Have to convert color to a hex string if possible
-	@if type-of($color) == 'color' {
-		@return '%23' + str-slice(ie-hex-str($color), 4);
+	@if meta.type-of($color) == 'color' {
+		@return '%23' + string.slice(ie-hex-str($color), 4);
 	}
 	@return $color;
 }
@@ -224,10 +227,10 @@ a:hover { text-decoration: underline; }
 	margin-top: 1em;
 }
 footer {
-	color: mix($textColor, $pageColor, 75%);
+	color: color.mix($textColor, $pageColor, 75%);
 	text-align: right;
 	a, a:visited {
-		color: mix($linkColor, $pageColor, 75%);
+		color: color.mix($linkColor, $pageColor, 75%);
 	}
 }
 
@@ -295,14 +298,14 @@ footer {
 		background-color: $darkTimerBackgroundColor;
 	}
 	.error {
-		border-color: mix(#F00, $darkTimerBorderColor);
-		background-color: mix(#F00, $darkTimerBackgroundColor);
-		color: mix(#F00, $darkTextColor);
+		border-color: color.mix(#F00, $darkTimerBorderColor);
+		background-color: color.mix(#F00, $darkTimerBackgroundColor);
+		color: color.mix(#F00, $darkTextColor);
 	}
 	footer {
-		color: mix($darkTextColor, $darkPageColor, 75%);
+		color: color.mix($darkTextColor, $darkPageColor, 75%);
 		a, a:visited {
-			color: mix($darkLinkColor, $darkPageColor, 75%);
+			color: color.mix($darkLinkColor, $darkPageColor, 75%);
 		}
 	}
 	.details {
