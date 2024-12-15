@@ -215,6 +215,12 @@
     "type": "event all-saints-wake",
     "start": "2024-10-18T01:00:00-0700",
     "end": "2024-11-04T06:59:00-0800"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2024/Starlight_Celebration/2w4vdz8s0c\">Starlight Celebration</a>",
+    "type": "event starlight",
+    "start": "2024-12-16T00:00:00-0800",
+    "end": "2024-12-31T06:59:00-0800"
   }
 ]
 }
