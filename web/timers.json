@@ -221,6 +221,12 @@
     "type": "event starlight",
     "start": "2024-12-16T00:00:00-0800",
     "end": "2024-12-31T06:59:00-0800"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2025/Heavensturn/xhy9z0p5ev\">Heavensturn</a>",
+    "type": "event heavensturn",
+    "start": "2024-12-31T07:00:00-0800",
+    "end": "2025-01-16T06:59:00-0800"
   }
 ]
 }
