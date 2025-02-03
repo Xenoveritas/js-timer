@@ -227,6 +227,12 @@
     "type": "event heavensturn",
     "start": "2024-12-31T07:00:00-0800",
     "end": "2025-01-16T06:59:00-0800"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2025/Valentiones_Day/xe76ytdwz8\">Valentione\u2019s Day</a>",
+    "type": "event valentiones-day",
+    "start": "2025-02-03T00:00:00-0800",
+    "end": "2025-02-17T06:59:00-0800"
   }
 ]
 }
