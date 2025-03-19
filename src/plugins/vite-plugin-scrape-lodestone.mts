@@ -3,42 +3,32 @@
  * generate a new JSON file that contains the timers within them.
  */
 
-import { getOptions } from 'loader-utils';
-import moment from '../lib/horrible-moment-hack.mjs';
-import Timer, { ProtoTimer } from '../lib/timer.mjs';
-import { LodestoneScraper, LodestoneScraperOptions, LodestoneTimer, TimerCache, isTimerCache } from '../lib/scrape-lodestone.mjs';
 import * as fs from 'fs';
 import { debuglog } from 'util';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration.js';
+import { Plugin } from 'vite';
+import { Timer, ProtoTimer } from '../lib/timer.mjs';
+import { LodestoneScraper, LodestoneScraperOptions, TimerCache, isTimerCache } from '../lib/scrape-lodestone.mjs';
+
+dayjs.extend(duration);
 
 const verboseLog = debuglog('lodestone');
 
-// Webpack is missing types for the loader interface, which is actually
-// declared in loader-runner, which is also missing types. Yay!
-type WebpackLoaderCallback = (error: Error | null, result?: Buffer | string) => void;
-
-// Incomplete type to get just enough data to make things work
-interface WebpackLoader {
-  async: () => WebpackLoaderCallback;
-  cacheable: (cacheable: boolean) => void;
-  callback: () => WebpackLoaderCallback;
-}
-
 interface LodestoneOptions {
-  scrapeTimeLimit: moment.Duration;
-  timeLimit: moment.Duration;
-  cacheTime: moment.Duration;
+  scrapeTimeLimit: duration.Duration;
+  timeLimit: duration.Duration;
+  cacheTime: duration.Duration;
   cacheFile?: string;
   url: string;
   ignore: string[] | null;
 }
 
-function parseDuration(configuration: Record<string, unknown>, options: LodestoneOptions, key: string, defaultUnit: moment.unitOfTime.DurationConstructor = 'day'): void {
-  if (key in configuration) {
-    const value = configuration[key];
-    if (typeof value === 'number') {
-      options[key] = moment.duration(value, defaultUnit);
-    }
+function parseDuration(value: unknown, defaultValue: duration.Duration, defaultUnit: duration.DurationUnitType = 'day'): duration.Duration {
+  if (typeof value === 'number') {
+    return dayjs.duration(value, defaultUnit);
   }
+  return defaultValue;
 }
 
 function loadCache(filename: string): Promise<TimerCache | null> {
@@ -123,11 +113,10 @@ export async function scrapeLodestone(source: string, options: LodestoneOptions)
     lodestoneURL: options.url,
     skipScrapeBefore: skipScrapeBefore,
     skipTimerBefore: skipTimerBefore,
-    ignoredURLs: ignoredURLs
+    ignoredURLs: ignoredURLs,
+    cache: cache,
+    refetchTime: skipScrapeBefore
   };
-  if (cache) {
-    scraperOptions.cache = cache;
-  }
   const scraper = new LodestoneScraper(scraperOptions);
   const timers = await scraper.loadLodestone();
   if (options.cacheFile) {
@@ -146,29 +135,25 @@ export async function scrapeLodestone(source: string, options: LodestoneOptions)
   return JSON.stringify({ timers: result.concat(timers) }, null, 2);
 }
 
-export default function loader(this: WebpackLoader, source: string) {
-  const webpackOptions = getOptions(this);
-  const options: LodestoneOptions = {
+export default function pluginScrapeLodestone(options?: Partial<LodestoneOptions>): Plugin {
+  const opts: LodestoneOptions = {
     // Don't scrape any news item posted this number of millis before
     // You know what, if S-E is going to start posting patch notices THAT far
     // in advance...
-    scrapeTimeLimit: moment.duration(1, 'month'),
-    timeLimit: moment.duration(1, 'day'),
-    cacheTime: moment.duration(1, 'hour'),
-    url: "http://na.finalfantasyxiv.com/lodestone/",
+    scrapeTimeLimit: parseDuration(options?.scrapeTimeLimit, dayjs.duration(1, 'month'), 'day'),
+    timeLimit: parseDuration(options?.timeLimit, dayjs.duration(1, 'day'), 'day'),
+    cacheTime: parseDuration(options?.cacheTime, dayjs.duration(1, 'hour'), 'hour'),
+    url: options?.url ?? "http://na.finalfantasyxiv.com/lodestone/",
     ignore: null
   };
-  if (typeof webpackOptions === 'object') {
-    parseDuration(webpackOptions, options, 'scrapeTimeLimit', 'day');
-    parseDuration(webpackOptions, options, 'timeLimit', 'day');
-    parseDuration(webpackOptions, options, 'cacheTime', 'minute');
-    if (typeof webpackOptions['cacheFile'] === 'string') {
-      options.cacheFile = webpackOptions['cacheFile'];
+  return {
+    name: 'scrape-lodestone',
+    async transform(src, id) {
+      if (id.endsWith('timers.json')) {
+        return {
+          code: await scrapeLodestone(src, opts)
+        };
+      }
     }
-  }
-  // As this explicitly involves calling web resources, we are very not cacheable
-  this.cacheable(false);
-  const callback = this.async();
-
-  scrapeLodestone(source, options).then((result) => callback(null, result), (error) => callback(error));
+  };
 }

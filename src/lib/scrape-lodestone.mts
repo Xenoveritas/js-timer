@@ -1,7 +1,17 @@
 import * as cheerio from 'cheerio';
-import moment from './horrible-moment-hack.mjs';
-import { debuglog, format } from 'util';
-import Timer from './timer.mjs';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import duration from 'dayjs/plugin/duration.js';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import Logger from './logger.mjs';
+import { Timer } from './timer.mjs';
+
+// Debug log
+const log = new Logger('lodestone');
+
+dayjs.extend(utc);
+dayjs.extend(duration);
+dayjs.extend(customParseFormat);
 
 /**
  * Defines the guaranteed entries of a timer produced by the scraper.
@@ -40,37 +50,70 @@ export function isTimerCache(o: unknown): o is TimerCache {
   return typeof cache.lastLoadedAt === 'number' && Array.isArray(cache.timers);
 }
 
-export type Logger = (message: string, ...optionalParams: unknown[]) => void;
-
-export type Time = moment.Moment | string | number;
+// A time - if a duration is given, it's used as "time before current date"
+export type Time = dayjs.Dayjs | duration.Duration | string | number;
+// Duration
+export type Duration = duration.Duration | string | number;
 
 export interface LodestoneScraperOptions {
-  cache?: TimerCache;
-  lodestoneURL?: string;
-  ignoredURLs?: string[];
-  skipScrapeBefore?: Time;
-  skipTimerBefore?: Time;
-  refetchTime?: Time;
+  cache: TimerCache | null;
+  lodestoneURL: string;
+  ignoredURLs: string[];
+  skipScrapeBefore: Time;
+  skipTimerBefore: Time;
+  refetchTime: Duration;
+}
+
+export const DEFAULT_OPTIONS: LodestoneScraperOptions = {
+  // Default cache has to be null to indicate a new empty cache should be created per instance
+  cache: null,
+  lodestoneURL: 'https://na.finalfantasyxiv.com/lodestone/',
+  ignoredURLs: [],
+  // Default to skipping all posts posted more than a week ago.
+  skipScrapeBefore: dayjs.duration({days: 7}),
+  // Default to skipping all timers that are more than 24 hours old
+  skipTimerBefore: dayjs.duration({days: 1}),
+  // Default to refetching after an hour
+  refetchTime: dayjs.duration({hours: 1})
+};
+
+function parseTimeString(time: string): dayjs.Dayjs | duration.Duration {
+  log.verbose('Parsing [%s] as time', time);
+  if (time.startsWith('P')) {
+    return dayjs.duration(time);
+  } else {
+    return dayjs(time);
+  }
 }
 
 /**
- * Parses the current time.
+ * Parses a time option, returning a timestamp.
  * @param time the time to parse
- * @param defaultValue the default value
- * @param delta if true, the default value is a delta before the current time to use
  * @returns time as milliseconds since the UNIX epoch, i.e., what Date.getTime returns
  */
-function parseTime(time: Time | undefined, defaultValue: number, delta = false): number {
-  switch(typeof time) {
-    case 'string':
-      return moment(time).valueOf();
-    case 'object':
-      return time.valueOf();
-    case 'number':
-      return time;
-    default:
-      return delta ? new Date().getTime() - defaultValue : defaultValue;
+function parseTime(time: Time, now?: dayjs.Dayjs): number {
+  const timeObj = typeof time === 'string' ? parseTimeString(time) : time;
+  if (typeof timeObj === 'number') {
+    return timeObj;
   }
+  if (dayjs.isDuration(timeObj)) {
+    // Convert to a timestamp based on now
+    return (now || dayjs()).subtract(timeObj).valueOf();
+  } else {
+    return timeObj.valueOf();
+  }
+}
+
+/**
+ * Converts the given duration to milliseconds
+ * @param duration the duration to parse
+ * @returns number of milliseconds in the duration
+ */
+function parseDuration(duration: Duration): number {
+  if (typeof duration === 'number') {
+    return duration;
+  }
+  return typeof duration === 'string' ? dayjs.duration(duration).asMilliseconds() : duration.asMilliseconds();
 }
 
 /**
@@ -78,20 +121,9 @@ function parseTime(time: Time | undefined, defaultValue: number, delta = false):
  */
 export class LodestoneScraper {
   cache = new Map<string, LodestoneTimer>();
-  log = {
-    verbose: debuglog('lodestone') as Logger,
-    info: (message: string, ...optionalParams: unknown[]): void => {
-      console.log(message, ...optionalParams);
-    },
-    warn: (message: string, ...optionalParams: unknown[]): void => {
-      console.error('Warning: %s', format(message, ...optionalParams));
-    },
-    error: (message: string, ...optionalParams: unknown[]): void => {
-      console.error('ERROR: %s', format(message, ...optionalParams));
-    }
-  };
-  skipScrapeBefore: number;
-  skipTimerBefore: number;
+  log = log;
+  skipScrapeBefore: Time;
+  skipTimerBefore: Time;
   refetchAfter: number;
   /**
    * The last time the Lodestone was loaded. Defaults to -Infinity.
@@ -99,39 +131,41 @@ export class LodestoneScraper {
   lastLoadedAt = -Infinity;
   lodestoneURL: URL;
   ignoredURLs: string[];
-  constructor(options?: LodestoneScraperOptions) {
-    if (options?.cache) {
-      this.lastLoadedAt = options.cache.lastLoadedAt;
-      for (const entry of options.cache.timers) {
+  constructor(options?: Partial<LodestoneScraperOptions>) {
+    const opts = { ...DEFAULT_OPTIONS, ...options };
+    if (opts.cache) {
+      this.lastLoadedAt = opts.cache.lastLoadedAt;
+      for (const entry of opts.cache.timers) {
         this.cache.set(entry.sourceURL, entry);
       }
     }
     // Default to skipping all posts posted more than a week ago.
-    this.skipScrapeBefore = parseTime(options?.skipScrapeBefore, 7 * 24 * 60 * 60 * 1000, true);
+    this.skipScrapeBefore = opts.skipScrapeBefore;
     // Default to skipping all timers that are more than 24 hours old
-    this.skipTimerBefore = parseTime(options?.skipTimerBefore, 24 * 60 * 60 * 1000, true);
-    this.lodestoneURL = new URL(options?.lodestoneURL ? options.lodestoneURL : 'https://na.finalfantasyxiv.com/lodestone/');
+    this.skipTimerBefore = opts.skipTimerBefore;
+    this.lodestoneURL = new URL(opts.lodestoneURL);
     // Default to refetching after an hour
-    this.refetchAfter = parseTime(options?.refetchTime, 60 * 60 * 1000);
-    this.ignoredURLs = options?.ignoredURLs ? options.ignoredURLs : [];
+    this.refetchAfter = parseDuration(opts.refetchTime);
+    this.ignoredURLs = opts.ignoredURLs.slice();
   }
 
-  setLogs(errorLog: Logger, warningLog: Logger, infoLog: Logger, aVerboseLog: Logger) {
-    this.log.error = errorLog;
-    this.log.warn = warningLog;
-    this.log.info = infoLog;
-    this.log.verbose = aVerboseLog;
+  setLogger(log: Logger) {
+    this.log = log;
   }
   
-  parseLodestoneDate(str: string, previous?: moment.Moment): moment.Moment {
+  parseLodestoneDate(str: string, previous?: dayjs.Dayjs): dayjs.Dayjs {
     // Cheat:
     str = str.replace(/([AaPp])\.[Mm]\./g, function(_, ap) { return ap.toLowerCase() + 'm'; });
     // It's possible for the end time NOT to include the date. If we're given
     // the previous time and have no date component, use that.
+    // dayjs has a bug where "MMM." is broken. Just remove it
+    str = str.replace(/^([A-Za-z]{3})\./, '$1');
     this.log.verbose('Parsing time [%s]', str);
-    let rv = moment.utc(str, 'MMM. D, YYYY h:mm a');
+    let rv = dayjs.utc(str, 'MMM D, YYYY h:mm a', true);
     if (!rv.isValid() && previous) {
-      rv = moment.utc(str, 'h:mm a');
+      this.log.verbose('Could not parse, attempting to parse time alone');
+      rv = dayjs.utc(str, 'h:mm a');
+      this.log.verbose('Parsed to %s', rv.format());
       if (rv !== null) {
         rv.year(previous.year()).month(previous.month()).date(previous.date());
       }
@@ -152,7 +186,7 @@ export class LodestoneScraper {
 
   cacheTimer(timer: LodestoneTimer): void {
     // URL is in the sourceURL field
-    this.cache.set(timer.sourceURL, timer);
+    this.cache.set(timer.sourceURL, { ...timer });
   }
 
   latestCacheEntry(): number {
@@ -183,12 +217,12 @@ export class LodestoneScraper {
    * @returns a Promise that resolves to any loaded timers
    */
   async loadLodestone(): Promise<LodestoneTimer[]> {
-    const now = new Date().getTime();
-    const skipTimersBeforeTimestamp = now - this.skipTimerBefore;
-    const skipScrapingBefore = now - this.skipScrapeBefore;
+    const now = dayjs();
+    const skipTimersBeforeTimestamp = parseTime(this.skipTimerBefore, now);
+    const skipScrapingBefore = parseTime(this.skipScrapeBefore, now);
     const mostRecent = this.latestCacheEntry();
-    if (mostRecent > now - this.refetchAfter) {
-      this.log.verbose('Cache is still fresh (loaded at %s, current time is %s), reusing timer data within the cache.', moment(mostRecent).format(), moment(now).format());
+    if (mostRecent > now.valueOf() - this.refetchAfter) {
+      this.log.verbose('Cache is still fresh (loaded at %s, current time is %s), reusing timer data within the cache.', dayjs(mostRecent).format(), dayjs(now).format());
       return this.cachedTimers().filter((timer) => {
         return timer.end ? timer.end > skipTimersBeforeTimestamp : true;
       });
@@ -204,7 +238,7 @@ export class LodestoneScraper {
         throw ex;
       }
       // Set the last loaded time to be the time when this request started
-      this.lastLoadedAt = now;
+      this.lastLoadedAt = now.valueOf();
       const timers: LodestoneTimer[] = [];
       // We now want to iterate through the links but we want to pull them
       // sequentially, so this ends up being a bit horrible. All we care
@@ -233,9 +267,9 @@ export class LodestoneScraper {
     }
   }
 
-  scrapeLodestone(html: string, links: Record<string, string>, skipBefore?: number) {
+  scrapeLodestone(html: string, links: Record<string, string>, skipBefore?: number): void {
     const $ = cheerio.load(html);
-    const cutoff = moment(skipBefore ?? new Date().getTime() - this.skipScrapeBefore).format();
+    const cutoff = dayjs(skipBefore ?? parseTime(this.skipScrapeBefore)).format();
     // Sweet lord is the FFXIV Lodestone HTML terrible
     $('a.ic__maintenance--list').each((i, e) => {
       // See if this is a maintenance news item.
@@ -270,7 +304,7 @@ export class LodestoneScraper {
           // Time on the Lodestone is helpfully stored as a UNIX timestamp in seconds and then formatted in JS
           const time = parseInt(m[1]) * 1000;
           if (skipBefore && time < skipBefore) {
-            this.log.verbose('Skipping "%s" its time (%s) is before cutoff %s', name, moment(time).format(), cutoff);
+            this.log.verbose('Skipping "%s" its time (%s) is before cutoff %s', name, dayjs(time).format(), cutoff);
           } else {
             if (href in links) {
               if (links[href] != name) {
@@ -316,7 +350,7 @@ export class LodestoneScraper {
     // Remove the maintenance tag
     title.find('.news__header__tag').remove();
     const post = $('div.news__detail__wrapper').text();
-    let m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(?:From\s+)?(.*)\s+to\s+(.*)\s*\((\w+)\)/.exec(post);
+    let m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(?:From\s+)?(.*)\s+to\s+(.*?)\s*\((\w+)\)/.exec(post);
     if (m) {
       const start = this.parseLodestoneDate(m[1]),
         end = this.parseLodestoneDate(m[2], start);

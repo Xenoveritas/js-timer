@@ -72,5 +72,11 @@ export function convertTimer(timer: ProtoTimer): Timer {
   }
 }
 
-
-export default Timer;
+export function compareTimes(a: Timer, b: Timer): number {
+  const d = a.start - b.start;
+  if (d != 0)
+    return d;
+  // Sort by effective title instead (either the title field, if set, or the name field, if not)
+  const aTitle = a.title ?? a.name ?? '', bTitle = b.title ?? b.name ?? '';
+  return aTitle < bTitle ? -1 : (aTitle == bTitle ? 0 : 1);
+}

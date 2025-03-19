@@ -6,6 +6,8 @@
 /build
 /build-plugins
 /doc
+/lodestone-cache.json
+/web/public/timers.json
 
 # Ignore clock.js - it's built from TypeScript now
 /clock.js

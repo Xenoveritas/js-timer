@@ -59,6 +59,12 @@ export function isSubtimerDefinition(definition: unknown): definition is Subtime
 	return Array.isArray((definition as SubtimerTimerDefinition).subtimers);
 }
 
+export interface FFXIVCountdownOptions {
+	addBuiltins?: boolean;
+	showWeeks?: boolean;
+	clock: Clock;
+}
+
 /**
  * FFXIV countdown object.
  */
@@ -72,17 +78,11 @@ class FFXIVCountdown {
 	/**
 	 * Create a new FFXIV countdown.
 	 * @param container the DOM element to place all generated HTML elements within
-	 * @param timers the timer definitions object or a string to use as a URL 
 	 * @param options extra options that may be specified
 	 */
 	constructor(
 		public container: HTMLElement,
-		timers: string | TimerDefinition[] = [],
-		options?: {
-			addBuiltins?: boolean;
-			showWeeks?: boolean;
-			clock: Clock;
-		}
+		options?: FFXIVCountdownOptions
 	) {
 		let clock: Clock;
 		if (options) {
@@ -97,12 +97,6 @@ class FFXIVCountdown {
 			}
 		}
 		this.clock = clock ?? new Clock();
-		if (typeof timers == 'string') {
-			// Assume it's a URL and try and pull it using AJAX
-			this.load(timers);
-		} else {
-			this._init(timers);
-		}
 		if (Intl.DateTimeFormat) {
 			this.dateTimeFormat = new Intl.DateTimeFormat('en', {
 				'weekday': 'short',
@@ -123,18 +117,40 @@ class FFXIVCountdown {
 
 	/**
 	 * Global array of "built-in" timers. By default this is empty. To populate it
-	 * with actual builtins, require the
+	 * with actual builtins, import the
 	 * {@link module:ffxiv_builtins ffxiv_builtins} module.
 	 */
 	static builtins: TimerDefinition[] = [];
 
 	/**
+	 * Create a new FFXIV countdown. Resolves when the initial data is loaded. If
+	 * no URL is given to load, this resolves immediately.
+	 * @param container the DOM element to place all generated HTML elements within
+	 * @param timers the timer definitions object
+	 * @param options extra options that may be specified
+	 */
+	static async create(
+		container: HTMLElement,
+		timers: string | TimerDefinition[] = [],
+		options?: FFXIVCountdownOptions): Promise<FFXIVCountdown> {
+		const result = new FFXIVCountdown(container, options);
+		if (Array.isArray(timers)) {
+			result.setTimers(timers);
+		} else if (typeof timers === 'string') {
+			await result.load(timers);
+		} else {
+			result.setTimers([]);
+		}
+		return result;
+	}
+
+	/**
 	 * Reload timers from the initial URL if there was one or a NO-OP if
 	 * there wasn't.
 	 */
-	reload(): void {
+	async reload(): Promise<void> {
 		if (this.updateURL) {
-			this.load(this.updateURL);
+			await this.load(this.updateURL);
 		}
 	}
 
@@ -142,7 +158,7 @@ class FFXIVCountdown {
 	 * Load timers from the given URL. When constructed with a URL, this is called
 	 * automatically.
 	 */
-	load(url: string): void {
+	async load(url: string): Promise<void> {
 		// Mini helper function for showing error messages
 		const error = (message: string): void => {
 			console.log(message);
@@ -151,65 +167,44 @@ class FFXIVCountdown {
 		this.updateURL = url;
 		const loading = this.makeMessage('loading', "Loading timer data...");
 		this.container.appendChild(loading);
-		const xhr = new XMLHttpRequest();
 		// Firefox will indefinitely cache the JSON file, even though the server
 		// is configured to require it to revalidate. Because... who cares.
 		// Add junk to the end of the URL to force Firefox to treat it like a
 		// new document and clutter up the caches of browsers that pay attention
 		// to "Cache-Control: must-revalidate"
-		url = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Math.floor(new Date().getTime() / 3600000).toString(36);
 		try {
-			xhr.open("GET", url);
-			xhr.onreadystatechange = () => {
-				if (xhr.readyState === 4) {
-					// All set.
-					this.container.removeChild(loading);
-					if (xhr.status === 200) {
-						let timers = xhr.response;
-						if (typeof timers == 'string') {
-							// avoid infinite recursion and re-sending things
-							try {
-								timers = JSON.parse(timers);
-							} catch (ex) {
-								error("Unable to parse timer data.");
-								console.log(xhr.response);
-								return;
-							}
-						}
-						if (typeof timers != 'object') {
-							error("Unable to parse timer data (bad JSON type).");
-							console.log(xhr.response);
-							return;
-						}
-						if (!('timers' in timers)) {
-							error("No timers present in data sent from server.");
-							console.log(xhr.response);
-							return;
-						}
-						this._init(timers['timers']);
-					} else {
-						error('Unable to load timer data, server replied with error: ' + xhr.status + ' ' + xhr.statusText);
-						// Still load builtins
-						this._init([]);
-					}
+			const response = await fetch(url + (url.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Math.floor(new Date().getTime() / 3600000).toString(36));
+			this.container.removeChild(loading);
+			if (response.ok) {
+				let timers = await response.json() as unknown;
+				if (typeof timers !== 'object') {
+					error("Unable to parse timer data (bad JSON type).");
+					return;
 				}
+				if (!('timers' in timers)) {
+					error("No timers present in data sent from server.");
+					return;
+				}
+				this.setTimers(timers['timers'] as TimerDefinition[]);
+			} else {
+				error('Unable to load timer data, server replied with error: ' + response.status + ' ' + response.statusText);
+				// Still load builtins
+				this.setTimers([]);
 			}
-			xhr.responseType = "json";
-			xhr.send(null);
 		} catch (ex) {
 			error('Unable to load timer data: ' + ex.toString());
 			// In this case, go ahead and do the built-ins
-			this._init([]);
+			this.setTimers([]);
 		}
 	}
 
 	/**
-	 * An internal method to constuct the actual UI.
-	 * @private
+	 * Sets the timers displayed. If addBuiltins is added, those are added automatically.
+	 * Otherwise, the given definitions override all other timer definitions.
 	 */
-	private _init(definitions: TimerDefinition[]) {
+	setTimers(definitions: TimerDefinition[]): void {
 		if (this.addBuiltins) {
-			Array.prototype.push.apply(definitions, FFXIVCountdown.builtins);
+			definitions = definitions.concat(FFXIVCountdown.builtins);
 		}
 		const now = new Date().getTime(),
 			skipTimersBefore = now - FFXIVCountdown.MAX_TIMER_AGE;

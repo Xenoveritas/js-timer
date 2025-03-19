@@ -1,4 +1,4 @@
-import Timer, { ProtoTimer, convertTimer } from './timer.mjs';
+import { Timer, ProtoTimer, convertTimer } from './timer.mjs';
 
 /**
  * The set of fields the timer cares about and that should survive
@@ -13,12 +13,12 @@ const TIMER_FIELDS = new Set<string>(["start", "end", "name", "type", "showDurat
 export function stripIgnoredFields(timer: Timer, allowSubtimer = true): void {
   // We want to pull the keys and delete them while iterating over them, so:
   const keys = Object.keys(timer);
-  keys.forEach(function(key) {
+  keys.forEach(function (key) {
     if (!TIMER_FIELDS.has(key)) {
       if (key === 'subtimers' && allowSubtimer) {
         // We actually want to recurse into this.
         if (Array.isArray(timer['subtimers'])) {
-          timer['subtimers'].forEach(function(subtimer) {
+          timer['subtimers'].forEach(function (subtimer) {
             // Subtimers aren't allowed on subtimers. You can only nest once.
             stripIgnoredFields(subtimer, false);
           });
@@ -38,7 +38,7 @@ export function stripIgnoredFields(timer: Timer, allowSubtimer = true): void {
  */
 function isTimerOld(timer: Timer, oldest: number): boolean {
   // If the end time is after oldest, it is definitely not old
-  if ('end' in timer && timer.end > oldest) {
+  if (timer?.end !== undefined && timer.end > oldest) {
     return false;
   }
   // If the start time is after the oldest, it is definitely not old
@@ -50,22 +50,14 @@ function isTimerOld(timer: Timer, oldest: number): boolean {
 }
 
 export function parseTimers(json: unknown, oldest: number): Timer[] {
-  const timers: Timer[] = [];
   // Fairly simple: just merge the timer data as necessary.
   let ts: ProtoTimer[];
   if (Array.isArray(json)) {
     ts = json;
-  } else if (typeof json === 'object' && Array.isArray(json['timers'])) {
+  } else if (typeof json === 'object' && json !== null && Array.isArray(json['timers'])) {
     ts = json['timers'];
   } else {
     throw new Error("Invalid JSON object given");
   }
-  ts.forEach(function(timerDef) {
-    const timer = convertTimer(timerDef);
-    // Exclude timers that are too old:
-    if (!isTimerOld(timer, oldest)) {
-      timers.push(timer);
-    }
-  });
-  return timers;
+  return ts.map((timerDef) => convertTimer(timerDef)).filter((timer) => !isTimerOld(timer, oldest));
 }
