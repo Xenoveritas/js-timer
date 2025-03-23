@@ -352,7 +352,7 @@ export class LodestoneScraper {
     const post = $('div.news__detail__wrapper').text();
     let m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(?:From\s+)?(.*)\s+to\s+(.*?)\s*\((\w+)\)/.exec(post);
     if (m) {
-      const start = this.parseLodestoneDate(m[1]),
+      let start = this.parseLodestoneDate(m[1]),
         end = this.parseLodestoneDate(m[2], start);
       let offset = 0;
       if (m[3] == "PDT") {
@@ -364,8 +364,9 @@ export class LodestoneScraper {
         return null;
       }
       // Apply the offset to make the time correct
-      start.add(-offset, 'h');
-      end.add(-offset, 'h');
+      start = start.add(-offset, 'h');
+      end = end.add(-offset, 'h');
+      this.log.verbose('Applied %d offset to create final times of %s-%s', offset, start.format(), end.format())
       const titleStr = title.text().trim();
       var name = '<a href="' + postURL + '">' + titleStr + '</a>';
       // See if it's for a patch.

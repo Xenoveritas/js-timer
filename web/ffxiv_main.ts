@@ -4,8 +4,6 @@ import './ffxiv_timer.scss';
 
 import timerURL from '/timers.json?url';
 
-console.log('Timer URL', timerURL);
-
 /**
  * Starts timers in any element that has a data-ffxiv-timer attribute set on it.
  */
