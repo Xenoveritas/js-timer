@@ -152,10 +152,12 @@ export class LodestoneScraper {
   setLogger(log: Logger) {
     this.log = log;
   }
-  
+
   parseLodestoneDate(str: string, previous?: dayjs.Dayjs): dayjs.Dayjs {
     // Cheat:
-    str = str.replace(/([AaPp])\.[Mm]\./g, function(_, ap) { return ap.toLowerCase() + 'm'; });
+    str = str.replace(/([AaPp])\.[Mm]\./g, (_, ap) => ap.toLowerCase() + 'm');
+    // "0:xx a.m."? Really?
+    str = str.replace(/\b0(:\d\d am)/g, (_, t) => "12" + t);
     // It's possible for the end time NOT to include the date. If we're given
     // the previous time and have no date component, use that.
     // dayjs has a bug where "MMM." is broken. Just remove it
@@ -211,7 +213,7 @@ export class LodestoneScraper {
       timers: this.cachedTimers()
     };
   }
-  
+
   /**
    * Attempts to scrape the Lodestone using the options given at construction time.
    * @returns a Promise that resolves to any loaded timers
