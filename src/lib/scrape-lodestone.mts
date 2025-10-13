@@ -13,6 +13,38 @@ dayjs.extend(utc);
 dayjs.extend(duration);
 dayjs.extend(customParseFormat);
 
+interface KnownEvent {
+  name: string;
+  pattern: RegExp;
+  type: string;
+}
+/**
+ * List of known events to the type used for them
+ */
+const KNOWN_EVENTS: KnownEvent[] = Object.entries({
+  //"Free Login Campaign": "campaign free-login",
+  "Heavensturn": "event heavensturn",
+  "Valentione's Day": "event valentiones-day",
+  "Little Ladies' Day": "event little-ladies-day",
+  "Hatching-tide": "event hatchingtide",
+  "The Make It Rain Campaign": "event make-it-rain",
+  "Moonfire Faire": "event moonfire-faire",
+  "The Rising": "event the-rising",
+  "All Saints' Wake": "event all-saints-wake",
+  "Starlight Celebration": "event starlight-celebration",
+}).map(([name, type]) => {
+  return {
+    name: name.replace("'", "\u2019"),
+    pattern: new RegExp(name.replace("'", "['\u2019]")),
+    type: type
+  };
+});
+
+const TIMEZONES = new Map<string, number>([
+  ["PDT", -7],
+  ["PST", -8]
+]);
+
 /**
  * Defines the guaranteed entries of a timer produced by the scraper.
  */
@@ -32,6 +64,9 @@ export interface LodestoneTimer extends Timer {
  * While this is documented, it should be considered "opaque" as it may change in the future.
  */
 export interface TimerCache {
+  /**
+   * Allow unknown elements.
+   */
   [key: string]: unknown;
   /**
    * The time the Lodestone was loaded.
@@ -131,6 +166,10 @@ export class LodestoneScraper {
   lastLoadedAt = -Infinity;
   lodestoneURL: URL;
   ignoredURLs: string[];
+  /**
+   * Next timestamp to make a fetch.
+   */
+  nextFetchTime = -Infinity;
   constructor(options?: Partial<LodestoneScraperOptions>) {
     const opts = { ...DEFAULT_OPTIONS, ...options };
     if (opts.cache) {
@@ -154,6 +193,8 @@ export class LodestoneScraper {
   }
 
   parseLodestoneDate(str: string, previous?: dayjs.Dayjs): dayjs.Dayjs {
+    // Remove any "at":
+    str = str.replace(/\s+at\s+/g, " ");
     // Cheat:
     str = str.replace(/([AaPp])\.[Mm]\./g, (_, ap) => ap.toLowerCase() + 'm');
     // "0:xx a.m."? Really?
@@ -163,7 +204,11 @@ export class LodestoneScraper {
     // dayjs has a bug where "MMM." is broken. Just remove it
     str = str.replace(/^([A-Za-z]{3})\./, '$1');
     this.log.verbose('Parsing time [%s]', str);
-    let rv = dayjs.utc(str, 'MMM D, YYYY h:mm a', true);
+    // First try the verbose method
+    let rv = dayjs.utc(str, 'MMMM D, YYYY h:mm a', true);
+    if (!rv.isValid()) {
+      rv = dayjs.utc(str, 'MMM D, YYYY h:mm a', true);
+    }
     if (!rv.isValid() && previous) {
       this.log.verbose('Could not parse, attempting to parse time alone');
       rv = dayjs.utc(str, 'h:mm a');
@@ -215,6 +260,28 @@ export class LodestoneScraper {
   }
 
   /**
+   * Wrapper around the actual fetch method. This may (eventually) be used to
+   * delay multiple loads.
+   * @param input the URL to load
+   * @returns
+   */
+  fetch(input: string | URL): Promise<Response> {
+    const now = new Date().valueOf();
+    if (now < this.nextFetchTime) {
+      // Wait before resolving
+      return new Promise<Response>((resolve) => {
+        setTimeout(() => {
+          this.nextFetchTime = new Date().valueOf() + 1000;
+          resolve(fetch(input));
+        }, this.nextFetchTime - now);
+      });
+    } else {
+      this.nextFetchTime = now + 1000;
+      return fetch(input);
+    }
+  }
+
+  /**
    * Attempts to scrape the Lodestone using the options given at construction time.
    * @returns a Promise that resolves to any loaded timers
    */
@@ -230,11 +297,11 @@ export class LodestoneScraper {
       });
     }
     this.log.verbose('Pulling %s...', this.lodestoneURL);
-    const response = await fetch(this.lodestoneURL.toString());
+    const response = await this.fetch(this.lodestoneURL);
     if (response.status === 200) {
-      const links: Record<string, string> = { };
+      let urls: Set<string>;
       try {
-        this.scrapeLodestone(await response.text(), links, skipScrapingBefore);
+        urls = this.scrapeLodestone(await response.text(), skipScrapingBefore);
       } catch (ex) {
         this.log.error("Unable to parse Lodestone: " + ex);
         throw ex;
@@ -242,11 +309,8 @@ export class LodestoneScraper {
       // Set the last loaded time to be the time when this request started
       this.lastLoadedAt = now.valueOf();
       const timers: LodestoneTimer[] = [];
-      // We now want to iterate through the links but we want to pull them
-      // sequentially, so this ends up being a bit horrible. All we care
-      // about are the object keys.
-      const urls = Object.keys(links);
-      this.log.info('Found %s URL%s to check.', urls.length, urls.length === 1 ? '' : 's');
+      // Iterate through found links
+      this.log.info('Found %s URL%s to check.', urls.size, urls.size === 1 ? '' : 's');
       for (const url of urls) {
         try {
           const timer = await this.loadPost(new URL(url, this.lodestoneURL).toString());
@@ -269,7 +333,8 @@ export class LodestoneScraper {
     }
   }
 
-  scrapeLodestone(html: string, links: Record<string, string>, skipBefore?: number): void {
+  scrapeLodestone(html: string, skipBefore?: number): Set<string> {
+    const links = new Set<string>();
     const $ = cheerio.load(html);
     const cutoff = dayjs(skipBefore ?? parseTime(this.skipScrapeBefore)).format();
     // Sweet lord is the FFXIV Lodestone HTML terrible
@@ -308,13 +373,11 @@ export class LodestoneScraper {
           if (skipBefore && time < skipBefore) {
             this.log.verbose('Skipping "%s" its time (%s) is before cutoff %s', name, dayjs(time).format(), cutoff);
           } else {
-            if (href in links) {
-              if (links[href] != name) {
-                this.log.warn("Link to %s title changed from %s to %s", href, links[href], name);
-              }
+            if (links.has(href)) {
+              this.log.warn("Link %s found twice", href);
             } else {
-              links[href] = name;
-              this.log.verbose('Adding "%s" => "%s"', name, href);
+              links.add(href);
+              this.log.verbose('Adding "%s"', href);
             }
           }
         } else {
@@ -322,6 +385,23 @@ export class LodestoneScraper {
         }
       }
     });
+    $('li.ic__topics--list').each((i, e) => {
+      // Try and determine if this event is worth following.
+      const item = $(e);
+      // Try and get the link
+      const href = item.find("p.news__list--title a").attr("href");
+      if (href === undefined) {
+        // Skip this if there's no link
+        return;
+      }
+      const text = item.text();
+      if (KNOWN_EVENTS.some((event) => event.pattern.test(text))) {
+        // Looks like it is, add it to the list
+        this.log.verbose('Adding event URL %s', href);
+        links.add(href);
+      }
+    });
+    return links;
   }
 
   async loadPost(postURL: string): Promise<LodestoneTimer | null> {
@@ -331,20 +411,21 @@ export class LodestoneScraper {
       return Promise.resolve(cachedResult);
     }
     this.log.info("Pulling %s...", postURL);
-    const response = await fetch(postURL);
+    const response = await this.fetch(postURL);
     if (response.status == 200) {
-      const timer = this.parsePost(await response.text(), postURL);
-      if (timer == null)
+      let timer = await this.parsePost(await response.text(), postURL);
+      if (timer == null) {
         this.log.error("Unable to parse post.");
-      else
+      } else {
         this.log.info("Generated a " + timer.type + " timer");
+      }
       return timer;
     } else {
       throw new Error(`Error response from server: ${response.status} ${response.statusText}`);
     }
   }
 
-  parsePost(html: string, postURL: string): LodestoneTimer | null {
+  async parsePost(html: string, postURL: string): Promise<LodestoneTimer | null> {
     const $ = cheerio.load(html);
     const title = $('header.news__header > h1');
     let tag = title.find('.news__header__tag').text().toLowerCase();
@@ -370,7 +451,7 @@ export class LodestoneScraper {
       end = end.add(-offset, 'h');
       this.log.verbose('Applied %d offset to create final times of %s-%s', offset, start.format(), end.format())
       const titleStr = title.text().trim();
-      var name = '<a href="' + postURL + '">' + titleStr + '</a>';
+      let name = '<a href="' + postURL + '">' + titleStr + '</a>';
       // See if it's for a patch.
       m = /\bPatch\s+(\d+\.\d+(?:\s+Hotfixes)?)\b/i.exec(post);
       if (m) {
@@ -392,9 +473,72 @@ export class LodestoneScraper {
         loadedAt: new Date().getTime()
       };
     } else {
-      this.log.verbose("Did not find times.");
+      // If no times were found, this may be an event time, and we may need to load another post
+      const event = KNOWN_EVENTS.find((event) => event.pattern.test(post));
+      if (event === undefined) {
+        this.log.verbose("Did not find any maintenance times and post did not match any known event.");
+        return null;
+      }
+      // In this case, find the link
+      const href = $('div.news__detail__wrapper a').attr('href');
+      if (href === undefined) {
+        this.log.verbose("Did not find a link for %s.", event.name);
+        return null;
+      }
+      // Load the link
+      const resp = await this.fetch(new URL(href, this.lodestoneURL));
+      if (resp.ok) {
+        const eventPage = cheerio.load(await resp.text());
+        const eventText = eventPage("div.content__span").text();
+        let m = /(?:From\s+)(?:\w+day,\s+)?(.*?)(?:\s*\((\w+)\))?\s+to\s+(?:\w+day,\s+)?(.*?)\s*\((\w+)\)/.exec(eventText);
+        if (m) {
+          this.log.verbose("Found event time %s to %s (TZ %s to TZ %s)", m[1], m[3], m[2], m[4]);
+          const times = this.parseTime(m[1], m[3], m[2], m[4]);
+          if (times != null) {
+            const [start, end] = times;
+            return {
+              name: `<a href="${new URL(resp.url, this.lodestoneURL)}">${event.name}</a>`,
+              sourceURL: postURL,
+              type: event.type,
+              start: start.valueOf(),
+              end: end.valueOf(),
+              // For debuggin (mostly) keep the text versions
+              startText: start.format(),
+              endText: end.format(),
+              loadedAt: new Date().getTime()
+            }
+          }
+        } else {
+          this.log.verbose("Unable to parse event.");
+          return null;
+        }
+      }
+      this.log.verbose("Did not find times for %s.", event.name);
+      return null;
     }
-    return null;
+  }
+
+  parseTime(start: string, end: string, startTZ: string | undefined, endTZ: string): [dayjs.Dayjs, dayjs.Dayjs] | null {
+    let startTime = this.parseLodestoneDate(start),
+        endTime = this.parseLodestoneDate(end, startTime);
+    let endOffset = TIMEZONES.get(endTZ);
+    if (endOffset === undefined) {
+      this.log.warn("Unknown time zone %s: skipping this.", endTZ);
+      return null;
+    }
+    let startOffset: number | undefined = endOffset;
+    if (startTZ) {
+      startOffset = TIMEZONES.get(startTZ);
+    }
+    if (startOffset === undefined) {
+      this.log.warn("Unknown time zone %s: skipping this.", startTZ);
+      return null;
+    }
+    // Apply the offset to make the time correct
+    startTime = startTime.add(-startOffset, 'h');
+    endTime = endTime.add(-endOffset, 'h');
+    this.log.verbose('Applied %d, %d offset to create final times of %s-%s', startOffset, endOffset, startTime.format(), endTime.format());
+    return [startTime, endTime];
   }
 }
 
