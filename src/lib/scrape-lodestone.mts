@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
 import duration from 'dayjs/plugin/duration.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import Logger from './logger.mjs';
@@ -10,6 +11,7 @@ import { Timer } from './timer.mjs';
 const log = new Logger('lodestone');
 
 dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(duration);
 dayjs.extend(customParseFormat);
 
@@ -40,9 +42,9 @@ const KNOWN_EVENTS: KnownEvent[] = Object.entries({
   };
 });
 
-const TIMEZONES = new Map<string, number>([
-  ["PDT", -7],
-  ["PST", -8]
+const TIMEZONES = new Map<string, string>([
+  ["PDT", 'Etc/GMT+7'],
+  ["PST", 'Etc/GMT+8']
 ]);
 
 /**
@@ -94,6 +96,7 @@ export interface LodestoneScraperOptions {
   cache: TimerCache | null;
   lodestoneURL: string;
   ignoredURLs: string[];
+  defaultTimezone: string;
   skipScrapeBefore: Time;
   skipTimerBefore: Time;
   refetchTime: Duration;
@@ -103,6 +106,7 @@ export const DEFAULT_OPTIONS: LodestoneScraperOptions = {
   // Default cache has to be null to indicate a new empty cache should be created per instance
   cache: null,
   lodestoneURL: 'https://na.finalfantasyxiv.com/lodestone/',
+  defaultTimezone: 'America/Los_Angeles',
   ignoredURLs: [],
   // Default to skipping all posts posted more than a week ago.
   skipScrapeBefore: dayjs.duration({days: 7}),
@@ -157,6 +161,7 @@ function parseDuration(duration: Duration): number {
 export class LodestoneScraper {
   cache = new Map<string, LodestoneTimer>();
   log = log;
+  defaultTimezone: string;
   skipScrapeBefore: Time;
   skipTimerBefore: Time;
   refetchAfter: number;
@@ -182,6 +187,7 @@ export class LodestoneScraper {
     this.skipScrapeBefore = opts.skipScrapeBefore;
     // Default to skipping all timers that are more than 24 hours old
     this.skipTimerBefore = opts.skipTimerBefore;
+    this.defaultTimezone = opts.defaultTimezone;
     this.lodestoneURL = new URL(opts.lodestoneURL);
     // Default to refetching after an hour
     this.refetchAfter = parseDuration(opts.refetchTime);
@@ -374,7 +380,7 @@ export class LodestoneScraper {
             this.log.verbose('Skipping "%s" its time (%s) is before cutoff %s', name, dayjs(time).format(), cutoff);
           } else {
             if (links.has(href)) {
-              this.log.warn("Link %s found twice", href);
+              this.log.warn("Link %s found twice (or more)", href);
             } else {
               links.add(href);
               this.log.verbose('Adding "%s"', href);
@@ -433,23 +439,18 @@ export class LodestoneScraper {
     // Remove the maintenance tag
     title.find('.news__header__tag').remove();
     const post = $('div.news__detail__wrapper').text();
-    let m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(?:From\s+)?(.*)\s+to\s+(.*?)\s*\((\w+)\)/.exec(post);
+    let m = /\[\s*Date\s+&(?:amp)?;?\s+Time\s*\]\s*\r?\n?\s*(?:From\s+)?(.*)\s+to\s+(.*?)\s*(?:\((\w+)\))?\r?\n/.exec(post);
     if (m) {
-      let start = this.parseLodestoneDate(m[1]),
-        end = this.parseLodestoneDate(m[2], start);
-      let offset = 0;
-      if (m[3] == "PDT") {
-        offset = -7;
-      } else if (m[3] == "PST") {
-        offset = -8;
-      } else {
-        this.log.warn("Unknown time zone %s: skipping this.", m[3]);
+      if (m[3] === undefined) {
+        this.log.error("No timezone given for event! Defaulting to %s", this.defaultTimezone);
+      }
+      this.log.verbose("Found event time %s to %s (TZ %s)", m[1], m[2], m[3] ?? 'not defined, using default');
+      const times = this.parseTime(m[1], m[2], undefined, m[3]);
+      if (times === null) {
+        this.log.error("Unable to parse times in post.");
         return null;
       }
-      // Apply the offset to make the time correct
-      start = start.add(-offset, 'h');
-      end = end.add(-offset, 'h');
-      this.log.verbose('Applied %d offset to create final times of %s-%s', offset, start.format(), end.format())
+      const [start, end] = times;
       const titleStr = title.text().trim();
       let name = '<a href="' + postURL + '">' + titleStr + '</a>';
       // See if it's for a patch.
@@ -518,26 +519,21 @@ export class LodestoneScraper {
     }
   }
 
-  parseTime(start: string, end: string, startTZ: string | undefined, endTZ: string): [dayjs.Dayjs, dayjs.Dayjs] | null {
+  parseTime(start: string, end: string, startTZ: string | undefined, endTZ: string | undefined): [dayjs.Dayjs, dayjs.Dayjs] | null {
     let startTime = this.parseLodestoneDate(start),
         endTime = this.parseLodestoneDate(end, startTime);
-    let endOffset = TIMEZONES.get(endTZ);
-    if (endOffset === undefined) {
-      this.log.warn("Unknown time zone %s: skipping this.", endTZ);
-      return null;
-    }
-    let startOffset: number | undefined = endOffset;
-    if (startTZ) {
-      startOffset = TIMEZONES.get(startTZ);
-    }
-    if (startOffset === undefined) {
-      this.log.warn("Unknown time zone %s: skipping this.", startTZ);
-      return null;
-    }
-    // Apply the offset to make the time correct
-    startTime = startTime.add(-startOffset, 'h');
-    endTime = endTime.add(-endOffset, 'h');
-    this.log.verbose('Applied %d, %d offset to create final times of %s-%s', startOffset, endOffset, startTime.format(), endTime.format());
+    // Look up the official end time zone name, defaulting to the endTZ if not
+    // in the list, defaulting to the default timezone if no timezone is
+    // given.
+    endTZ = endTZ ? (TIMEZONES.get(endTZ) ?? endTZ) : this.defaultTimezone;
+    // Look up the official start time zone name if a start time zone was
+    // given, otherwise use what was given; if no start timezone, use the end
+    // timezone from above.
+    startTZ = startTZ ? (TIMEZONES.get(startTZ) ?? startTZ) : endTZ;
+    // Apply time zones (true meaning "treat existing as local time")
+    endTime = endTime.tz(endTZ, true);
+    startTime = startTime.tz(startTZ ?? endTZ, true);
+    this.log.verbose('With timezone times are now %s, %s (UTC %s, %s)', startTime.format(), endTime.format(), startTime.utc().toISOString(), endTime.utc().toISOString());
     return [startTime, endTime];
   }
 }

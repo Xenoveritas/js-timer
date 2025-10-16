@@ -41,7 +41,7 @@ export default function compileTimers(options?: Partial<CompileTimerOptions>): P
     configResolved(config) {
       emitAssets = config.command === 'build';
       assetDir = config.build.assetsDir;
-      baseDir = config.envDir;
+      baseDir = config.envDir === false ? '' : config.envDir;
       // console.log('resolved config', config);
     },
     resolveId(id) {

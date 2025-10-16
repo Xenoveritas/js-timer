@@ -19,6 +19,7 @@ interface LodestoneOptions {
   scrapeTimeLimit: duration.Duration;
   timeLimit: duration.Duration;
   cacheTime: duration.Duration;
+  defaultTimezone?: string;
   cacheFile?: string;
   url: string;
   ignore: string[] | null;
@@ -76,7 +77,7 @@ function saveCache(filename: string, cache: TimerCache): Promise<void> {
  * The "real" function, used to ensure that the Promise is handled properly.
  * @param source the source data
  * @param options options
- * @param callback 
+ * @param callback
  */
 export async function scrapeLodestone(source: string, options: LodestoneOptions): Promise<string> {
   // Grab whatever configuration we can from the source we're given
@@ -111,6 +112,7 @@ export async function scrapeLodestone(source: string, options: LodestoneOptions)
   // Create the scraper
   const scraperOptions: LodestoneScraperOptions = {
     lodestoneURL: options.url,
+    defaultTimezone: options.defaultTimezone ?? 'America/Los_Angeles',
     skipScrapeBefore: skipScrapeBefore,
     skipTimerBefore: skipTimerBefore,
     ignoredURLs: ignoredURLs,

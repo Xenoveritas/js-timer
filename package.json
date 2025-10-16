@@ -27,12 +27,12 @@
   },
   "homepage": "https://github.com/Xenoveritas/js-timer#readme",
   "devDependencies": {
-    "@types/node": "^22.10.2",
-    "cheerio": "^1.0.0-rc.12",
+    "@types/node": "^24.7.2",
+    "cheerio": "^1.0.0",
     "dayjs": "^1.11.13",
     "sass": "^1.30.0",
     "typescript": "^5.5.4",
     "vite": "^6.0.6"
   },
-  "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b"
+  "packageManager": "pnpm@10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d"
 }
