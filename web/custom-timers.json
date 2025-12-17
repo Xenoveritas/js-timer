@@ -275,6 +275,18 @@
     "type": "event rising",
     "start": "2025-08-27T00:00:00-0700",
     "end": "2025-09-11T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/fallguys/\">Blunderville (FFXIV \u00D7 Fall Guys)</a>",
+    "type": "event crossover fallguys",
+    "start": "2025-11-06T00:00:00-0800",
+    "end": "2025-11-27T06:59:00-0800"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/mogmog-collection/202511/a0fymw99rl\">Moogle Treasure Trove: The Hunt for Revelation</a>",
+    "type": "event mogtome",
+    "start": "2025-11-18T00:00:00-0800",
+    "end": 17658648E5
   }
 ]
 }

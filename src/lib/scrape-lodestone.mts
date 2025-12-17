@@ -487,11 +487,13 @@ export class LodestoneScraper {
         return null;
       }
       // Load the link
-      const resp = await this.fetch(new URL(href, this.lodestoneURL));
+      const eventUrl = new URL(href, this.lodestoneURL);
+      this.log.verbose("Fetching event details page %s", eventUrl.toString());
+      const resp = await this.fetch(eventUrl);
       if (resp.ok) {
         const eventPage = cheerio.load(await resp.text());
         const eventText = eventPage("div.content__span").text();
-        let m = /(?:From\s+)(?:\w+day,\s+)?(.*?)(?:\s*\((\w+)\))?\s+to\s+(?:\w+day,\s+)?(.*?)\s*\((\w+)\)/.exec(eventText);
+        let m = /(?:From\s+)(?:\w+day,\s+)?(.*?)(?:\s*\((\w+)\))?\s*to\s+(?:\w+day,\s+)?(.*?)\s*\((\w+)\)/.exec(eventText);
         if (m) {
           this.log.verbose("Found event time %s to %s (TZ %s to TZ %s)", m[1], m[3], m[2], m[4]);
           const times = this.parseTime(m[1], m[3], m[2], m[4]);
