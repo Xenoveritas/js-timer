@@ -213,6 +213,10 @@ export class LodestoneScraper {
     // First try the verbose method
     let rv = dayjs.utc(str, 'MMMM D, YYYY h:mm a', true);
     if (!rv.isValid()) {
+      // Apparently "MMMM D, YYYY, h:mm a" is also used. Sometimes.
+      rv = dayjs.utc(str, 'MMMM D, YYYY, h:mm a', true);
+    }
+    if (!rv.isValid()) {
       rv = dayjs.utc(str, 'MMM D, YYYY h:mm a', true);
     }
     if (!rv.isValid() && previous) {
