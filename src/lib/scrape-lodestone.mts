@@ -479,9 +479,17 @@ export class LodestoneScraper {
       };
     } else {
       // If no times were found, this may be an event time, and we may need to load another post
-      const event = KNOWN_EVENTS.find((event) => event.pattern.test(post));
+      const titleStr = title.text().trim();
+        // Check the article title for the event
+      let event = KNOWN_EVENTS.find((event) => event.pattern.test(titleStr));
+      if (event === undefined) {
+        // If nothing, see if it's mentioned in the post text
+        event = KNOWN_EVENTS.find((event) => event.pattern.test(post));
+      }
       if (event === undefined) {
         this.log.verbose("Did not find any maintenance times and post did not match any known event.");
+        this.log.verbose('Event title: %s', titleStr);
+        this.log.verbose('Event description: %s', post);
         return null;
       }
       // In this case, find the link
