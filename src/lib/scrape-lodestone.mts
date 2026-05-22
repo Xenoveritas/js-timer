@@ -34,6 +34,8 @@ const KNOWN_EVENTS: KnownEvent[] = Object.entries({
   "The Rising": "event the-rising",
   "All Saints' Wake": "event all-saints-wake",
   "Starlight Celebration": "event starlight-celebration",
+  // Guess this is going to be a recurring thing
+  "The Maiden's Rhapsody": "event crossover crossover-ffxi maidens-rhapsody"
 }).map(([name, type]) => {
   return {
     name: name.replace("'", "\u2019"),
@@ -504,7 +506,17 @@ export class LodestoneScraper {
       const resp = await this.fetch(eventUrl);
       if (resp.ok) {
         const eventPage = cheerio.load(await resp.text());
-        const eventText = eventPage("div.content__span").text();
+        let contentSpan = eventPage("div.content__span");
+        if (contentSpan.length === 0) {
+          // The Maiden's Rhapsody uses some old FFXI page design because of
+          // course it does, so try that
+          contentSpan = eventPage("div.window div.body");
+          if (contentSpan.length === 0) {
+            this.log.verbose("Unable to locate event page content. (Different HTML layout?)");
+            return null;
+          }
+        }
+        const eventText = contentSpan.text();
         let m = /(?:From\s+)(?:\w+day,\s+)?(.*?)(?:\s*\((\w+)\))?\s*to\s+(?:\w+day,\s+)?(.*?)\s*\((\w+)\)/.exec(eventText);
         if (m) {
           this.log.verbose("Found event time %s to %s (TZ %s to TZ %s)", m[1], m[3], m[2], m[4]);
@@ -517,14 +529,14 @@ export class LodestoneScraper {
               type: event.type,
               start: start.valueOf(),
               end: end.valueOf(),
-              // For debuggin (mostly) keep the text versions
+              // For debugging (mostly) keep the text versions
               startText: start.format(),
               endText: end.format(),
               loadedAt: new Date().getTime()
             }
           }
         } else {
-          this.log.verbose("Unable to parse event.");
+          this.log.verbose("Unable to locate event times within post.");
           return null;
         }
       }
