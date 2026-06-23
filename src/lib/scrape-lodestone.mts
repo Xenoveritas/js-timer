@@ -231,18 +231,20 @@ export class LodestoneScraper {
     }
     if (!rv.isValid() && previous) {
       this.log.verbose('Could not parse, attempting to parse with missing elements');
-      rv = dayjs.utc(str, 'h:mm a');
+      // This one is solely for Breaking Brick Mountains at present
+      // Try this first as h:mm a parses that time (???)
+      rv = dayjs.utc(str, 'MMMM D H:mm', true);
       if (rv.isValid()) {
-        rv.year(previous.year()).month(previous.month()).date(previous.date());
-        this.log.verbose('Parsed to %s', rv.format());
+        rv = rv.year(previous.year());
+        this.log.verbose('Parsed to date/time alone, updated to %s', rv.format());
       } else {
-        // This one is solely for Breaking Brick Mountains at present
-        rv = dayjs.utc(str, 'MMMM D H:mm', true);
+        rv = dayjs.utc(str, 'h:mm a');
         if (rv.isValid()) {
-          rv.year(previous.year());
-          this.log.verbose('Parsed to %s', rv.format());
+          rv = rv.year(previous.year()).month(previous.month()).date(previous.date());
+          this.log.verbose('Parsed to hour alone, updated to %s based on %s', rv.format(), previous.format());
+        } else {
+          this.log.verbose('Failed to parse!');
         }
-        this.log.verbose('Failed to parse!');
       }
     }
     return rv;
