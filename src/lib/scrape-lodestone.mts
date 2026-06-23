@@ -35,7 +35,8 @@ const KNOWN_EVENTS: KnownEvent[] = Object.entries({
   "All Saints' Wake": "event all-saints-wake",
   "Starlight Celebration": "event starlight-celebration",
   // Guess this is going to be a recurring thing
-  "The Maiden's Rhapsody": "event crossover crossover-ffxi maidens-rhapsody"
+  "The Maiden's Rhapsody": "event crossover crossover-ffxi maidens-rhapsody",
+  "Breaking Brick Mountains": "event crossover crossover-dq breaking-brick-mountains"
 }).map(([name, type]) => {
   return {
     name: name.replace("'", "\u2019"),
@@ -217,16 +218,31 @@ export class LodestoneScraper {
     if (!rv.isValid()) {
       // Apparently "MMMM D, YYYY, h:mm a" is also used. Sometimes.
       rv = dayjs.utc(str, 'MMMM D, YYYY, h:mm a', true);
+      if (!rv.isValid()) {
+        rv = dayjs.utc(str, 'MMM D, YYYY h:mm a', true);
+        if (!rv.isValid()) {
+          // Sometimes they're in 24-hour time. Maybe.
+          rv = dayjs.utc(str, 'MMMM D, YYYY H:mm', true);
+        }
+      }
     }
-    if (!rv.isValid()) {
-      rv = dayjs.utc(str, 'MMM D, YYYY h:mm a', true);
+    if (rv.isValid()) {
+      this.log.verbose('Parsed to %s', rv.format());
     }
     if (!rv.isValid() && previous) {
-      this.log.verbose('Could not parse, attempting to parse time alone');
+      this.log.verbose('Could not parse, attempting to parse with missing elements');
       rv = dayjs.utc(str, 'h:mm a');
-      this.log.verbose('Parsed to %s', rv.format());
-      if (rv !== null) {
+      if (rv.isValid()) {
         rv.year(previous.year()).month(previous.month()).date(previous.date());
+        this.log.verbose('Parsed to %s', rv.format());
+      } else {
+        // This one is solely for Breaking Brick Mountains at present
+        rv = dayjs.utc(str, 'MMMM D H:mm', true);
+        if (rv.isValid()) {
+          rv.year(previous.year());
+          this.log.verbose('Parsed to %s', rv.format());
+        }
+        this.log.verbose('Failed to parse!');
       }
     }
     return rv;
