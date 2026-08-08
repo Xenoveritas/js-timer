@@ -293,6 +293,12 @@
     "type": "event mogtome",
     "start": "2026-03-31T01:00:00-0700",
     "end": 17773452E5
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/2026/youkai-watch/u6bmhovibh\">Yokai Watch: Gather One, Gather All</a>",
+    "type": "event crossover yokai-watch",
+    "start": "2026-08-04T01:00:00-0700",
+    "end": "2026-10-05T07:59:00-0700"
   }
 ]
 }
