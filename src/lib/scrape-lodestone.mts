@@ -34,9 +34,10 @@ const KNOWN_EVENTS: KnownEvent[] = Object.entries({
   "The Rising": "event the-rising",
   "All Saints' Wake": "event all-saints-wake",
   "Starlight Celebration": "event starlight-celebration",
-  // Guess this is going to be a recurring thing
+  // Guess these are going to be a recurring things
   "The Maiden's Rhapsody": "event crossover crossover-ffxi maidens-rhapsody",
-  "Breaking Brick Mountains": "event crossover crossover-dq breaking-brick-mountains"
+  "Breaking Brick Mountains": "event crossover crossover-dq breaking-brick-mountains",
+  "Fall Guys": "event crossover crossover-fall-guys",
 }).map(([name, type]) => {
   return {
     name: name.replace("'", "\u2019"),
@@ -530,8 +531,12 @@ export class LodestoneScraper {
           // course it does, so try that
           contentSpan = eventPage("div.window div.body");
           if (contentSpan.length === 0) {
-            this.log.verbose("Unable to locate event page content. (Different HTML layout?)");
-            return null;
+            // Fall Guys also uses a different event layout
+            contentSpan = eventPage("div#contents div.fgs__overview__inner");
+            if (contentSpan.length === 0) {
+              this.log.verbose("Unable to locate event page content. (Different HTML layout?)");
+              return null;
+            }
           }
         }
         const eventText = contentSpan.text();

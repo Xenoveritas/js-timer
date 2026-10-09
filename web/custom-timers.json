@@ -305,6 +305,12 @@
     "type": "event mogtome",
     "start": "2026-09-09T01:00:00-0700",
     "end": "2026-10-19T07:59:00-0700"
+  },
+  {
+    "name": "<a href=\"https://na.finalfantasyxiv.com/lodestone/special/ffxv/8ghatq7szp/\">A Nocturne for Heroes</a> (Final Fantasy XV crossover)",
+    "type": "event crossover ffxv",
+    "start": "2026-09-24T01:00:00-0700",
+    "end": "2026-10-13T07:59:00-0700"
   }
 ]
 }
