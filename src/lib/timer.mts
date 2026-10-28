@@ -14,6 +14,15 @@ export interface BaseTimer {
 }
 
 /**
+ * Mostly for readability reasons, type check if a thing is a string or number.
+ * @param o the object to check
+ * @returns whether it's a string or number
+ */
+function stringOrNumber(o: unknown): o is string | number {
+  return typeof o === 'string' || typeof o === 'number';
+}
+
+/**
  * A timer as read from JSON.
  */
 export interface ProtoTimer extends BaseTimer {
@@ -23,6 +32,16 @@ export interface ProtoTimer extends BaseTimer {
   end: number | string;
   subtimers?: ProtoTimer[];
 };
+
+export function isProtoTimer(o: unknown): o is ProtoTimer {
+  if (typeof o !== 'object' || o === null) {
+    return false;
+  }
+  const pt = o as ProtoTimer;
+  return typeof pt.name === 'string' && typeof pt.type === 'string'
+    && stringOrNumber(pt.start) && stringOrNumber(pt.end)
+    && (!('subtimers' in pt) || Array.isArray(pt.subtimers));
+}
 
 /**
  * A complete timer (with timestamps for start/end).
@@ -44,8 +63,8 @@ function convertDate(date: string): number {
 export function isTimer(o: unknown): o is Timer {
   if (typeof o !== 'object' || o === null)
     return false;
-  const obj = o as Record<string, unknown>;
-  return typeof o['start'] === 'number' && (typeof o['end'] === 'number' || typeof o['end'] === 'undefined');
+  const obj = o as Timer;
+  return typeof obj.start === 'number' && (typeof obj.end === 'number' || typeof obj.end === 'undefined');
 }
 
 /**

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "outDir": "build/ts",
+    "rootDir": ".",
     "sourceMap": true,
-    "target": "ES5"
+    "target": "ES6"
   },
   "include": [
     "./src/clock.ts", "./web/**/*.ts"

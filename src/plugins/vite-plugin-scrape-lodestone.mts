@@ -8,7 +8,7 @@ import { debuglog } from 'util';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration.js';
 import { Plugin } from 'vite';
-import { Timer, ProtoTimer } from '../lib/timer.mjs';
+import { Timer, ProtoTimer, isProtoTimer } from '../lib/timer.mjs';
 import { LodestoneScraper, LodestoneScraperOptions, TimerCache, isTimerCache } from '../lib/scrape-lodestone.mjs';
 
 dayjs.extend(duration);
@@ -73,6 +73,36 @@ function saveCache(filename: string, cache: TimerCache): Promise<void> {
   });
 }
 
+interface ScraperConfig {
+  ignore?: string[];
+}
+
+function isScraperConfig(o: unknown): o is ScraperConfig {
+  if (typeof o !== 'object' || o === null) {
+    return false;
+  }
+  const sc = o as ScraperConfig;
+  return !('ignore' in sc) || (Array.isArray(sc.ignore) && sc.ignore.every(s => typeof s === 'string'));
+}
+
+interface TimerSource {
+  scrapeLodestone?: ScraperConfig;
+  timers?: ProtoTimer[];
+}
+
+function isTimerSource(o: unknown): o is TimerSource {
+  if (typeof o !== 'object' || o === null) {
+    return false;
+  }
+  const ts = o as TimerSource;
+  return !('timers' in ts) || (Array.isArray(ts.timers) && ts.timers.every(isProtoTimer));
+}
+
+function getScraperConfig(src: TimerSource): ScraperConfig | null {
+  const rv = src.scrapeLodestone;
+  return isScraperConfig(rv) ? rv : null;
+}
+
 /**
  * The "real" function, used to ensure that the Promise is handled properly.
  * @param source the source data
@@ -82,7 +112,7 @@ function saveCache(filename: string, cache: TimerCache): Promise<void> {
 export async function scrapeLodestone(source: string, options: LodestoneOptions): Promise<string> {
   // Grab whatever configuration we can from the source we're given
   const data = JSON.parse(source);
-  const existingTimers: ProtoTimer[] = typeof data === 'object' && data !== null && Array.isArray(data['timers']) ? data['timers'] : [];
+  const existingTimers: ProtoTimer[] = isTimerSource(data) && data.timers ? data.timers : [];
   let cache: TimerCache | null = null;
 
   if (options.cacheFile) {
@@ -99,14 +129,9 @@ export async function scrapeLodestone(source: string, options: LodestoneOptions)
     skipTimerBefore = options.timeLimit.asMilliseconds();
 
   const ignoredURLs = Array.isArray(options.ignore) ? options.ignore : [];
-  if (typeof data === 'object' && data !== null
-    && typeof data.scrapeLoadstone === 'object' && data.scrapeLoadstone !== null
-    && Array.isArray(typeof data.scrapeLoadstone.ignore)) {
-    // Phew - merge in the ignore if we can
-    data.scrapeLoadstone.ignore.forEach((url) => {
-      if (typeof url === 'string')
-        ignoredURLs.push(url);
-    });
+  const additionalIgnoredURLs = getScraperConfig(data);
+  if (additionalIgnoredURLs != null && additionalIgnoredURLs.ignore) {
+    ignoredURLs.push(...additionalIgnoredURLs.ignore);
   }
 
   // Create the scraper

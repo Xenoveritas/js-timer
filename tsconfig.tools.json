@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
       "outDir": "build-plugins",
+      "rootDir": "./src",
       "moduleResolution": "node16",
       "module": "Node16",
       "target": "ES2022"

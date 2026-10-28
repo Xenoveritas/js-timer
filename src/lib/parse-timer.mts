@@ -12,7 +12,7 @@ const TIMER_FIELDS = new Set<string>(["start", "end", "name", "type", "showDurat
  */
 export function stripIgnoredFields(timer: Timer, allowSubtimer = true): void {
   // We want to pull the keys and delete them while iterating over them, so:
-  const keys = Object.keys(timer);
+  const keys = Object.keys(timer) as (keyof Timer)[];
   keys.forEach(function (key) {
     if (!TIMER_FIELDS.has(key)) {
       if (key === 'subtimers' && allowSubtimer) {
@@ -54,8 +54,8 @@ export function parseTimers(json: unknown, oldest: number): Timer[] {
   let ts: ProtoTimer[];
   if (Array.isArray(json)) {
     ts = json;
-  } else if (typeof json === 'object' && json !== null && Array.isArray(json['timers'])) {
-    ts = json['timers'];
+  } else if (typeof json === 'object' && json !== null && Array.isArray((json as {[k: string]: unknown})['timers'])) {
+    ts = (json as {timers: ProtoTimer[]})['timers'];
   } else {
     throw new Error("Invalid JSON object given");
   }

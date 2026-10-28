@@ -39,7 +39,7 @@ async function loadLodestoneOptions(options: PartialLodestoneToolCLIOptions["lod
       cache = JSON.parse(await fs.readFile(options.cache, { encoding: 'utf8' })) as TimerCache;
     } catch (e) {
       // Ignore the error if the cache doesn't exist
-      if (typeof e !== 'object' || e?.code !== 'ENOENT') {
+      if (typeof e !== 'object' || (e && 'code' in e && e?.code !== 'ENOENT')) {
         throw e;
       }
       log.verbose('Cache file did not exist, cache is empty.');
