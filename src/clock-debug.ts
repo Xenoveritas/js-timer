@@ -10,7 +10,7 @@
  * @module clock-debug
  */
 
-import Clock from './clock';
+import Clock from './clock.js';
 
 let clockCount = 0;
 

@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <title>Demo</title>
-  <script type="application/javascript" src="clock.js"></script>
-  <script type="application/javascript">
+  <script type="module">
+    import { Clock } from "./build/clock.js";
     window.addEventListener('load', function() {
       var e = document.createElement('h1'), clock = new Clock();
       document.body.appendChild(e);

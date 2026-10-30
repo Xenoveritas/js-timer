@@ -3,7 +3,7 @@
     "outDir": "./build",
     "rootDir": "./src",
     "strict": true,
-    "target": "ES5"
+    "target": "ES6"
   },
   "include": [
     "./src/clock.ts", "./src/clock-debug.ts"

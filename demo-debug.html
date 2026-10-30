@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
   <title>Demo</title>
-  <script type="application/javascript" src="clock.js"></script>
-  <script type="application/javascript" src="clock-debug.js"></script>
-  <script type="application/javascript">
+  <script type="module">
+    import { Clock } from "./build/clock.js";
+    import { DebugClock } from "./build/clock-debug.js";
     window.addEventListener('load', function() {
       var e = document.createElement('h1'), clock = new DebugClock("Demo");
       document.body.appendChild(e);
